@@ -1,0 +1,147 @@
+{
+  "zona": {
+    "nombre": "Mercado Público · CAI Mercado (8 cuadras)",
+    "centro": [
+      11.245,
+      -74.2064
+    ],
+    "zoom": 17,
+    "limites": {
+      "lat_min": 11.18,
+      "lat_max": 11.3,
+      "lng_min": -74.27,
+      "lng_max": -74.15
+    },
+    "radio_max_m": 80
+  },
+  "cuadras": [
+    {
+      "id": "CR9-C11-C12",
+      "nombre": "Carrera 9 entre Calles 11 y 12 (Frente al CAI Mercado)",
+      "sector": "Mercado Público",
+      "tipo_via": "arterial",
+      "extremos": [
+        [
+          11.2446,
+          -74.2066
+        ],
+        [
+          11.2454,
+          -74.2063
+        ]
+      ]
+    },
+    {
+      "id": "CR9-C10C-C11",
+      "nombre": "Carrera 9 entre Calles 10C y 11 (Costado norte CAI)",
+      "sector": "Mercado Público",
+      "tipo_via": "arterial",
+      "extremos": [
+        [
+          11.2454,
+          -74.2063
+        ],
+        [
+          11.2461,
+          -74.206
+        ]
+      ]
+    },
+    {
+      "id": "C11-CR8-CR9",
+      "nombre": "Calle 11 entre Carreras 8 y 9 (Esquina CAI Mercado)",
+      "sector": "Mercado Público",
+      "tipo_via": "arterial",
+      "extremos": [
+        [
+          11.2457,
+          -74.2074
+        ],
+        [
+          11.2454,
+          -74.2063
+        ]
+      ]
+    },
+    {
+      "id": "C11-CR9-CR10",
+      "nombre": "Calle 11 entre Carreras 9 y 10 (Galería Mercado)",
+      "sector": "Mercado Público",
+      "tipo_via": "arterial",
+      "extremos": [
+        [
+          11.2454,
+          -74.2063
+        ],
+        [
+          11.2451,
+          -74.2052
+        ]
+      ]
+    },
+    {
+      "id": "C13-CR9-CR10",
+      "nombre": "Calle 13 entre Carreras 9 y 10 (Corredor de busetas)",
+      "sector": "Mercado Público",
+      "tipo_via": "arterial",
+      "extremos": [
+        [
+          11.2438,
+          -74.2069
+        ],
+        [
+          11.2435,
+          -74.2058
+        ]
+      ]
+    },
+    {
+      "id": "C12-CR8-CR9",
+      "nombre": "Calle 12 entre Carreras 8 y 9",
+      "sector": "Mercado Público",
+      "tipo_via": "secundaria",
+      "extremos": [
+        [
+          11.2449,
+          -74.2077
+        ],
+        [
+          11.2446,
+          -74.2066
+        ]
+      ]
+    },
+    {
+      "id": "C12-CR9-CR10",
+      "nombre": "Calle 12 entre Carreras 9 y 10",
+      "sector": "Mercado Público",
+      "tipo_via": "secundaria",
+      "extremos": [
+        [
+          11.2446,
+          -74.2066
+        ],
+        [
+          11.2443,
+          -74.2055
+        ]
+      ]
+    },
+    {
+      "id": "CR8-C11-C12",
+      "nombre": "Carrera 8 entre Calles 11 y 12",
+      "sector": "Mercado Público",
+      "tipo_via": "secundaria",
+      "extremos": [
+        [
+          11.2449,
+          -74.2077
+        ],
+        [
+          11.2457,
+          -74.2074
+        ]
+      ]
+    }
+  ]
+}
