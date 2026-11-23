@@ -13,6 +13,8 @@ var AppEstado = {
   reportesPrecargados: [],
   reportesLocales: [],
   reportesActivos: [], // Lista única con criticidad ya recalculada
+  reportesFiltrados: [], // Subconjunto tras aplicar filtros de análisis
+  filtrosActivos: { cuadra: "todas", franja: "todas", categoria: "todas", actor: "todas" },
   config: { iniciales: "", origen: "campo" },
 
   // Estado del formulario de captura actual
@@ -177,10 +179,124 @@ function sincronizarListaUnicaReportes() {
     AppEstado.vias
   );
 
-  // Actualizar mapas y vistas dependientes
+  // Actualizar mapa de captura con todos los reportes activos y aplicar filtros en Registros
   actualizarPuntosEnMapaCaptura(AppEstado.reportesActivos);
-  actualizarMarcadoresRegistros(AppEstado.reportesActivos, AppEstado.vias);
+  aplicarFiltrosYActualizarRegistros();
+}
+
+/**
+ * Aplica los filtros activos (RF-04), actualiza porcentajes por categoría (CU-02),
+ * actualiza el mapa de calor/puntos, el Resumen Operativo Top 5 (RF-05) y la lista.
+ */
+function aplicarFiltrosYActualizarRegistros() {
+  var filtrados = typeof filtrarReportes === "function"
+    ? filtrarReportes(AppEstado.reportesActivos, AppEstado.filtrosActivos, AppEstado.criterios)
+    : AppEstado.reportesActivos.slice();
+
+  AppEstado.reportesFiltrados = filtrados;
+
+  renderizarEstadisticasFiltros(filtrados, AppEstado.reportesActivos.length);
+  actualizarMarcadoresRegistros(filtrados, AppEstado.vias);
+  renderizarResumenOperativoTop5(filtrados);
   renderizarVistaRegistros();
+}
+
+/**
+ * Muestra el conteo filtrado y los porcentajes por categoría (CU-02).
+ */
+function renderizarEstadisticasFiltros(listaFiltrada, totalGeneral) {
+  var conteoEl = document.getElementById("conteo-filtrado-texto");
+  if (conteoEl) {
+    conteoEl.textContent =
+      "Mostrando " + listaFiltrada.length + " de " + totalGeneral + " reportes";
+  }
+
+  var contenedorPct = document.getElementById("desglose-porcentajes-categoria");
+  if (!contenedorPct || typeof calcularEstadisticasFiltradas !== "function") return;
+
+  var stats = calcularEstadisticasFiltradas(listaFiltrada);
+  contenedorPct.innerHTML = "";
+
+  for (var i = 0; i < stats.categorias.length; i++) {
+    var cat = stats.categorias[i];
+    var pctTexto = cat.porcentaje.toFixed(1).replace(".", ",") + "%";
+    var fila = document.createElement("div");
+    fila.className = "item-porcentaje";
+    fila.innerHTML =
+      '<div class="fila-texto-porcentaje">' +
+        '<span><strong>' + cat.etiqueta + '</strong></span>' +
+        '<span class="texto-mono">' + cat.conteo + ' (' + pctTexto + ')</span>' +
+      '</div>' +
+      '<div class="barra-progreso-fondo">' +
+        '<div class="barra-progreso-relleno" style="width:' + Math.min(100, cat.porcentaje) + '%"></div>' +
+      '</div>';
+    contenedorPct.appendChild(fila);
+  }
+}
+
+/**
+ * Renderiza las tarjetas del Top 5 de cuadras críticas con recomendación y regla (RF-05).
+ */
+function renderizarResumenOperativoTop5(listaBase) {
+  var contenedor = document.getElementById("lista-top-5-cuadras");
+  if (!contenedor || typeof generarResumenOperativo !== "function") return;
+
+  var subtitulo = document.getElementById("subtitulo-resumen-operativo");
+  if (subtitulo) {
+    var hayFiltro =
+      AppEstado.filtrosActivos.cuadra !== "todas" ||
+      AppEstado.filtrosActivos.franja !== "todas" ||
+      AppEstado.filtrosActivos.categoria !== "todas" ||
+      AppEstado.filtrosActivos.actor !== "todas";
+
+    subtitulo.textContent = hayFiltro
+      ? "Calculado sobre los " + listaBase.length + " reporte(s) que cumplen los filtros activos."
+      : "Calculado sobre los " + listaBase.length + " reporte(s) activos, ordenados por puntaje acumulado.";
+  }
+
+  var top5 = generarResumenOperativo(listaBase, AppEstado.vias, AppEstado.criterios);
+  contenedor.innerHTML = "";
+
+  if (top5.length === 0) {
+    contenedor.innerHTML =
+      '<p class="texto-suave">No hay reportes en la selección actual para generar el Top 5 operativo.</p>';
+    return;
+  }
+
+  for (var i = 0; i < top5.length; i++) {
+    var item = top5[i];
+    var claseSeveridad = "";
+    if (item.conteoNivel.Alto >= 3 || item.puntajeAcumulado >= 15) {
+      claseSeveridad = " top5-critico";
+    } else if (item.puntajeAcumulado >= 7) {
+      claseSeveridad = " top5-medio";
+    }
+
+    var tipoViaTexto = item.tipoVia === "arterial" ? "Vía arterial" : "Vía secundaria";
+
+    var card = document.createElement("article");
+    card.className = "tarjeta-top5" + claseSeveridad;
+    card.innerHTML =
+      '<div class="top5-cabecera">' +
+        '<div>' +
+          '<span class="top5-puesto">#' + (i + 1) + '</span>' +
+          '<strong>' + item.nombreCuadra + '</strong> ' +
+          '<span class="texto-mono">(' + item.cuadraId + ')</span>' +
+        '</div>' +
+        '<span class="top5-puntaje">' + item.puntajeAcumulado + ' pts</span>' +
+      '</div>' +
+      '<div class="top5-metricas">' +
+        tipoViaTexto + ' · ' + item.totalReportes + ' reporte(s) ' +
+        '(Alto: ' + item.conteoNivel.Alto + ', Medio: ' + item.conteoNivel.Medio + ', Bajo: ' + item.conteoNivel.Bajo + ') · ' +
+        'Pico: ' + item.porFranja.pico + ' / Valle: ' + item.porFranja.valle +
+      '</div>' +
+      '<div class="caja-recomendacion-top5">' +
+        '<div class="titulo-recomendacion">Recomendación: ' + item.recomendacion + '</div>' +
+        '<div class="texto-regla-aplicada">' + item.reglaAplicada + '</div>' +
+      '</div>';
+
+    contenedor.appendChild(card);
+  }
 }
 
 /**
@@ -878,8 +994,11 @@ function renderizarVistaRegistros() {
   // Actualizar badge en navegación inferior
   document.getElementById("badge-total-registros").textContent = String(todos.length);
 
-  // Ordenar lista: más recientes primero
-  var ordenados = todos.slice().sort(function (a, b) {
+  // Lista visible según filtros activos (más recientes primero)
+  var listaParaTarjetas = Array.isArray(AppEstado.reportesFiltrados)
+    ? AppEstado.reportesFiltrados
+    : todos;
+  var ordenados = listaParaTarjetas.slice().sort(function (a, b) {
     if (a.fecha_hora < b.fecha_hora) return 1;
     if (a.fecha_hora > b.fecha_hora) return -1;
     return 0;
@@ -1180,6 +1299,49 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Filtros dinámicos (RF-04) e impresión de resumen operativo (RF-05)
+  var idsFiltros = [
+    { id: "filtro-cuadra", clave: "cuadra" },
+    { id: "filtro-franja", clave: "franja" },
+    { id: "filtro-categoria", clave: "categoria" },
+    { id: "filtro-actor", clave: "actor" }
+  ];
+  for (var fIdx = 0; fIdx < idsFiltros.length; fIdx++) {
+    (function (cfg) {
+      var el = document.getElementById(cfg.id);
+      if (el) {
+        el.addEventListener("change", function () {
+          AppEstado.filtrosActivos[cfg.clave] = this.value;
+          aplicarFiltrosYActualizarRegistros();
+        });
+      }
+    })(idsFiltros[fIdx]);
+  }
+
+  var btnLimpiarFiltros = document.getElementById("btn-limpiar-filtros");
+  if (btnLimpiarFiltros) {
+    btnLimpiarFiltros.addEventListener("click", function () {
+      AppEstado.filtrosActivos = {
+        cuadra: "todas",
+        franja: "todas",
+        categoria: "todas",
+        actor: "todas"
+      };
+      for (var k = 0; k < idsFiltros.length; k++) {
+        var sel = document.getElementById(idsFiltros[k].id);
+        if (sel) sel.value = "todas";
+      }
+      aplicarFiltrosYActualizarRegistros();
+    });
+  }
+
+  var btnImprimirResumen = document.getElementById("btn-imprimir-resumen");
+  if (btnImprimirResumen) {
+    btnImprimirResumen.addEventListener("click", function () {
+      window.print();
+    });
+  }
+
   // Modal de foto ampliada
   var btnCerrarModalFoto = document.getElementById("btn-cerrar-modal-foto");
   if (btnCerrarModalFoto) {
@@ -1286,15 +1448,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
       document.getElementById("nombre-zona-header").textContent = AppEstado.vias.zona.nombre;
 
-      // Poblar selector manual de cuadras
+      // Poblar selector manual de cuadras y selector de filtro de cuadra
       var selectCuadra = document.getElementById("select-cuadra");
+      var filtroCuadra = document.getElementById("filtro-cuadra");
       selectCuadra.innerHTML = '<option value="">-- Selecciona una cuadra --</option>';
+      if (filtroCuadra) {
+        filtroCuadra.innerHTML = '<option value="todas">Todas las cuadras</option>';
+      }
       for (var i = 0; i < AppEstado.vias.cuadras.length; i++) {
         var c = AppEstado.vias.cuadras[i];
         var opt = document.createElement("option");
         opt.value = c.id;
         opt.textContent = c.nombre + " (" + c.tipo_via + ")";
         selectCuadra.appendChild(opt);
+
+        if (filtroCuadra) {
+          var optF = document.createElement("option");
+          optF.value = c.id;
+          optF.textContent = c.nombre + " (" + c.id + ")";
+          filtroCuadra.appendChild(optF);
+        }
       }
 
       // Iniciar mapas con tolerancia a fallas (sin internet)

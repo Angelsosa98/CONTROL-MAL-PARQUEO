@@ -751,3 +751,194 @@ button {
 [hidden] {
   display: none !important;
 }
+
+
+/* Panel de Filtros Dinámicos (RF-04 y CU-02) */
+.rejilla-filtros {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 460px) {
+  .rejilla-filtros {
+    grid-template-columns: 1fr;
+  }
+}
+
+.caja-resultado-filtros {
+  background: #f8fafc;
+  border: 1px solid var(--color-borde);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.rejilla-porcentajes {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.item-porcentaje {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.84rem;
+}
+
+.fila-texto-porcentaje {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.barra-progreso-fondo {
+  width: 100%;
+  height: 7px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.barra-progreso-relleno {
+  height: 100%;
+  background: var(--color-primario);
+  border-radius: 999px;
+}
+
+/* Resumen Operativo Top 5 (RF-05 y CU-03) */
+.lista-top5 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tarjeta-top5 {
+  border: 1px solid #cbd5e1;
+  border-left: 5px solid var(--color-primario);
+  border-radius: 10px;
+  padding: 11px 12px;
+  background: #f8fafc;
+}
+
+.tarjeta-top5.top5-critico {
+  border-left-color: var(--color-alto);
+}
+
+.tarjeta-top5.top5-medio {
+  border-left-color: var(--color-medio);
+}
+
+.top5-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.top5-puesto {
+  display: inline-block;
+  background: #0f172a;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.78rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-right: 6px;
+}
+
+.top5-puntaje {
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #0f172a;
+  background: #e2e8f0;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.top5-metricas {
+  font-size: 0.82rem;
+  color: var(--color-suave);
+  margin-bottom: 8px;
+}
+
+.caja-recomendacion-top5 {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.titulo-recomendacion {
+  font-weight: 800;
+  font-size: 0.92rem;
+  color: #0c4a6e;
+  margin-bottom: 3px;
+}
+
+.texto-regla-aplicada {
+  font-size: 0.8rem;
+  color: #334155;
+}
+
+/* Estilos limpios de impresión para Resumen Operativo (RF-05) */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .no-imprimir,
+  #vista-captura,
+  #modal-ajustes,
+  #modal-foto,
+  #aviso-fetch,
+  #aviso-sin-mapa {
+    display: none !important;
+  }
+
+  #vista-registros {
+    display: block !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .encabezado {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-bottom: 2px solid #000000;
+    padding: 6px 0 10px !important;
+    margin-bottom: 12px;
+  }
+
+  .subtitulo-zona {
+    color: #333333 !important;
+  }
+
+  .btn-ajustes {
+    display: none !important;
+  }
+
+  #seccion-resumen-operativo {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .tarjeta-top5 {
+    background: #ffffff !important;
+    border: 1px solid #64748b !important;
+    border-left: 5px solid #0f172a !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

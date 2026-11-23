@@ -207,7 +207,7 @@
        ====================================================================== -->
   <main id="vista-registros" class="contenedor-principal" hidden>
     <!-- Resumen de avance hacia los 30 registros de campo -->
-    <section class="tarjeta">
+    <section class="tarjeta no-imprimir">
       <div class="fila-cabecera-seccion">
         <h2>Avance de campo</h2>
         <span id="contador-meta-30" class="contador-grande">0 de 30</span>
@@ -218,7 +218,7 @@
     </section>
 
     <!-- Exportar e importar (RF-06) -->
-    <section class="tarjeta">
+    <section class="tarjeta no-imprimir">
       <h2>Reunir datos del equipo (RF-06)</h2>
       <div class="rejilla-exportar">
         <button type="button" id="btn-exportar-con-fotos" class="btn-secundario">
@@ -238,8 +238,63 @@
       <div id="resultado-importacion" class="aviso-info margen-superior" hidden></div>
     </section>
 
+    <!-- Panel de filtros dinámicos sin recargar (RF-04 y CU-02) -->
+    <section class="tarjeta no-imprimir" id="seccion-filtros">
+      <div class="fila-cabecera-seccion">
+        <h2>Filtros de análisis (RF-04)</h2>
+        <button type="button" id="btn-limpiar-filtros" class="btn-secundario">
+          Limpiar filtros
+        </button>
+      </div>
+      <p class="ayuda-campo">Combina filtros para actualizar el mapa de calor, los porcentajes por categoría y los conteos al instante.</p>
+
+      <div class="rejilla-filtros">
+        <div>
+          <label for="filtro-cuadra" class="etiqueta-control">Cuadra:</label>
+          <select id="filtro-cuadra" class="control-select">
+            <option value="todas">Todas las cuadras</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="filtro-franja" class="etiqueta-control">Franja horaria:</label>
+          <select id="filtro-franja" class="control-select">
+            <option value="todas">Todas (Pico y Valle)</option>
+            <option value="pico">Hora pico</option>
+            <option value="valle">Hora valle</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="filtro-categoria" class="etiqueta-control">Categoría:</label>
+          <select id="filtro-categoria" class="control-select">
+            <option value="todas">Todas las categorías</option>
+            <option value="doble_fila">Doble fila / vía prohibida</option>
+            <option value="bloqueo_rampa_cebra_paradero">Bloqueo rampa, cebra o paradero</option>
+            <option value="invasion_anden">Invasión de andén</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="filtro-actor" class="etiqueta-control">Tipo de actor:</label>
+          <select id="filtro-actor" class="control-select">
+            <option value="todas">Todos los actores</option>
+            <option value="vehiculo_particular">Vehículo particular</option>
+            <option value="motocicleta">Motocicleta</option>
+            <option value="vehiculo_carga">Vehículo de carga</option>
+            <option value="mobiliario_comercial">Mobiliario comercial</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="caja-resultado-filtros">
+        <div id="conteo-filtrado-texto" class="texto-destacado">Mostrando 0 de 0 reportes</div>
+        <div id="desglose-porcentajes-categoria" class="rejilla-porcentajes"></div>
+      </div>
+    </section>
+
     <!-- Mapa de calor (Leaflet.heat) y puntos individuales (RF-03) -->
-    <section class="tarjeta">
+    <section class="tarjeta no-imprimir">
       <div class="fila-cabecera-seccion">
         <h2>Mapa de calor y puntos (RF-03)</h2>
       </div>
@@ -264,8 +319,22 @@
       <div id="mapa-registros" class="caja-mapa caja-mapa-registros"></div>
     </section>
 
+    <!-- Resumen operativo Top 5 y vista imprimible (RF-05 y CU-03) -->
+    <section class="tarjeta" id="seccion-resumen-operativo">
+      <div class="fila-cabecera-seccion">
+        <h2>Resumen operativo · Top 5 cuadras críticas (RF-05)</h2>
+        <button type="button" id="btn-imprimir-resumen" class="btn-secundario no-imprimir">
+          🖨️ Imprimir resumen operativo
+        </button>
+      </div>
+      <p id="subtitulo-resumen-operativo" class="ayuda-campo">
+        Ordenadas por puntaje de criticidad acumulado, con recomendación automática y la regla explícita que la produjo.
+      </p>
+      <div id="lista-top-5-cuadras" class="lista-top5"></div>
+    </section>
+
     <!-- Lista de reportes (más recientes primero) -->
-    <section class="tarjeta">
+    <section class="tarjeta no-imprimir">
       <h2>Reportes (más recientes primero)</h2>
       <div id="lista-registros" class="lista-tarjetas"></div>
     </section>
@@ -321,7 +390,7 @@
   <!-- ======================================================================
        NAVEGACIÓN INFERIOR FIJA (DOS VISTAS SIN RECARGAR)
        ====================================================================== -->
-  <nav class="nav-inferior" aria-label="Navegación principal">
+  <nav class="nav-inferior no-imprimir" aria-label="Navegación principal">
     <button type="button" id="tab-captura" class="btn-nav activo">
       ➕ Captura
     </button>
@@ -336,6 +405,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="criticidad.js"></script>
   <script src="almacenamiento.js"></script>
+  <script src="filtros.js"></script>
+  <script src="resumen.js"></script>
   <script src="mapa.js"></script>
   <script src="captura.js"></script>
 </body>
