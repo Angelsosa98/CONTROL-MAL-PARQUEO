@@ -454,6 +454,7 @@ function seleccionarCuadraManual(cuadraId) {
   limpiarErrorCampo("error-ubicacion");
 
   actualizarMarcadorCaptura(centro.lat, centro.lng, function (nuevaLat, nuevaLng) {
+    AppEstado.seleccionManualCuadra = false;
     fijarUbicacion(nuevaLat, nuevaLng, null);
   });
 
@@ -1270,6 +1271,8 @@ document.addEventListener("DOMContentLoaded", function () {
     seleccionarCuadraManual(this.value);
   });
 
+  configurarBuscadorDireccion();
+
   // 7. Botones principales del formulario y navegación
   document.getElementById("btn-usar-gps").addEventListener("click", function () {
     AppEstado.seleccionManualCuadra = false;
@@ -1505,4 +1508,111 @@ function actualizarIndicadorUsuario() {
   } else {
     badge.textContent = "Configurar iniciales";
   }
+}
+
+/**
+ * Configura el buscador de direcciones estilo mapa sobre la vista de Captura.
+ */
+function configurarBuscadorDireccion() {
+  var inputBuscar = document.getElementById("input-buscar-direccion");
+  var btnLimpiar = document.getElementById("btn-limpiar-busqueda");
+  var listaSug = document.getElementById("lista-sugerencias-direccion");
+  var estadoEl = document.getElementById("estado-busqueda-direccion");
+
+  if (!inputBuscar || !listaSug) return;
+
+  var temporizador = null;
+  var tokenBusqueda = 0;
+
+  function ocultarSugerencias() {
+    listaSug.innerHTML = "";
+    listaSug.hidden = true;
+  }
+
+  function mostrarEstado(texto, esError) {
+    if (!estadoEl) return;
+    if (!texto) {
+      estadoEl.textContent = "";
+      estadoEl.hidden = true;
+      return;
+    }
+    estadoEl.textContent = texto;
+    estadoEl.className = esError ? "aviso-alerta" : "texto-suave";
+    estadoEl.hidden = false;
+  }
+
+  function elegirSugerencia(sug) {
+    AppEstado.seleccionManualCuadra = false;
+    inputBuscar.value = sug.titulo;
+    if (btnLimpiar) btnLimpiar.hidden = false;
+    ocultarSugerencias();
+    mostrarEstado("", false);
+
+    fijarUbicacion(sug.lat, sug.lng, null);
+
+    if (leafletDisponible() && mapaCaptura) {
+      mapaCaptura.setView([sug.lat, sug.lng], 18);
+    }
+  }
+
+  inputBuscar.addEventListener("input", function () {
+    var valor = inputBuscar.value.trim();
+    if (btnLimpiar) btnLimpiar.hidden = valor.length === 0;
+
+    if (temporizador) clearTimeout(temporizador);
+
+    if (valor.length < 2) {
+      ocultarSugerencias();
+      mostrarEstado("", false);
+      return;
+    }
+
+    var tokenActual = ++tokenBusqueda;
+    temporizador = setTimeout(function () {
+      mostrarEstado("Buscando ubicación...", false);
+      buscarDireccionesMapa(valor, AppEstado.vias).then(function (sugerencias) {
+        if (tokenActual !== tokenBusqueda) return;
+
+        listaSug.innerHTML = "";
+        if (!sugerencias || sugerencias.length === 0) {
+          listaSug.hidden = true;
+          mostrarEstado("No se encontraron coincidencias. Toca el mapa para marcar el punto.", true);
+          return;
+        }
+
+        mostrarEstado("", false);
+        for (var i = 0; i < sugerencias.length; i++) {
+          (function (sug) {
+            var li = document.createElement("li");
+            li.className = "item-sugerencia";
+            li.setAttribute("role", "option");
+            li.innerHTML =
+              '<span class="sugerencia-titulo">' + sug.titulo + '</span>' +
+              '<span class="sugerencia-sub">' + sug.subtitulo + '</span>';
+            li.addEventListener("click", function () {
+              elegirSugerencia(sug);
+            });
+            listaSug.appendChild(li);
+          })(sugerencias[i]);
+        }
+        listaSug.hidden = false;
+      });
+    }, 300);
+  });
+
+  if (btnLimpiar) {
+    btnLimpiar.addEventListener("click", function () {
+      inputBuscar.value = "";
+      btnLimpiar.hidden = true;
+      ocultarSugerencias();
+      mostrarEstado("", false);
+      inputBuscar.focus();
+    });
+  }
+
+  document.addEventListener("click", function (ev) {
+    if (!listaSug.contains(ev.target) && ev.target !== inputBuscar) {
+      ocultarSugerencias();
+    }
+  });
 }

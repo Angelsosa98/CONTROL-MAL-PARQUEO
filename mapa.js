@@ -376,3 +376,97 @@ function redimensionarMapaRegistros() {
     }, 80);
   }
 }
+
+/**
+ * Busca coincidencias en las cuadras de vias.json y en Nominatim (OpenStreetMap)
+ * priorizando Santa Marta / zona de estudio.
+ * Devuelve Promise<Array<{ titulo, subtitulo, lat, lng, origen }>>.
+ */
+function buscarDireccionesMapa(textoConsulta, vias) {
+  var q = String(textoConsulta || "").trim();
+  if (q.length < 2) {
+    return Promise.resolve([]);
+  }
+
+  var qLower = q.toLowerCase();
+  var resultados = [];
+
+  // 1. Coincidencias locales en cuadras de vias.json
+  if (vias && Array.isArray(vias.cuadras)) {
+    for (var i = 0; i < vias.cuadras.length; i++) {
+      var c = vias.cuadras[i];
+      if (!Array.isArray(c.extremos) || c.extremos.length === 0) continue;
+
+      var textoCuadra = (String(c.nombre || "") + " " + String(c.id || "") + " " + String(c.tipo_via || "")).toLowerCase();
+      if (textoCuadra.indexOf(qLower) !== -1) {
+        var sumaLat = 0;
+        var sumaLng = 0;
+        for (var j = 0; j < c.extremos.length; j++) {
+          sumaLat += Number(c.extremos[j][0]);
+          sumaLng += Number(c.extremos[j][1]);
+        }
+        resultados.push({
+          titulo: c.nombre + " (" + c.id + ")",
+          subtitulo: "Cuadra en zona · " + (c.tipo_via === "arterial" ? "Vía arterial" : "Vía secundaria"),
+          lat: Number((sumaLat / c.extremos.length).toFixed(6)),
+          lng: Number((sumaLng / c.extremos.length).toFixed(6)),
+          origen: "local"
+        });
+      }
+    }
+  }
+
+  // 2. Consulta a Nominatim (con viewbox si existe zona.limites)
+  var consultaConCiudad = qLower.indexOf("santa marta") === -1 ? q + ", Santa Marta, Colombia" : q;
+  var url =
+    "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&countrycodes=co&q=" +
+    encodeURIComponent(consultaConCiudad);
+
+  var lim = vias && vias.zona && vias.zona.limites;
+  if (
+    lim &&
+    typeof lim.lng_min === "number" &&
+    typeof lim.lat_min === "number" &&
+    typeof lim.lng_max === "number" &&
+    typeof lim.lat_max === "number"
+  ) {
+    // Formato viewbox de Nominatim: lon_min,lat_max,lon_max,lat_min
+    url += "&viewbox=" + lim.lng_min + "," + lim.lat_max + "," + lim.lng_max + "," + lim.lat_min;
+  }
+
+  return fetch(url, {
+    headers: {
+      "Accept": "application/json"
+    }
+  })
+    .then(function (resp) {
+      if (!resp.ok) throw new Error("Error consultando servicio de direcciones");
+      return resp.json();
+    })
+    .then(function (items) {
+      if (Array.isArray(items)) {
+        for (var k = 0; k < items.length; k++) {
+          var item = items[k];
+          var latNum = parseFloat(item.lat);
+          var lngNum = parseFloat(item.lon);
+          if (isNaN(latNum) || isNaN(lngNum)) continue;
+
+          var partes = String(item.display_name || "").split(",");
+          var tituloExt = item.name || partes[0] || q;
+          var subExt = partes.slice(1, 4).join(",").trim() || "Santa Marta";
+
+          resultados.push({
+            titulo: tituloExt,
+            subtitulo: subExt,
+            lat: Number(latNum.toFixed(6)),
+            lng: Number(lngNum.toFixed(6)),
+            origen: "nominatim"
+          });
+        }
+      }
+      return resultados.slice(0, 7);
+    })
+    .catch(function () {
+      return resultados.slice(0, 7);
+    });
+}

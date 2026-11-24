@@ -65,6 +65,24 @@
       </div>
       <p class="ayuda-campo">Toca el mapa o arrastra el marcador azul hasta el punto exacto.</p>
 
+            <div class="buscador-direccion">
+        <label for="input-buscar-direccion" class="etiqueta-control">Buscar calle, carrera o punto en Santa Marta</label>
+        <div class="fila-buscador">
+          <input
+            type="search"
+            id="input-buscar-direccion"
+            class="control-input"
+            placeholder="Ej. Carrera 5 # 14-20, Calle 15, Parque..."
+            autocomplete="off"
+          />
+          <button type="button" id="btn-limpiar-busqueda" class="btn-secundario" hidden aria-label="Limpiar búsqueda">
+            ✕
+          </button>
+        </div>
+        <ul id="lista-sugerencias-direccion" class="lista-sugerencias" role="listbox" hidden></ul>
+        <div id="estado-busqueda-direccion" class="texto-suave" hidden></div>
+      </div>
+
       <div id="mapa-captura" class="caja-mapa"></div>
 
       <div class="fila-coords">
