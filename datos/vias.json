@@ -1,11 +1,11 @@
 {
   "zona": {
-    "nombre": "Unimagdalena · Villa Marbella · Semáforo de Cañaveral",
+    "nombre": "Unimagdalena – Villa Marbella y Mercado Público · Santa Marta",
     "centro": [
-      11.2228,
-      -74.186
+      11.2335,
+      -74.1972
     ],
-    "zoom": 16,
+    "zoom": 14,
     "limites": {
       "lat_min": 11.18,
       "lat_max": 11.3,
@@ -22,12 +22,12 @@
       "tipo_via": "arterial",
       "extremos": [
         [
-          11.2256,
-          -74.185
+          11.2266,
+          -74.1869
         ],
         [
-          11.2244,
-          -74.1852
+          11.225,
+          -74.1871
         ]
       ]
     },
@@ -38,12 +38,12 @@
       "tipo_via": "arterial",
       "extremos": [
         [
-          11.2244,
-          -74.1852
+          11.225,
+          -74.1871
         ],
         [
-          11.2232,
-          -74.1855
+          11.2233,
+          -74.1873
         ]
       ]
     },
@@ -54,12 +54,12 @@
       "tipo_via": "arterial",
       "extremos": [
         [
-          11.2232,
-          -74.1855
+          11.2233,
+          -74.1873
         ],
         [
-          11.2216,
-          -74.1858
+          11.2215,
+          -74.1875
         ]
       ]
     },
@@ -70,12 +70,12 @@
       "tipo_via": "arterial",
       "extremos": [
         [
-          11.2216,
-          -74.1858
+          11.2215,
+          -74.1875
         ],
         [
           11.2202,
-          -74.186
+          -74.1876
         ]
       ]
     },
@@ -86,12 +86,12 @@
       "tipo_via": "arterial",
       "extremos": [
         [
-          11.221,
-          -74.1872
+          11.2206,
+          -74.1894
         ],
         [
           11.2202,
-          -74.186
+          -74.1876
         ]
       ]
     },
@@ -102,12 +102,12 @@
       "tipo_via": "secundaria",
       "extremos": [
         [
-          11.224,
-          -74.1865
+          11.2243,
+          -74.189
         ],
         [
-          11.2238,
-          -74.1854
+          11.2241,
+          -74.1872
         ]
       ]
     },
@@ -118,12 +118,12 @@
       "tipo_via": "secundaria",
       "extremos": [
         [
-          11.2234,
-          -74.1866
+          11.2235,
+          -74.1891
         ],
         [
-          11.2232,
-          -74.1855
+          11.2233,
+          -74.1873
         ]
       ]
     },
@@ -135,11 +135,11 @@
       "extremos": [
         [
           11.2226,
-          -74.1868
+          -74.1892
         ],
         [
           11.2224,
-          -74.1856
+          -74.1874
         ]
       ]
     },
@@ -150,12 +150,12 @@
       "tipo_via": "secundaria",
       "extremos": [
         [
-          11.2234,
-          -74.1866
+          11.2235,
+          -74.1891
         ],
         [
-          11.2218,
-          -74.1869
+          11.2217,
+          -74.1893
         ]
       ]
     },
@@ -166,12 +166,92 @@
       "tipo_via": "secundaria",
       "extremos": [
         [
-          11.2218,
-          -74.1869
+          11.2217,
+          -74.1893
         ],
         [
-          11.2216,
-          -74.1858
+          11.2215,
+          -74.1875
+        ]
+      ]
+    },
+    {
+      "id": "CR9-C11-C12",
+      "nombre": "Carrera 9 entre Calles 11 y 12 (Frente al CAI Mercado Público)",
+      "sector": "Mercado Público",
+      "tipo_via": "arterial",
+      "extremos": [
+        [
+          11.2446,
+          -74.2066
+        ],
+        [
+          11.2454,
+          -74.2063
+        ]
+      ]
+    },
+    {
+      "id": "C11-CR8-CR9",
+      "nombre": "Calle 11 entre Carreras 8 y 9 (Esquina CAI Mercado Público)",
+      "sector": "Mercado Público",
+      "tipo_via": "arterial",
+      "extremos": [
+        [
+          11.2457,
+          -74.2074
+        ],
+        [
+          11.2454,
+          -74.2063
+        ]
+      ]
+    },
+    {
+      "id": "C11-CR9-CR10",
+      "nombre": "Calle 11 entre Carreras 9 y 10 (Galería Mercado · Sector Alameda)",
+      "sector": "Mercado Público",
+      "tipo_via": "arterial",
+      "extremos": [
+        [
+          11.2454,
+          -74.2063
+        ],
+        [
+          11.2451,
+          -74.2052
+        ]
+      ]
+    },
+    {
+      "id": "C11-CR12-CR13",
+      "nombre": "Calle 11 entre Carreras 12 y 13 (Sector Comercial Ferreterías · Calle 11 # 12-42)",
+      "sector": "Mercado Público",
+      "tipo_via": "arterial",
+      "extremos": [
+        [
+          11.2445,
+          -74.203
+        ],
+        [
+          11.2442,
+          -74.2019
+        ]
+      ]
+    },
+    {
+      "id": "C12-CR9-CR10",
+      "nombre": "Calle 12 entre Carreras 9 y 10 (Zona Comercial Mercado Público)",
+      "sector": "Mercado Público",
+      "tipo_via": "secundaria",
+      "extremos": [
+        [
+          11.2446,
+          -74.2066
+        ],
+        [
+          11.2443,
+          -74.2055
         ]
       ]
     }
