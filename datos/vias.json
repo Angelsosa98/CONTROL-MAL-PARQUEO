@@ -1,11 +1,11 @@
 {
   "zona": {
-    "nombre": "Mercado Público · CAI Mercado (8 cuadras)",
+    "nombre": "Unimagdalena · Villa Marbella · Semáforo de Cañaveral",
     "centro": [
-      11.245,
-      -74.2064
+      11.2228,
+      -74.186
     ],
-    "zoom": 17,
+    "zoom": 16,
     "limites": {
       "lat_min": 11.18,
       "lat_max": 11.3,
@@ -16,130 +16,162 @@
   },
   "cuadras": [
     {
-      "id": "CR9-C11-C12",
-      "nombre": "Carrera 9 entre Calles 11 y 12 (Frente al CAI Mercado)",
-      "sector": "Mercado Público",
+      "id": "CR32-C22-C24",
+      "nombre": "Carrera 32 entre Calles 22 y 24 (Portería Principal Unimagdalena)",
+      "sector": "Unimagdalena - Villa Marbella",
       "tipo_via": "arterial",
       "extremos": [
         [
-          11.2446,
-          -74.2066
+          11.2256,
+          -74.185
         ],
         [
-          11.2454,
-          -74.2063
+          11.2244,
+          -74.1852
         ]
       ]
     },
     {
-      "id": "CR9-C10C-C11",
-      "nombre": "Carrera 9 entre Calles 10C y 11 (Costado norte CAI)",
-      "sector": "Mercado Público",
+      "id": "CR32-C24-C26",
+      "nombre": "Carrera 32 entre Calles 24 y 26 (Frente a Unimagdalena · Zona comercial y paradero)",
+      "sector": "Unimagdalena - Villa Marbella",
       "tipo_via": "arterial",
       "extremos": [
         [
-          11.2454,
-          -74.2063
+          11.2244,
+          -74.1852
         ],
         [
-          11.2461,
-          -74.206
+          11.2232,
+          -74.1855
         ]
       ]
     },
     {
-      "id": "C11-CR8-CR9",
-      "nombre": "Calle 11 entre Carreras 8 y 9 (Esquina CAI Mercado)",
-      "sector": "Mercado Público",
+      "id": "CR32-C26-C28",
+      "nombre": "Carrera 32 entre Calles 26 y 28 (Costado Urbanización Villa Marbella)",
+      "sector": "Unimagdalena - Villa Marbella",
       "tipo_via": "arterial",
       "extremos": [
         [
-          11.2457,
-          -74.2074
+          11.2232,
+          -74.1855
         ],
         [
-          11.2454,
-          -74.2063
+          11.2216,
+          -74.1858
         ]
       ]
     },
     {
-      "id": "C11-CR9-CR10",
-      "nombre": "Calle 11 entre Carreras 9 y 10 (Galería Mercado)",
-      "sector": "Mercado Público",
+      "id": "CR32-C28-C29",
+      "nombre": "Carrera 32 entre Calles 28 y 29 (Tramo Villa Marbella – Semáforo de Cañaveral)",
+      "sector": "Unimagdalena - Villa Marbella",
       "tipo_via": "arterial",
       "extremos": [
         [
-          11.2454,
-          -74.2063
+          11.2216,
+          -74.1858
         ],
         [
-          11.2451,
-          -74.2052
+          11.2202,
+          -74.186
         ]
       ]
     },
     {
-      "id": "C13-CR9-CR10",
-      "nombre": "Calle 13 entre Carreras 9 y 10 (Corredor de busetas)",
-      "sector": "Mercado Público",
+      "id": "C29-CR31-CR32",
+      "nombre": "Calle 29 / Av. del Ferrocarril entre Carreras 31 y 32 (Semáforo de Cañaveral)",
+      "sector": "Unimagdalena - Villa Marbella",
       "tipo_via": "arterial",
       "extremos": [
         [
-          11.2438,
-          -74.2069
+          11.221,
+          -74.1872
         ],
         [
-          11.2435,
-          -74.2058
+          11.2202,
+          -74.186
         ]
       ]
     },
     {
-      "id": "C12-CR8-CR9",
-      "nombre": "Calle 12 entre Carreras 8 y 9",
-      "sector": "Mercado Público",
+      "id": "C25-CR31-CR32",
+      "nombre": "Calle 25 entre Carreras 31 y 32 (Acceso comercial frente a Unimagdalena)",
+      "sector": "Unimagdalena - Villa Marbella",
       "tipo_via": "secundaria",
       "extremos": [
         [
-          11.2449,
-          -74.2077
+          11.224,
+          -74.1865
         ],
         [
-          11.2446,
-          -74.2066
+          11.2238,
+          -74.1854
         ]
       ]
     },
     {
-      "id": "C12-CR9-CR10",
-      "nombre": "Calle 12 entre Carreras 9 y 10",
-      "sector": "Mercado Público",
+      "id": "C26-CR31-CR32",
+      "nombre": "Calle 26 entre Carreras 31 y 32 (Entrada norte Urbanización Villa Marbella)",
+      "sector": "Unimagdalena - Villa Marbella",
       "tipo_via": "secundaria",
       "extremos": [
         [
-          11.2446,
-          -74.2066
+          11.2234,
+          -74.1866
         ],
         [
-          11.2443,
-          -74.2055
+          11.2232,
+          -74.1855
         ]
       ]
     },
     {
-      "id": "CR8-C11-C12",
-      "nombre": "Carrera 8 entre Calles 11 y 12",
-      "sector": "Mercado Público",
+      "id": "C27-CR31-CR32",
+      "nombre": "Calle 27 entre Carreras 31 y 32 (Vía interior Urbanización Villa Marbella)",
+      "sector": "Unimagdalena - Villa Marbella",
       "tipo_via": "secundaria",
       "extremos": [
         [
-          11.2449,
-          -74.2077
+          11.2226,
+          -74.1868
         ],
         [
-          11.2457,
-          -74.2074
+          11.2224,
+          -74.1856
+        ]
+      ]
+    },
+    {
+      "id": "CR31-C26-C28",
+      "nombre": "Carrera 31 entre Calles 26 y 28 (Calle interna paralela Villa Marbella)",
+      "sector": "Unimagdalena - Villa Marbella",
+      "tipo_via": "secundaria",
+      "extremos": [
+        [
+          11.2234,
+          -74.1866
+        ],
+        [
+          11.2218,
+          -74.1869
+        ]
+      ]
+    },
+    {
+      "id": "C28-CR31-CR32",
+      "nombre": "Calle 28 entre Carreras 31 y 32 (Límite sur Villa Marbella – Cañaveral)",
+      "sector": "Unimagdalena - Villa Marbella",
+      "tipo_via": "secundaria",
+      "extremos": [
+        [
+          11.2218,
+          -74.1869
+        ],
+        [
+          11.2216,
+          -74.1858
         ]
       ]
     }
