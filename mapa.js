@@ -171,16 +171,18 @@ function reporteDentroZonaMapa(reporte, vias) {
   var metrosLng = 111320 * Math.cos(latRad);
 
   // Exigir que la coordenada esté cerca de la cuadra declarada por el reporte.
-  // Evita dibujar un reporte asignado a otra calle solo porque hay una vía cercana.
+  // Evita dibujar un punto en una vía distinta a la seleccionada.
   var cuadraObjetivo = null;
   for (var k = 0; k < cuadras.length; k++) {
-    if (cuadras[k].id === reporte.cuadra) { cuadraObjetivo = cuadras[k]; break; }
+    if (cuadras[k].id === reporte.cuadra) {
+      cuadraObjetivo = cuadras[k];
+      break;
+    }
   }
-  if (!cuadraObjetivo) return false;
+  if (!cuadraObjetivo || !Array.isArray(cuadraObjetivo.extremos)) return false;
 
-  for (var i = 0; i < 1; i++) {
-    var extremos = cuadraObjetivo.extremos || [];
-    for (var j = 0; j < extremos.length - 1; j++) {
+  var extremos = cuadraObjetivo.extremos;
+  for (var j = 0; j < extremos.length - 1; j++) {
       var p1 = extremos[j], p2 = extremos[j + 1];
       var px = (reporte.lng - p1[1]) * metrosLng;
       var py = (reporte.lat - p1[0]) * metrosLat;
@@ -188,7 +190,6 @@ function reporteDentroZonaMapa(reporte, vias) {
       var by = (p2[0] - p1[0]) * metrosLat;
       var t = Math.max(0, Math.min(1, (px * bx + py * by) / (bx * bx + by * by || 1)));
       if (Math.hypot(px - bx * t, py - by * t) <= radioMaximo) return true;
-    }
   }
   return false;
 }
@@ -260,8 +261,15 @@ function dibujarRecorridoCampo(vias) {
     .bindPopup("<strong>Recorrido de campo aproximado</strong><br>Circuito descrito por el equipo; no representa posiciones GPS individuales.")
     .addTo(capaRecorridoCampo);
   hitos.forEach(function (h, i) {
-    L.circleMarker(h.coordenadas, { radius: 6, color: "#ffffff", weight: 2, fillColor: "#2563eb", fillOpacity: 1 })
-      .bindTooltip((i + 1) + ". " + h.nombre).addTo(capaRecorridoCampo);
+    var icono = L.divIcon({
+      className: "marcador-recorrido",
+      html: "<span>" + (i + 1) + "</span>",
+      iconSize: [25, 25],
+      iconAnchor: [12, 12]
+    });
+    L.marker(h.coordenadas, { icon: icono, keyboard: true, title: h.nombre })
+      .bindPopup("<strong>Parada " + (i + 1) + "</strong><br>" + h.nombre)
+      .addTo(capaRecorridoCampo);
   });
   capaRecorridoCampo.addTo(mapaRegistros);
 }
