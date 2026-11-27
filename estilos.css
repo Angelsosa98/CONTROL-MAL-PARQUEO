@@ -1171,3 +1171,33 @@ button {
   font-size: 0.78rem;
   font-weight: 800;
 }
+
+
+/* Versión visible durante el desarrollo */
+.insignia-version {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 4px;
+  padding: 2px 8px;
+  border: 1px solid #475569;
+  border-radius: 999px;
+  background: #1e293b;
+  color: #bae6fd;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.nav-inferior {
+  grid-template-columns: 1fr 1fr auto;
+}
+.version-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  padding: 0 10px;
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 800;
+  border-left: 1px solid #334155;
+}
