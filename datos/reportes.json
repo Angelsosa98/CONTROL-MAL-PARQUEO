@@ -1,0 +1,402 @@
+[
+  {
+    "id": "MP-ASO-001",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22344,
+    "lng": -74.18856,
+    "cuadra": "C26-CR31-CR32",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-001.jpg",
+    "observaciones": "Camioneta estacionada en calzada frente a vivienda en Villa Marbella",
+    "criticidad": {
+      "puntaje": 5,
+      "nivel": "Medio"
+    }
+  },
+  {
+    "id": "MP-ASO-002",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22252,
+    "lng": -74.18848,
+    "cuadra": "C27-CR31-CR32",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-002.jpg",
+    "observaciones": "Van escolar estacionada sobre vía residencial reduciendo el carril",
+    "criticidad": {
+      "puntaje": 5,
+      "nivel": "Medio"
+    }
+  },
+  {
+    "id": "MP-ASO-003",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22246,
+    "lng": -74.18794,
+    "cuadra": "C27-CR31-CR32",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-003.jpg",
+    "observaciones": "Vehículos particulares estacionados en ambos costados de la calle interna",
+    "criticidad": {
+      "puntaje": 5,
+      "nivel": "Medio"
+    }
+  },
+  {
+    "id": "MP-ASO-004",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22267,
+    "lng": -74.18737,
+    "cuadra": "CR32-C26-C28",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_carga",
+    "foto": "fotos/mp-aso-004.jpg",
+    "observaciones": "Camión furgón detenido junto al borde de la ciclorruta en Carrera 32",
+    "criticidad": {
+      "puntaje": 7,
+      "nivel": "Alto"
+    }
+  },
+  {
+    "id": "MP-ASO-009",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22305,
+    "lng": -74.18915,
+    "cuadra": "CR31-C26-C28",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-009.jpg",
+    "observaciones": "Vehículo tipo van estacionado en calle interna paralela de Villa Marbella",
+    "criticidad": {
+      "puntaje": 5,
+      "nivel": "Medio"
+    }
+  },
+  {
+    "id": "MP-ASO-010",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.222744,
+    "lng": -74.189184,
+    "cuadra": "CR31-C26-C28",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-010.jpg",
+    "observaciones": "Automóvil blanco estacionado frente a reja residencial bloqueando acceso",
+    "criticidad": {
+      "puntaje": 5,
+      "nivel": "Medio"
+    }
+  },
+  {
+    "id": "MP-ASO-011",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22215,
+    "lng": -74.18925,
+    "cuadra": "CR31-C26-C28",
+    "categoria": "invasion_anden",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-011.jpg",
+    "observaciones": "Automóvil rojo subido parcialmente sobre el andén en Villa Marbella",
+    "criticidad": {
+      "puntaje": 4,
+      "nivel": "Bajo"
+    }
+  },
+  {
+    "id": "MP-ASO-012",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22337,
+    "lng": -74.18793,
+    "cuadra": "C26-CR31-CR32",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-012.jpg",
+    "observaciones": "Camioneta estacionada en vía interna residencial reduciendo visibilidad",
+    "criticidad": {
+      "puntaje": 5,
+      "nivel": "Medio"
+    }
+  },
+  {
+    "id": "MP-ASO-013",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22164,
+    "lng": -74.18876,
+    "cuadra": "C28-CR31-CR32",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-013.jpg",
+    "observaciones": "Camioneta negra estacionada sobre la calzada en límite Villa Marbella",
+    "criticidad": {
+      "puntaje": 5,
+      "nivel": "Medio"
+    }
+  },
+  {
+    "id": "MP-ASO-014",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22158,
+    "lng": -74.18822,
+    "cuadra": "C28-CR31-CR32",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-014.jpg",
+    "observaciones": "Camioneta gris estacionada junto a esquina obstruyendo giro vehicular",
+    "criticidad": {
+      "puntaje": 5,
+      "nivel": "Medio"
+    }
+  },
+  {
+    "id": "MP-ASO-015",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22153,
+    "lng": -74.18777,
+    "cuadra": "C28-CR31-CR32",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-015.jpg",
+    "observaciones": "Automóvil plateado estacionado frente a conjunto en Calle 28",
+    "criticidad": {
+      "puntaje": 5,
+      "nivel": "Medio"
+    }
+  },
+  {
+    "id": "MP-ASO-016",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22204,
+    "lng": -74.18744,
+    "cuadra": "CR32-C26-C28",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-016.jpg",
+    "observaciones": "Camioneta blanca estacionada sobre vía cerca a esquina de Villa Marbella",
+    "criticidad": {
+      "puntaje": 7,
+      "nivel": "Alto"
+    }
+  },
+  {
+    "id": "MP-ASO-018",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22111,
+    "lng": -74.18753,
+    "cuadra": "CR32-C28-C29",
+    "categoria": "invasion_anden",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-018.jpg",
+    "observaciones": "Automóvil gris con ruedas sobre el bordillo en tramo hacia Cañaveral",
+    "criticidad": {
+      "puntaje": 6,
+      "nivel": "Medio"
+    }
+  },
+  {
+    "id": "MP-ASO-019",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22188,
+    "lng": -74.18928,
+    "cuadra": "CR31-C26-C28",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-019.jpg",
+    "observaciones": "Dos vehículos estacionados en ambos lados estrechando la calle interna",
+    "criticidad": {
+      "puntaje": 5,
+      "nivel": "Medio"
+    }
+  },
+  {
+    "id": "MP-ASO-020",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.220785,
+    "lng": -74.187555,
+    "cuadra": "CR32-C28-C29",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-020.jpg",
+    "observaciones": "Taxi detenido en fila sobre la calzada antes del semáforo de Cañaveral",
+    "criticidad": {
+      "puntaje": 7,
+      "nivel": "Alto"
+    }
+  },
+  {
+    "id": "MP-ASO-021",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22243,
+    "lng": -74.18767,
+    "cuadra": "C27-CR31-CR32",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-021.jpg",
+    "observaciones": "Automóvil negro estacionado en esquina reduciendo radio de giro",
+    "criticidad": {
+      "puntaje": 5,
+      "nivel": "Medio"
+    }
+  },
+  {
+    "id": "MP-ASO-022",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22333,
+    "lng": -74.18757,
+    "cuadra": "C26-CR31-CR32",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-022.jpg",
+    "observaciones": "Camioneta plateada estacionada en vía residencial junto a esquina",
+    "criticidad": {
+      "puntaje": 5,
+      "nivel": "Medio"
+    }
+  },
+  {
+    "id": "MP-ASO-023",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22168,
+    "lng": -74.18748,
+    "cuadra": "CR32-C26-C28",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-023.jpg",
+    "observaciones": "Fila de camionetas estacionadas sobre costado de Villa Marbella",
+    "criticidad": {
+      "puntaje": 7,
+      "nivel": "Alto"
+    }
+  },
+  {
+    "id": "MP-ASO-024",
+    "origen": "campo",
+    "fecha_hora": "2026-11-24T13:20",
+    "lat": 11.24531,
+    "lng": -74.20597,
+    "cuadra": "C11-CR9-CR10",
+    "categoria": "bloqueo_rampa_cebra_paradero",
+    "actor": "motocicleta",
+    "foto": "fotos/mp-aso-024.jpg",
+    "observaciones": "Motocicleta y motocarro detenidos sobre vía comercial en Galería Mercado Público",
+    "criticidad": {
+      "puntaje": 9,
+      "nivel": "Alto"
+    }
+  },
+  {
+    "id": "MP-ASO-025",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T13:35",
+    "lat": 11.245,
+    "lng": -74.20645,
+    "cuadra": "CR9-C11-C12",
+    "categoria": "doble_fila",
+    "actor": "motocicleta",
+    "foto": "fotos/mp-aso-025.jpg",
+    "observaciones": "Fila de motocicletas estacionadas en batería frente a Mundo Fiesta en Carrera 9",
+    "criticidad": {
+      "puntaje": 9,
+      "nivel": "Alto"
+    }
+  },
+  {
+    "id": "MP-ASO-026",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T13:35",
+    "lat": 11.24555,
+    "lng": -74.20685,
+    "cuadra": "C11-CR8-CR9",
+    "categoria": "invasion_anden",
+    "actor": "motocicleta",
+    "foto": "fotos/mp-aso-026.jpg",
+    "observaciones": "Automóvil y motocicletas sobre sardinel amarillo en esquina del CAI Mercado",
+    "criticidad": {
+      "puntaje": 8,
+      "nivel": "Alto"
+    }
+  },
+  {
+    "id": "MP-ASO-027",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T13:35",
+    "lat": 11.24445,
+    "lng": -74.20605,
+    "cuadra": "C12-CR9-CR10",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-027.jpg",
+    "observaciones": "Vehículos particulares estacionados en fila frente a locales comerciales en Calle 12",
+    "criticidad": {
+      "puntaje": 7,
+      "nivel": "Alto"
+    }
+  },
+  {
+    "id": "MP-ASO-028",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T13:35",
+    "lat": 11.24519,
+    "lng": -74.20553,
+    "cuadra": "C11-CR9-CR10",
+    "categoria": "bloqueo_rampa_cebra_paradero",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-028.jpg",
+    "observaciones": "Automóvil estacionado frente a Granero Alameda bloqueando borde de vía en Calle 11",
+    "criticidad": {
+      "puntaje": 9,
+      "nivel": "Alto"
+    }
+  },
+  {
+    "id": "MP-ASO-029",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T13:35",
+    "lat": 11.24435,
+    "lng": -74.20245,
+    "cuadra": "C11-CR12-CR13",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_carga",
+    "foto": "fotos/mp-aso-029.jpg",
+    "observaciones": "Camioneta de carga y SUV bloqueando carril frente a Distribuidora Mundial Calle 11 # 12-42",
+    "criticidad": {
+      "puntaje": 9,
+      "nivel": "Alto"
+    }
+  },
+  {
+    "id": "MP-ASO-030",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T13:35",
+    "lat": 11.220248,
+    "lng": -74.187816,
+    "cuadra": "C29-CR31-CR32",
+    "categoria": "bloqueo_rampa_cebra_paradero",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-030.jpg",
+    "observaciones": "Taxis estacionados sobre franja amarilla junto a intersección semaforizada de Cañaveral",
+    "criticidad": {
+      "puntaje": 9,
+      "nivel": "Alto"
+    }
+  }
+]
