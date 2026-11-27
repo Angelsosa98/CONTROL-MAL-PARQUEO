@@ -165,7 +165,8 @@ function encontrarCuadraMasCercana(lat, lng) {
       mejor = c;
     }
   });
-  return mejor;
+  var radioMaximo = Number(AppEstado.vias && AppEstado.vias.zona && AppEstado.vias.zona.radio_max_m) || 90;
+  return mejor && mejorDistancia <= radioMaximo ? mejor : null;
 }
 
 function poblarSelectoresCuadras() {
@@ -206,9 +207,12 @@ function fijarUbicacion(lat, lng, opciones) {
   porId("texto-coordenadas").textContent =
     "Lat: " + AppEstado.ubicacion.lat.toFixed(6) + ", Lng: " + AppEstado.ubicacion.lng.toFixed(6);
   mostrarTexto("error-ubicacion", "");
-  mostrarTexto("aviso-fuera-zona", estaDentroDeLimitesZona(lat, lng)
-    ? ""
-    : "Este punto está fuera de la zona de estudio: se puede guardar, pero la importación del equipo lo rechazará.");
+  var dentroDeZona = estaDentroDeLimitesZona(lat, lng);
+  var cuadraCercana = encontrarCuadraMasCercana(lat, lng);
+  mostrarTexto("aviso-fuera-zona", !dentroDeZona
+    ? "Este punto está fuera del área de estudio. Desplaza el marcador hacia una de las vías incluidas."
+    : (!cuadraCercana ? "El punto no está suficientemente cerca de una cuadra del estudio. Ajusta el marcador a la vía." : ""));
+
 
   actualizarMarcadorCaptura(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng, function (la, ln) {
     marcarInicioCaptura();
@@ -216,8 +220,7 @@ function fijarUbicacion(lat, lng, opciones) {
   });
 
   if (!opts.conservarCuadra) {
-    var cercana = encontrarCuadraMasCercana(lat, lng);
-    asignarCuadra(cercana ? cercana.id : "");
+    asignarCuadra(cuadraCercana ? cuadraCercana.id : "");
   }
 }
 
@@ -543,6 +546,10 @@ function actualizarReloj() {
 function validarFormulario() {
   var errores = [
     ["error-ubicacion", !AppEstado.ubicacion, "Marca el punto en el mapa, usa el GPS o elige una cuadra."],
+    ["error-ubicacion", AppEstado.ubicacion && (!estaDentroDeLimitesZona(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng) ||
+      !AppEstado.cuadraId || distanciaACuadraMetros(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng, obtenerCuadraPorId(AppEstado.cuadraId)) >
+      (Number(AppEstado.vias && AppEstado.vias.zona && AppEstado.vias.zona.radio_max_m) || 90)),
+      "La ubicación debe estar dentro del área de estudio y a máximo 90 m de una cuadra configurada."],
     ["error-cuadra", !AppEstado.cuadraId, "Selecciona una cuadra."],
     ["error-categoria", !AppEstado.categoria, "Selecciona una categoría."],
     ["error-actor", !AppEstado.actor, "Selecciona el tipo de actor."],
