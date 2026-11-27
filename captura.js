@@ -661,10 +661,16 @@ function leerFiltros() {
 function renderizarAvance() {
   var totalEvidencias = AppEstado.evidenciasFotograficas.length;
   porId("contador-meta-30").textContent = totalEvidencias + " de 30";
-  porId("desglose-franjas").textContent = "Evidencias fotográficas seleccionadas para la nueva muestra.";
-  porId("desglose-cuadras").textContent = "Las ubicaciones no forman parte de esta versión de la muestra.";
+  porId("desglose-franjas").textContent = "Fotografías conservadas; pendientes de georreferenciación y clasificación.";
+  porId("desglose-cuadras").textContent = "No se asignan calles ni coordenadas a las fotografías sin verificación de campo.";
   porId("uso-almacenamiento").textContent = "Reportes georreferenciados: " + AppEstado.reportesUnificados.length;
   porId("badge-total-registros").textContent = totalEvidencias;
+  var estadoMapa = porId("estado-mapa-registros");
+  if (estadoMapa) {
+    estadoMapa.textContent = AppEstado.reportesUnificados.length
+      ? "Se muestran reportes georreferenciados registrados. Las fotografías sin coordenadas verificadas no se incluyen en el mapa."
+      : "Aún no hay reportes georreferenciados. Las fotografías disponibles están en la galería y no tienen una ubicación verificada.";
+  }
 }
 
 function renderizarGaleriaEvidencias() {
@@ -684,7 +690,7 @@ function renderizarGaleriaEvidencias() {
     tarjeta.appendChild(img);
     var info = crear("div", "detalle-evidencia");
     info.appendChild(crear("strong", "", e.id));
-    info.appendChild(crear("span", "estado-evidencia", "Evidencia fotográfica · ubicación no registrada"));
+    info.appendChild(crear("span", "estado-evidencia", "Fotografía · pendiente de ubicación y clasificación verificadas"));
     tarjeta.appendChild(info);
     contenedor.appendChild(tarjeta);
   });
