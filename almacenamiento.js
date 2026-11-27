@@ -348,17 +348,37 @@ function validarReporteImportado(item, criterios, vias) {
   }
 
   // Verificar que la cuadra exista en vias.json
-  var cuadraExiste = false;
+  var cuadraEncontrada = null;
   if (vias && Array.isArray(vias.cuadras)) {
     for (var i = 0; i < vias.cuadras.length; i++) {
       if (vias.cuadras[i].id === item.cuadra) {
-        cuadraExiste = true;
+        cuadraEncontrada = vias.cuadras[i];
         break;
       }
     }
   }
-  if (!cuadraExiste) {
+  if (!cuadraEncontrada) {
     return { valido: false, motivo: "Cuadra inexistente en vias.json ('" + item.cuadra + "')." };
+  }
+
+  // Evitar importar puntos asignados a una cuadra lejana o ajena al recorrido.
+  var radioMaximo = Number(vias && vias.zona && vias.zona.radio_max_m) || 90;
+  var latRad = item.lat * Math.PI / 180;
+  var metrosLat = 111320;
+  var metrosLng = 111320 * Math.cos(latRad);
+  var distanciaMinima = Infinity;
+  var extremos = cuadraEncontrada.extremos || [];
+  for (var j = 0; j < extremos.length - 1; j++) {
+    var p1 = extremos[j], p2 = extremos[j + 1];
+    var px = (item.lng - p1[1]) * metrosLng;
+    var py = (item.lat - p1[0]) * metrosLat;
+    var bx = (p2[1] - p1[1]) * metrosLng;
+    var by = (p2[0] - p1[0]) * metrosLat;
+    var t = Math.max(0, Math.min(1, (px * bx + py * by) / (bx * bx + by * by || 1)));
+    distanciaMinima = Math.min(distanciaMinima, Math.hypot(px - bx * t, py - by * t));
+  }
+  if (distanciaMinima > radioMaximo) {
+    return { valido: false, motivo: "El punto está a más de " + radioMaximo + " m de la cuadra indicada." };
   }
 
   // Verificar categoría y actor permitidos
