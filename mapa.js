@@ -116,7 +116,7 @@ function actualizarPuntosEnMapaCaptura(listaReportes) {
 
   for (var i = 0; i < listaReportes.length; i++) {
     var r = listaReportes[i];
-    if (typeof r.lat !== "number" || typeof r.lng !== "number") continue;
+    if (!reporteDentroZonaMapa(r, ultimoViasRegistros)) continue;
 
     var nivel = r.criticidad ? r.criticidad.nivel : "Bajo";
     var color = obtenerColorNivel(nivel);
