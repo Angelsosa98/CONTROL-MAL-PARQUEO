@@ -256,7 +256,8 @@ function dibujarRecorridoCampo(vias) {
   var recorrido = vias && vias.recorrido_campo;
   var hitos = recorrido && Array.isArray(recorrido.hitos) ? recorrido.hitos : [];
   if (hitos.length < 2) return;
-  var puntos = hitos.map(function (h) { return h.coordenadas; });
+  var puntos = Array.isArray(recorrido.trazado) && recorrido.trazado.length >= 2
+    ? recorrido.trazado : hitos.map(function (h) { return h.coordenadas; });
   L.polyline(puntos, { color: "#2563eb", weight: 4, opacity: 0.85, dashArray: "8 7" })
     .bindPopup("<strong>Recorrido de campo aproximado</strong><br>Circuito descrito por el equipo; no representa posiciones GPS individuales.")
     .addTo(capaRecorridoCampo);
