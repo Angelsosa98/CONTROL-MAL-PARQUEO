@@ -6,12 +6,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22485,
-      "lng": -74.19005
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.22622,
+      "lng": -74.188556,
+      "grupo": "Referencia 1"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-002",
@@ -20,12 +21,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22494,
-      "lng": -74.18947
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.22622,
+      "lng": -74.188556,
+      "grupo": "Referencia 1"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-003",
@@ -34,12 +36,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22485,
-      "lng": -74.18889
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.22622,
+      "lng": -74.188556,
+      "grupo": "Referencia 1"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-004",
@@ -48,12 +51,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22494,
-      "lng": -74.18831
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.22622,
+      "lng": -74.188556,
+      "grupo": "Referencia 1"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-005",
@@ -62,12 +66,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22485,
-      "lng": -74.18773
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.22622,
+      "lng": -74.188556,
+      "grupo": "Referencia 1"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-006",
@@ -76,12 +81,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22494,
-      "lng": -74.18715
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.22622,
+      "lng": -74.188556,
+      "grupo": "Referencia 1"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-007",
@@ -90,12 +96,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22394,
-      "lng": -74.18993
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.224553,
+      "lng": -74.191182,
+      "grupo": "Referencia 2"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-008",
@@ -104,12 +111,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22403,
-      "lng": -74.18935
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.224553,
+      "lng": -74.191182,
+      "grupo": "Referencia 2"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-009",
@@ -118,12 +126,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22394,
-      "lng": -74.18877
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.224553,
+      "lng": -74.191182,
+      "grupo": "Referencia 2"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-010",
@@ -132,12 +141,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22403,
-      "lng": -74.18819
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.224553,
+      "lng": -74.191182,
+      "grupo": "Referencia 2"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-011",
@@ -146,12 +156,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22394,
-      "lng": -74.18761
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.224553,
+      "lng": -74.191182,
+      "grupo": "Referencia 2"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-012",
@@ -160,12 +171,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22403,
-      "lng": -74.18703
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.224553,
+      "lng": -74.191182,
+      "grupo": "Referencia 2"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-013",
@@ -174,12 +186,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22303,
-      "lng": -74.19005
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.223676,
+      "lng": -74.190561,
+      "grupo": "Referencia 3"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-014",
@@ -188,12 +201,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22312,
-      "lng": -74.18947
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.223676,
+      "lng": -74.190561,
+      "grupo": "Referencia 3"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-015",
@@ -202,12 +216,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22303,
-      "lng": -74.18889
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.223676,
+      "lng": -74.190561,
+      "grupo": "Referencia 3"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-016",
@@ -216,12 +231,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22312,
-      "lng": -74.18831
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.223676,
+      "lng": -74.190561,
+      "grupo": "Referencia 3"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-017",
@@ -230,12 +246,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22303,
-      "lng": -74.18773
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.223676,
+      "lng": -74.190561,
+      "grupo": "Referencia 3"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-018",
@@ -244,12 +261,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22312,
-      "lng": -74.18715
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.223676,
+      "lng": -74.190561,
+      "grupo": "Referencia 3"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-019",
@@ -258,12 +276,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22212,
-      "lng": -74.18993
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.224123,
+      "lng": -74.189855,
+      "grupo": "Referencia 4"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-020",
@@ -272,12 +291,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22221,
-      "lng": -74.18935
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.224123,
+      "lng": -74.189855,
+      "grupo": "Referencia 4"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-021",
@@ -286,12 +306,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22212,
-      "lng": -74.18877
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.224123,
+      "lng": -74.189855,
+      "grupo": "Referencia 4"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-022",
@@ -300,12 +321,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22221,
-      "lng": -74.18819
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.224123,
+      "lng": -74.189855,
+      "grupo": "Referencia 4"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-023",
@@ -314,12 +336,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22212,
-      "lng": -74.18761
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.224123,
+      "lng": -74.189855,
+      "grupo": "Referencia 4"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-024",
@@ -328,12 +351,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22221,
-      "lng": -74.18703
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.224123,
+      "lng": -74.189855,
+      "grupo": "Referencia 4"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-025",
@@ -342,12 +366,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22121,
-      "lng": -74.19005
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.22518,
+      "lng": -74.190385,
+      "grupo": "Referencia 5"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-026",
@@ -356,12 +381,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.2213,
-      "lng": -74.18947
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.22518,
+      "lng": -74.190385,
+      "grupo": "Referencia 5"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-027",
@@ -370,12 +396,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22121,
-      "lng": -74.18889
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.22518,
+      "lng": -74.190385,
+      "grupo": "Referencia 5"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-028",
@@ -384,12 +411,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.2213,
-      "lng": -74.18831
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.22518,
+      "lng": -74.190385,
+      "grupo": "Referencia 5"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-029",
@@ -398,12 +426,13 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.22121,
-      "lng": -74.18773
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.22518,
+      "lng": -74.190385,
+      "grupo": "Referencia 5"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   },
   {
     "id": "EVID-030",
@@ -412,11 +441,12 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "aproximada_referencial_no_gps",
-      "lat": 11.2213,
-      "lng": -74.18715
+      "tipo": "punto_referencia_google_maps",
+      "lat": 11.22518,
+      "lng": -74.190385,
+      "grupo": "Referencia 5"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Punto aproximado para visualización académica; no corresponde a coordenada GPS verificada."
+    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
   }
 ]
