@@ -29,7 +29,7 @@ Las ubicaciones sintéticas y los puntajes simulados se retiraron de los registr
 
 ## 4. Alcance y limitaciones geográficas
 
-La aplicación limita la captura al rectángulo definido en `datos/vias.json` y verifica distancia respecto al segmento de referencia asignado. El umbral actual de 90 m es una validación geométrica contra esos segmentos; **no equivale a comprobar que el punto esté sobre la calzada ni que esté fuera de predios privados, edificios, andenes o campus**.
+La aplicación limita la captura al rectángulo definido en `datos/vias.json` y verifica distancia respecto al segmento de referencia asignado. El umbral actual de 30 m es una validación geométrica contra esos segmentos; **no equivale a comprobar que el punto esté sobre la calzada ni que esté fuera de predios privados, edificios, andenes o campus**.
 
 Los segmentos configurados no constituyen todavía una cartografía vial oficial ni una delimitación de calzadas. Para sostener conclusiones espaciales del estudio, deben sustituirse por geometrías viales verificadas y validarse visualmente los puntos de campo.
 
