@@ -109,14 +109,14 @@ function resaltarCuadraCaptura(cuadraId) {
 /**
  * Dibuja los puntos de los reportes ya guardados en el mapa de captura.
  */
-function actualizarPuntosEnMapaCaptura(listaReportes) {
+function actualizarPuntosEnMapaCaptura(listaReportes, vias) {
   if (!leafletDisponible() || !mapaCaptura || !capaReportesCaptura) return;
 
   capaReportesCaptura.clearLayers();
 
   for (var i = 0; i < listaReportes.length; i++) {
     var r = listaReportes[i];
-    if (!reporteDentroZonaMapa(r, ultimoViasRegistros)) continue;
+    if (!reporteDentroZonaMapa(r, vias || ultimoViasRegistros)) continue;
 
     var nivel = r.criticidad ? r.criticidad.nivel : "Bajo";
     var color = obtenerColorNivel(nivel);
