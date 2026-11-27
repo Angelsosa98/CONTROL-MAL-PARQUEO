@@ -333,16 +333,33 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
     coordenadas.push([u.lat, u.lng]);
   });
 
-  if (heatDisponible() && puntosCalor.length) {
-    capaCalorEvidencias = L.heatLayer(puntosCalor, {
-      pane: "evidenciasHeatPane",
-      radius: 30,
-      blur: 22,
-      maxZoom: 18,
-      max: 1,
-      minOpacity: 0.35,
-      gradient: { 0.25: "#16a34a", 0.55: "#f59e0b", 1: "#dc2626" }
-    }).addTo(mapaRegistros);
+  // Mapa de calor sintético sin Leaflet.heat: se dibuja con círculos
+  // radiales HTML en un pane propio. Así evitamos el error de canvas 0x0
+  // (getImageData) que aparece cuando el mapa se inicializa en una pestaña oculta.
+  if (puntosCalor.length) {
+    capaCalorEvidencias = L.layerGroup();
+    puntosCalor.forEach(function (punto) {
+      var intensidad = punto[2];
+      var tono = intensidad >= 0.78 ? "220,38,38" : (intensidad >= 0.45 ? "245,158,11" : "22,163,74");
+      var diametro = Math.round(58 + intensidad * 24);
+      var iconoCalor = L.divIcon({
+        className: "evidencia-calor-icono",
+        html: '<div style="width:' + diametro + 'px;height:' + diametro +
+          'px;border-radius:50%;background:radial-gradient(circle,rgba(' + tono +
+          ',0.48) 0%,rgba(' + tono + ',0.27) 34%,rgba(' + tono +
+          ',0.10) 62%,rgba(' + tono + ',0) 100%);"></div>',
+        iconSize: [diametro, diametro],
+        iconAnchor: [diametro / 2, diametro / 2]
+      });
+      L.marker([punto[0], punto[1]], {
+        pane: "evidenciasHeatPane",
+        icon: iconoCalor,
+        interactive: false,
+        keyboard: false,
+        zIndexOffset: -100
+      }).addTo(capaCalorEvidencias);
+    });
+    capaCalorEvidencias.addTo(mapaRegistros);
   }
   aplicarModoCapasRegistros();
   if (vias && vias.zona && vias.zona.limites) {
