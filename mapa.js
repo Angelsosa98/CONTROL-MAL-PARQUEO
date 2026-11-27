@@ -301,21 +301,31 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
   var coordenadas = [];
   Object.keys(grupos).forEach(function (clave) {
     var grupo = grupos[clave];
-    var ids = grupo.items.map(function (e) { return e.id; }).join(", ");
-    var marcador = L.marker([grupo.lat, grupo.lng], {
-      icon: L.divIcon({
-        className: "marcador-grupo-evidencias",
-        html: '<span>' + grupo.items.length + '</span>',
-        iconSize: [34, 34],
-        iconAnchor: [17, 17]
-      })
+    var contenido = "<strong>" + clave + " · " + grupo.items.length + " evidencias</strong>" +
+      "<p class='popup-nota-evidencia'>Punto de referencia compartido; no indica el lugar exacto de cada foto.</p>";
+    grupo.items.forEach(function (e) {
+      var archivo = String(e.foto || "").replace(/^.*\//, "");
+      var ruta = "datos/fotos/" + archivo;
+      contenido += "<div class='popup-item-evidencia'>" +
+        "<img src='" + ruta + "' alt='" + e.id + "'>" +
+        "<span><strong>" + e.id + "</strong><br><small>" + archivo + "</small></span>" +
+        "</div>";
     });
-    marcador.bindPopup(
-      "<strong>" + clave + "</strong><br>" +
-      grupo.items.length + " evidencias asociadas<br>" +
-      "<small>" + ids + "</small><br>" +
-      "<em>Punto de referencia compartido; no es la ubicación exacta de cada fotografía.</em>"
-    );
+    var marcador = L.circleMarker([grupo.lat, grupo.lng], {
+      radius: 15,
+      fillColor: "#2563eb",
+      color: "#ffffff",
+      weight: 3,
+      opacity: 1,
+      fillOpacity: 0.98
+    });
+    marcador.bindTooltip(String(grupo.items.length), {
+      permanent: true,
+      direction: "center",
+      className: "etiqueta-conteo-evidencias",
+      opacity: 1
+    });
+    marcador.bindPopup(contenido, { maxWidth: 290, maxHeight: 300 });
     marcador.addTo(capaEvidenciasAproximadas);
     coordenadas.push([grupo.lat, grupo.lng]);
   });
