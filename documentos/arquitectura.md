@@ -1,65 +1,38 @@
 # Arquitectura del Sistema — Control Vial Santa Marta
 
 **Autores:** Angel Sosa Ospino, Adrian Jose Marquez Orozco, Johan David Acosta Peñaloza, Josue David Rodriguez  
-**Programa:** Ingeniería de Sistemas — Universidad del Magdalena  
+**Programa:** Ingeniería de Sistemas — Universidad del Magdalena
 
 ---
 
-## 1. Estilo Arquitectónico
+## 1. Estilo arquitectónico
 
-La aplicación adopta una **arquitectura cliente estática modular (Single Page Application ligera sin backend)** desplegada en GitHub Pages. Todo el procesamiento ocurre en el navegador del usuario separando estrictamente la **capa de presentación**, la **capa de persistencia**, la **capa de visualización geoespacial** y los **módulos puros de lógica de negocio** (sin dependencias de DOM ni red, lo que permite ejecutar pruebas unitarias deterministas en `pruebas.html`).
+Aplicación cliente estática modular, sin backend, desplegable en GitHub Pages. La presentación está en `index.html` y `estilos.css`; la lógica de aplicación en `captura.js`; la persistencia en `almacenamiento.js`; la visualización cartográfica en `mapa.js`; y la lógica de negocio en `criticidad.js`, `filtros.js` y `resumen.js`.
 
----
+## 2. Módulos
 
-## 2. Diagrama de Arquitectura y Flujo de Datos
+1. **`index.html` y `estilos.css`:** dos vistas conmutables: captura y registros/evidencias.
+2. **`captura.js`:** ciclo de vida, GPS, selección de ubicación, validación de formulario, galería y actualización de indicadores.
+3. **`criticidad.js`:** deducción de franja horaria y cálculo de criticidad a partir de reportes completos.
+4. **`mapa.js`:** mapas Leaflet, marcadores de reportes georreferenciados y mapa de calor basado en esos reportes. Las fotografías sin coordenadas verificadas no se dibujan.
+5. **`filtros.js` y `resumen.js`:** filtros, estadísticas y ranking operativo calculados sobre reportes, no sobre fotografías aisladas.
+6. **`almacenamiento.js`:** persistencia local, importación/exportación JSON y validación estructural y geográfica.
 
-```text
-+-----------------------------------------------------------------------------------+
-|                        CAPA DE PRESENTACIÓN (index.html + estilos.css)            |
-|  [Vista 1: Captura Rápida]     [Vista 2: Registros, Mapa y Resumen]  |
-+-------------------+------------------------+------------------------+-------------+
-                    |                        |                        |
-                    v                        v                        v
-+-----------------------------------------------------------------------------------+
-|                       CONTROLADOR DE APLICACIÓN (captura.js)                      |
-|  - Orquesta eventos UI, GPS, canvas de pixelado y sincronización de estado        |
-+--------+--------------------+---------------------+--------------------+----------+
-         |                    |                     |                    |
-         v                    v                     v                    v
-+-----------------+  +------------------+  +------------------+  +------------------+
-| almacenamiento  |  |   criticidad.js  |  |    filtros.js    |  |    resumen.js    |
-|      .js        |  |   (Módulo Puro)  |  |   (Módulo Puro)  |  |   (Módulo Puro)  |
-|                 |  |                  |  |                  |  |                  |
-| - localStorage  |  | - horaAMinutos() |  | - filtrarReportes|  | - Top 5 cuadras  |
-|   (mp_reportes, |  | - deducirFranja()|  | - Estadísticas   |  | - Reglas R1-R6   |
-|    mp_config)   |  | - calcularCriti- |  |   por categoría  |  |   operativas     |
-| - Exportar/     |  |   cidad()        |  |                  |  |                  |
-|   Importar JSON |  +--------+---------+  +------------------+  +------------------+
-| - Control cuota |           ^
-+--------+--------+           |
-         |                    |
-         v                    |
-+-----------------+  +--------+-----------------------------------------------------+
-|    mapa.js      |  |              CAPA DE DATOS ESTÁTICOS (datos/)                |
-|                 |  |  - vias.json      (10 cuadras y límites del área de estudio)      |
-| - Leaflet 1.9.4 |  |  - criterios.json (Pesos categoría/vía/franja y niveles)     |
-| - Leaflet.heat  |  |  - reportes.json  (24 evidencias precargadas)                |
-| - Nominatim OSM |  |  - fotos/*.jpg    (24 imágenes vinculadas y 6 imágenes históricas conservadas)                 |
-+-----------------+  +--------------------------------------------------------------+
-```
+## 3. Estado de los datos al actualizar esta documentación
 
----
+- `datos/reportes.json`: 0 reportes precargados.
+- `datos/evidencias_nuevas.json`: 30 fotografías pendientes de georreferenciación y clasificación verificadas.
+- `datos/vias.json`: 10 cuadras configuradas mediante segmentos de referencia aproximados.
+- `datos/criterios.json`: pesos y franjas horarias del motor de criticidad.
 
-## 3. Descripción de Módulos
+Las ubicaciones sintéticas y los puntajes simulados se retiraron de los registros fotográficos. Las fotografías permanecen en la galería, pero no se utilizan para generar marcadores, mapa de calor, estadísticas o ranking.
 
-1. **`index.html` y `estilos.css`:** Estructura semántica con dos vistas conmutables mediante pestañas inferiores; el resumen operativo está integrado en la vista Registros y diseño adaptable a pantallas móviles en campo.
-2. **`captura.js`:** Gestiona el ciclo de vida de la app, obtiene coordenadas mediante Geolocation API o clic en mapa, calcula la distancia geométrica punto-segmento para asignar la cuadra más cercana y controla el `<canvas>` de pixelado irreversible.
-3. **`criticidad.js` (Lógica pura):** Deduce si la hora local cae en rango pico (`06:30–08:30`, `11:30–14:00`, `17:00–19:30`) y suma los pesos definidos en `datos/criterios.json`.
-4. **`mapa.js`:** Administra los dos mapas Leaflet (captura y registros), administra los mapas y las capas de puntos y calor, genera la capa de calor `L.heatLayer` ponderada por `puntaje / 9` y permite alternar entre *Ambos*, *Solo calor* y *Solo puntos*.
-5. **`filtros.js` y `resumen.js` (Lógica pura):** Filtran el arreglo unificado de reportes (precargados + locales) y calculan el ranking Top 5 con recomendaciones operativas deterministas (`R1` a `R6`).
-6. **`almacenamiento.js`:** Administra `localStorage`, captura `QuotaExceededError` sin pérdida de datos y valida estructura, límites geográficos y duplicados al importar archivos JSON externos.
+## 4. Alcance y limitaciones geográficas
 
+La aplicación limita la captura al rectángulo definido en `datos/vias.json` y verifica distancia respecto al segmento de referencia asignado. El umbral actual de 90 m es una validación geométrica contra esos segmentos; **no equivale a comprobar que el punto esté sobre la calzada ni que esté fuera de predios privados, edificios, andenes o campus**.
 
-## 4. Validación del alcance geográfico
+Los segmentos configurados no constituyen todavía una cartografía vial oficial ni una delimitación de calzadas. Para sostener conclusiones espaciales del estudio, deben sustituirse por geometrías viales verificadas y validarse visualmente los puntos de campo.
 
-La captura comprueba que el punto esté dentro de los límites configurados en `datos/vias.json` y que se encuentre a una distancia máxima de 90 m de la polilínea de la cuadra asignada. La misma regla de proximidad se aplica a los reportes importados. El conjunto activo se limita a 10 cuadras y 24 reportes del entorno Unimagdalena–Villa Marbella–Cañaveral.
+## 5. Pruebas y alcance de verificación
+
+La suite `pruebas.html` cubre casos del motor de criticidad. La sintaxis de los módulos puede comprobarse por separado. Ninguna de estas verificaciones sustituye una prueba funcional integral en navegador de GPS, mapas, filtros, persistencia, importación y exportación.
