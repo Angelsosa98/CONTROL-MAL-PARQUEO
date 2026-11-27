@@ -1,11 +1,19 @@
 /* ============================================================================
  * ARCHIVO: filtros.js
- * DEPENDENCIAS OPCIONALES: criticidad.js (deducirFranja, CATALOGO_CATEGORIAS)
  * RESPONSABILIDAD: Lógica pura para filtrar la lista de reportes por cuadra,
  * franja horaria, categoría y tipo de actor sin recargar la página (RF-04),
  * y calcular conteos y porcentajes de participación por categoría (CU-02).
+ * No usa DOM, ni fetch, ni localStorage.
  * ============================================================================ */
 
+/**
+ * Filtra un arreglo de reportes según los criterios activos.
+ * Entradas:
+ *   - listaReportes: Array de reportes
+ *   - filtros: { cuadra, franja, categoria, actor } ("" o "todas" = sin filtro)
+ *   - criterios: Objeto criterios.json (usado si el reporte no tiene _franja)
+ * Salida: Nuevo arreglo con los reportes que cumplen todos los filtros activos.
+ */
 function filtrarReportes(listaReportes, filtros, criterios) {
   if (!Array.isArray(listaReportes)) {
     return [];
@@ -23,16 +31,26 @@ function filtrarReportes(listaReportes, filtros, criterios) {
     var r = listaReportes[i];
     if (!r || typeof r !== "object") continue;
 
-    if (cuadraFiltro && r.cuadra !== cuadraFiltro) continue;
-    if (categoriaFiltro && r.categoria !== categoriaFiltro) continue;
-    if (actorFiltro && r.actor !== actorFiltro) continue;
+    if (cuadraFiltro && r.cuadra !== cuadraFiltro) {
+      continue;
+    }
+
+    if (categoriaFiltro && r.categoria !== categoriaFiltro) {
+      continue;
+    }
+
+    if (actorFiltro && r.actor !== actorFiltro) {
+      continue;
+    }
 
     if (franjaFiltro) {
       var franjaReporte = r._franja;
       if (!franjaReporte && typeof deducirFranja === "function" && criterios) {
         franjaReporte = deducirFranja(r.fecha_hora, criterios);
       }
-      if (franjaReporte !== franjaFiltro) continue;
+      if (franjaReporte !== franjaFiltro) {
+        continue;
+      }
     }
 
     resultado.push(r);
@@ -41,19 +59,27 @@ function filtrarReportes(listaReportes, filtros, criterios) {
   return resultado;
 }
 
+/**
+ * Calcula conteos y porcentajes por categoría sobre la lista filtrada (CU-02).
+ * Salida:
+ *   {
+ *     total: number,
+ *     categorias: [
+ *       { clave: "doble_fila", etiqueta: "...", conteo: number, porcentaje: number },
+ *       ...
+ *     ]
+ *   }
+ */
 function calcularEstadisticasFiltradas(listaFiltrada) {
   var lista = Array.isArray(listaFiltrada) ? listaFiltrada : [];
   var total = lista.length;
 
-  var etiquetas = typeof CATALOGO_CATEGORIAS !== "undefined"
-    ? CATALOGO_CATEGORIAS
-    : {
-        doble_fila: "Doble fila / vía prohibida",
-        bloqueo_rampa_cebra_paradero: "Bloqueo rampa, cebra o paradero",
-        invasion_anden: "Invasión de andén"
-      };
+  var definiciones = [
+    { clave: "doble_fila", etiqueta: "Doble fila / vía prohibida" },
+    { clave: "bloqueo_rampa_cebra_paradero", etiqueta: "Bloqueo rampa, cebra o paradero" },
+    { clave: "invasion_anden", etiqueta: "Invasión de andén" }
+  ];
 
-  var claves = ["doble_fila", "bloqueo_rampa_cebra_paradero", "invasion_anden"];
   var conteos = {
     doble_fila: 0,
     bloqueo_rampa_cebra_paradero: 0,
@@ -68,13 +94,13 @@ function calcularEstadisticasFiltradas(listaFiltrada) {
   }
 
   var categorias = [];
-  for (var j = 0; j < claves.length; j++) {
-    var clave = claves[j];
-    var c = conteos[clave];
+  for (var j = 0; j < definiciones.length; j++) {
+    var def = definiciones[j];
+    var c = conteos[def.clave];
     var pct = total > 0 ? Number(((c / total) * 100).toFixed(1)) : 0;
     categorias.push({
-      clave: clave,
-      etiqueta: etiquetas[clave] || clave,
+      clave: def.clave,
+      etiqueta: def.etiqueta,
       conteo: c,
       porcentaje: pct
     });

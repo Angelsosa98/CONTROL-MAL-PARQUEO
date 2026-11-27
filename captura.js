@@ -1,22 +1,23 @@
 /* ============================================================================
  * ARCHIVO: captura.js
- * DEPENDENCIAS: criticidad.js, almacenamiento.js, filtros.js, resumen.js, mapa.js
- * RESPONSABILIDAD: Controlador principal de la aplicación. Carga los JSON con fetch,
+ * RESPONSABILIDAD: Controlador principal de la Fase 1. Carga los JSON con fetch,
  * gestiona GPS, asignación geométrica de cuadra más cercana, validación del
  * formulario, procesamiento/pixelado irreversible de foto en canvas, armado
  * del reporte, guardado en localStorage y renderizado de la vista Registros.
  * ============================================================================ */
 
+// Estado único compartido en memoria (listo para Fases 2 y 3)
 var AppEstado = {
   vias: null,
   criterios: null,
   reportesPrecargados: [],
   reportesLocales: [],
-  reportesActivos: [],
-  reportesFiltrados: [],
+  reportesActivos: [], // Lista única con criticidad ya recalculada
+  reportesFiltrados: [], // Subconjunto tras aplicar filtros de análisis
   filtrosActivos: { cuadra: "todas", franja: "todas", categoria: "todas", actor: "todas" },
   config: { iniciales: "", origen: "campo" },
 
+  // Estado del formulario de captura actual
   lat: null,
   lng: null,
   precisionGps: null,
@@ -31,38 +32,29 @@ var AppEstado = {
   inicioCronometroMs: Date.now()
 };
 
-var MAX_HISTORIAL_CANVAS = 10;
+// Variables para el canvas y el pixelado táctil
 var historialCanvas = [];
 var dibujandoPixelado = false;
 var puntoInicioPixel = null;
-var idPendienteEliminar = null;
 
-var ETIQUETAS_CATEGORIA = typeof CATALOGO_CATEGORIAS !== "undefined"
-  ? CATALOGO_CATEGORIAS
-  : {
-      doble_fila: "Doble fila / vía prohibida",
-      bloqueo_rampa_cebra_paradero: "Bloqueo rampa, cebra o paradero",
-      invasion_anden: "Invasión de andén"
-    };
+// Diccionarios de etiquetas legibles para la interfaz
+var ETIQUETAS_CATEGORIA = {
+  doble_fila: "Doble fila / vía prohibida",
+  bloqueo_rampa_cebra_paradero: "Bloqueo rampa, cebra o paradero",
+  invasion_anden: "Invasión de andén"
+};
 
-var ETIQUETAS_ACTOR = typeof CATALOGO_ACTORES !== "undefined"
-  ? CATALOGO_ACTORES
-  : {
-      vehiculo_particular: "Vehículo particular",
-      motocicleta: "Motocicleta",
-      vehiculo_carga: "Vehículo de carga",
-      mobiliario_comercial: "Mobiliario comercial"
-    };
+var ETIQUETAS_ACTOR = {
+  vehiculo_particular: "Vehículo particular",
+  motocicleta: "Motocicleta",
+  vehiculo_carga: "Vehículo de carga",
+  mobiliario_comercial: "Mobiliario comercial"
+};
 
-function escaparHtml(valor) {
-  return String(valor == null ? "" : valor)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
+/**
+ * Formatea la hora LOCAL actual del dispositivo como "AAAA-MM-DDTHH:MM".
+ * Nunca usa toISOString() para no adelantar 5 horas (UTC) en Colombia.
+ */
 function obtenerFechaHoraLocal() {
   var d = new Date();
   var anio = String(d.getFullYear());
@@ -73,6 +65,10 @@ function obtenerFechaHoraLocal() {
   return anio + "-" + mes + "-" + dia + "T" + hora + ":" + min;
 }
 
+/**
+ * Calcula la distancia en metros de un punto P(lat, lng) a un segmento AB
+ * usando aproximación plana local (válida para distancias urbanas cortas).
+ */
 function distanciaPuntoASegmentoMetros(latP, lngP, extremoA, extremoB) {
   var lat1 = extremoA[0];
   var lng1 = extremoA[1];
@@ -104,6 +100,10 @@ function distanciaPuntoASegmentoMetros(latP, lngP, extremoA, extremoB) {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
+/**
+ * Busca la cuadra más cercana a (lat, lng) dentro de vias.json.
+ * Salida: { cuadra: Object|null, distanciaMetros: number }
+ */
 function buscarCuadraMasCercana(lat, lng, vias) {
   if (!vias || !Array.isArray(vias.cuadras) || vias.cuadras.length === 0) {
     return { cuadra: null, distanciaMetros: Infinity };
@@ -116,6 +116,7 @@ function buscarCuadraMasCercana(lat, lng, vias) {
     var c = vias.cuadras[i];
     if (!Array.isArray(c.extremos) || c.extremos.length < 2) continue;
 
+    // Soporta segmentos simples de 2 extremos o polilíneas de varios tramos
     for (var j = 0; j < c.extremos.length - 1; j++) {
       var dist = distanciaPuntoASegmentoMetros(lat, lng, c.extremos[j], c.extremos[j + 1]);
       if (dist < menorDistancia) {
@@ -128,6 +129,9 @@ function buscarCuadraMasCercana(lat, lng, vias) {
   return { cuadra: mejorCuadra, distanciaMetros: menorDistancia };
 }
 
+/**
+ * Busca el objeto completo de una cuadra por su ID.
+ */
 function obtenerCuadraPorId(cuadraId) {
   if (!AppEstado.vias || !Array.isArray(AppEstado.vias.cuadras)) return null;
   for (var i = 0; i < AppEstado.vias.cuadras.length; i++) {
@@ -138,9 +142,14 @@ function obtenerCuadraPorId(cuadraId) {
   return null;
 }
 
+/**
+ * Reconstruye la lista única de reportes (precargados + locales) recalculando
+ * la criticidad de todos con las reglas vigentes de criterios.json y vias.json.
+ */
 function sincronizarListaUnicaReportes() {
   AppEstado.reportesLocales = cargarReportesLocales();
 
+  // Evitar duplicados si un reporte local ya fue integrado a reportes.json
   var idsPrecargados = {};
   for (var i = 0; i < AppEstado.reportesPrecargados.length; i++) {
     var repPre = Object.assign({}, AppEstado.reportesPrecargados[i], { _origenArchivo: "precargado" });
@@ -163,16 +172,22 @@ function sincronizarListaUnicaReportes() {
     }
   }
 
+  // Recalcular criticidad de TODOS los reportes con las reglas actuales
   AppEstado.reportesActivos = recalcularTodosLosReportes(
     combinados,
     AppEstado.criterios,
     AppEstado.vias
   );
 
+  // Actualizar mapa de captura con todos los reportes activos y aplicar filtros en Registros
   actualizarPuntosEnMapaCaptura(AppEstado.reportesActivos);
   aplicarFiltrosYActualizarRegistros();
 }
 
+/**
+ * Aplica los filtros activos (RF-04), actualiza porcentajes por categoría (CU-02),
+ * actualiza el mapa de calor/puntos, el Resumen Operativo Top 5 (RF-05) y la lista.
+ */
 function aplicarFiltrosYActualizarRegistros() {
   var filtrados = typeof filtrarReportes === "function"
     ? filtrarReportes(AppEstado.reportesActivos, AppEstado.filtrosActivos, AppEstado.criterios)
@@ -186,6 +201,9 @@ function aplicarFiltrosYActualizarRegistros() {
   renderizarVistaRegistros();
 }
 
+/**
+ * Muestra el conteo filtrado y los porcentajes por categoría (CU-02).
+ */
 function renderizarEstadisticasFiltros(listaFiltrada, totalGeneral) {
   var conteoEl = document.getElementById("conteo-filtrado-texto");
   if (conteoEl) {
@@ -206,7 +224,7 @@ function renderizarEstadisticasFiltros(listaFiltrada, totalGeneral) {
     fila.className = "item-porcentaje";
     fila.innerHTML =
       '<div class="fila-texto-porcentaje">' +
-        '<span><strong>' + escaparHtml(cat.etiqueta) + '</strong></span>' +
+        '<span><strong>' + cat.etiqueta + '</strong></span>' +
         '<span class="texto-mono">' + cat.conteo + ' (' + pctTexto + ')</span>' +
       '</div>' +
       '<div class="barra-progreso-fondo">' +
@@ -216,6 +234,9 @@ function renderizarEstadisticasFiltros(listaFiltrada, totalGeneral) {
   }
 }
 
+/**
+ * Renderiza las tarjetas del Top 5 de cuadras críticas con recomendación y regla (RF-05).
+ */
 function renderizarResumenOperativoTop5(listaBase) {
   var contenedor = document.getElementById("lista-top-5-cuadras");
   if (!contenedor || typeof generarResumenOperativo !== "function") return;
@@ -259,8 +280,8 @@ function renderizarResumenOperativoTop5(listaBase) {
       '<div class="top5-cabecera">' +
         '<div>' +
           '<span class="top5-puesto">#' + (i + 1) + '</span>' +
-          '<strong>' + escaparHtml(item.nombreCuadra) + '</strong> ' +
-          '<span class="texto-mono">(' + escaparHtml(item.cuadraId) + ')</span>' +
+          '<strong>' + item.nombreCuadra + '</strong> ' +
+          '<span class="texto-mono">(' + item.cuadraId + ')</span>' +
         '</div>' +
         '<span class="top5-puntaje">' + item.puntajeAcumulado + ' pts</span>' +
       '</div>' +
@@ -270,14 +291,18 @@ function renderizarResumenOperativoTop5(listaBase) {
         'Pico: ' + item.porFranja.pico + ' / Valle: ' + item.porFranja.valle +
       '</div>' +
       '<div class="caja-recomendacion-top5">' +
-        '<div class="titulo-recomendacion">Recomendación: ' + escaparHtml(item.recomendacion) + '</div>' +
-        '<div class="texto-regla-aplicada">' + escaparHtml(item.reglaAplicada) + '</div>' +
+        '<div class="titulo-recomendacion">Recomendación: ' + item.recomendacion + '</div>' +
+        '<div class="texto-regla-aplicada">' + item.reglaAplicada + '</div>' +
       '</div>';
 
     contenedor.appendChild(card);
   }
 }
 
+/**
+ * Carga los archivos JSON iniciales mediante fetch.
+ * Si falla (p. ej. al abrir index.html con doble clic), muestra el aviso requerido.
+ */
 function cargarDatosIniciales() {
   return Promise.all([
     fetch("datos/vias.json").then(function (r) {
@@ -295,6 +320,10 @@ function cargarDatosIniciales() {
   ]);
 }
 
+/**
+ * Actualiza las coordenadas seleccionadas (redondeadas a 6 decimales),
+ * mueve el marcador en el mapa y asigna automáticamente la cuadra más cercana.
+ */
 function fijarUbicacion(lat, lng, precisionMetros) {
   var latRedondeada = Number(Number(lat).toFixed(6));
   var lngRedondeada = Number(Number(lng).toFixed(6));
@@ -326,6 +355,7 @@ function fijarUbicacion(lat, lng, precisionMetros) {
     fijarUbicacion(nuevaLat, nuevaLng, null);
   });
 
+  // Buscar cuadra más cercana y validar radio máximo
   var resultadoCuadra = buscarCuadraMasCercana(latRedondeada, lngRedondeada, AppEstado.vias);
   var radioMax = (AppEstado.vias && AppEstado.vias.zona && AppEstado.vias.zona.radio_max_m) || 60;
   var avisoZona = document.getElementById("aviso-fuera-zona");
@@ -348,6 +378,9 @@ function fijarUbicacion(lat, lng, precisionMetros) {
   limpiarErrorCampo("error-ubicacion");
 }
 
+/**
+ * Actualiza el estado y la tarjeta de solo lectura de la cuadra seleccionada.
+ */
 function asignarCuadraEnFormulario(cuadraId) {
   AppEstado.cuadraAsignada = cuadraId || "";
   var selectCuadra = document.getElementById("select-cuadra");
@@ -371,12 +404,35 @@ function asignarCuadraEnFormulario(cuadraId) {
   resaltarCuadraCaptura(AppEstado.cuadraAsignada);
 }
 
+/**
+ * Calcula el punto medio [lat, lng] de una cuadra a partir de sus extremos en vias.json.
+ */
+function calcularCentroCuadra(cuadraObj) {
+  if (!cuadraObj || !Array.isArray(cuadraObj.extremos) || cuadraObj.extremos.length === 0) {
+    return null;
+  }
+  var sumaLat = 0;
+  var sumaLng = 0;
+  for (var i = 0; i < cuadraObj.extremos.length; i++) {
+    sumaLat += Number(cuadraObj.extremos[i][0]);
+    sumaLng += Number(cuadraObj.extremos[i][1]);
+  }
+  return {
+    lat: Number((sumaLat / cuadraObj.extremos.length).toFixed(6)),
+    lng: Number((sumaLng / cuadraObj.extremos.length).toFixed(6))
+  };
+}
+
+/**
+ * Mueve la ubicación del reporte (lat, lng) y el marcador azul del mapa al punto
+ * exacto de la dirección seleccionada en el menú desplegable de cuadras.
+ */
 function seleccionarCuadraManual(cuadraId) {
   AppEstado.seleccionManualCuadra = Boolean(cuadraId);
   asignarCuadraEnFormulario(cuadraId);
 
   var cuadraObj = obtenerCuadraPorId(cuadraId);
-  var centro = typeof obtenerCentroideCuadra === "function" ? obtenerCentroideCuadra(cuadraObj) : null;
+  var centro = calcularCentroCuadra(cuadraObj);
   if (!centro) return;
 
   AppEstado.lat = centro.lat;
@@ -407,6 +463,11 @@ function seleccionarCuadraManual(cuadraId) {
   }
 }
 
+
+/**
+ * Solicita la ubicación GPS del dispositivo con alta precisión y traduce
+ * cualquier error a un mensaje claro en español.
+ */
 function solicitarGpsDispositivo(esAutomaticoAlInicio) {
   var estadoGps = document.getElementById("estado-gps");
   estadoGps.hidden = false;
@@ -457,13 +518,10 @@ function solicitarGpsDispositivo(esAutomaticoAlInicio) {
   );
 }
 
-function guardarPasoHistorialCanvas(ctx, ancho, alto) {
-  historialCanvas.push(ctx.getImageData(0, 0, ancho, alto));
-  while (historialCanvas.length > MAX_HISTORIAL_CANVAS) {
-    historialCanvas.splice(1, 1);
-  }
-}
-
+/**
+ * Carga una imagen seleccionada desde cámara o galería, la redimensiona a máximo
+ * 800 px de ancho respetando EXIF y la dibuja en el canvas listo para pixelar.
+ */
 function procesarArchivoFoto(archivo) {
   if (!archivo) return;
 
@@ -481,6 +539,7 @@ function procesarArchivoFoto(archivo) {
     ctx.clearRect(0, 0, nuevoAncho, nuevoAlto);
     ctx.drawImage(fuenteImagen, 0, 0, nuevoAncho, nuevoAlto);
 
+    // Guardar estado inicial en el historial para permitir "Deshacer"
     historialCanvas = [ctx.getImageData(0, 0, nuevoAncho, nuevoAlto)];
     AppEstado.tieneFoto = true;
 
@@ -489,6 +548,7 @@ function procesarArchivoFoto(archivo) {
     limpiarErrorCampo("error-foto");
   }
 
+  // createImageBitmap respeta automáticamente la orientación EXIF en navegadores modernos
   if (typeof createImageBitmap === "function") {
     createImageBitmap(archivo)
       .then(function (bitmap) {
@@ -515,6 +575,10 @@ function cargarConFileReader(archivo, callback) {
   lector.readAsDataURL(archivo);
 }
 
+/**
+ * Configura los eventos Pointer en el canvas para pixelar áreas rectangulares
+ * de forma irreversible (reducción a 1/12 y ampliación sin suavizado).
+ */
 function configurarHerramientaPixelado() {
   var canvas = document.getElementById("canvas-foto");
   var ctx = canvas.getContext("2d");
@@ -542,6 +606,7 @@ function configurarHerramientaPixelado() {
     e.preventDefault();
     var actual = obtenerCoordsCanvas(e);
 
+    // Restaurar imagen base actual y dibujar guía punteada de selección
     var estadoActual = historialCanvas[historialCanvas.length - 1];
     ctx.putImageData(estadoActual, 0, 0);
 
@@ -574,6 +639,7 @@ function configurarHerramientaPixelado() {
 
     if (rw < 4 || rh < 4) return;
 
+    // Pixelado irreversible: reducir región a 1/12 en canvas auxiliar y ampliar sin suavizado
     var miniW = Math.max(1, Math.floor(rw / 12));
     var miniH = Math.max(1, Math.floor(rh / 12));
 
@@ -590,13 +656,17 @@ function configurarHerramientaPixelado() {
     ctx.drawImage(aux, 0, 0, miniW, miniH, rx, ry, rw, rh);
     ctx.restore();
 
-    guardarPasoHistorialCanvas(ctx, canvas.width, canvas.height);
+    // Guardar nuevo estado en historial
+    historialCanvas.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
   }
 
   canvas.addEventListener("pointerup", finalizarTrazoPixelado);
   canvas.addEventListener("pointercancel", finalizarTrazoPixelado);
 }
 
+/**
+ * Exporta el contenido del canvas como JPEG calidad 0.6 garantizando máximo 80 KB.
+ */
 function exportarCanvasComprimido() {
   if (!AppEstado.tieneFoto) return null;
 
@@ -615,6 +685,7 @@ function exportarCanvasComprimido() {
     dataUrl = canvas.toDataURL("image/jpeg", calidad);
   }
 
+  // Si aún supera 80 KB (imagen con mucho detalle), reducir escala al 80%
   if (calcularBytesBase64(dataUrl) > maxBytes) {
     var reducido = document.createElement("canvas");
     reducido.width = Math.round(canvas.width * 0.8);
@@ -626,6 +697,9 @@ function exportarCanvasComprimido() {
   return dataUrl;
 }
 
+/**
+ * Limpia el canvas y reinicia el estado de foto del formulario.
+ */
 function quitarFotoFormulario() {
   var canvas = document.getElementById("canvas-foto");
   var ctx = canvas.getContext("2d");
@@ -655,14 +729,19 @@ function limpiarErrorCampo(idElemento) {
   }
 }
 
+/**
+ * Valida todos los campos obligatorios antes de guardar el reporte.
+ */
 function validarFormularioCaptura() {
   var esValido = true;
 
+  // 1. Verificar iniciales del integrante
   if (!AppEstado.config.iniciales || AppEstado.config.iniciales.length < 2) {
     abrirModalAjustes();
     return false;
   }
 
+  // 2. Verificar coordenadas y límites geográficos de Santa Marta
   var lim = AppEstado.vias && AppEstado.vias.zona && AppEstado.vias.zona.limites;
   if (AppEstado.lat === null || AppEstado.lng === null) {
     mostrarErrorCampo("error-ubicacion", "Marca el punto en el mapa o usa tu ubicación GPS.");
@@ -680,6 +759,7 @@ function validarFormularioCaptura() {
     limpiarErrorCampo("error-ubicacion");
   }
 
+  // 3. Verificar cuadra asignada
   if (!AppEstado.cuadraAsignada || !obtenerCuadraPorId(AppEstado.cuadraAsignada)) {
     mostrarErrorCampo("error-cuadra", "Selecciona una cuadra válida de la zona de estudio.");
     esValido = false;
@@ -687,6 +767,7 @@ function validarFormularioCaptura() {
     limpiarErrorCampo("error-cuadra");
   }
 
+  // 4. Verificar categoría
   if (!AppEstado.categoriaSeleccionada) {
     mostrarErrorCampo("error-categoria", "Selecciona una categoría de obstrucción.");
     esValido = false;
@@ -694,6 +775,7 @@ function validarFormularioCaptura() {
     limpiarErrorCampo("error-categoria");
   }
 
+  // 5. Verificar actor
   if (!AppEstado.actorSeleccionado) {
     mostrarErrorCampo("error-actor", "Selecciona el tipo de actor.");
     esValido = false;
@@ -701,6 +783,7 @@ function validarFormularioCaptura() {
     limpiarErrorCampo("error-actor");
   }
 
+  // 6. Verificar casilla de privacidad si hay foto adjunta
   if (AppEstado.tieneFoto && !document.getElementById("check-privacidad-foto").checked) {
     mostrarErrorCampo("error-foto", "Debes confirmar que no se ven placas ni rostros antes de guardar.");
     esValido = false;
@@ -711,7 +794,11 @@ function validarFormularioCaptura() {
   return esValido;
 }
 
+/**
+ * Procesa el guardado completo de un nuevo reporte (RF-01 + RF-02 + RF-06).
+ */
 function guardarNuevoReporte() {
+  // Evitar doble guardado por doble toque rápido
   if (AppEstado.guardando) return;
 
   if (!validarFormularioCaptura()) {
@@ -749,12 +836,14 @@ function guardarNuevoReporte() {
       observaciones: obsTexto
     };
 
+    // Calcular criticidad usando exclusivamente criticidad.js
     var calculo = calcularCriticidad(borradorReporte, AppEstado.criterios, AppEstado.vias);
     borradorReporte.criticidad = {
       puntaje: calculo.puntaje,
       nivel: calculo.nivel
     };
 
+    // Guardar en localStorage
     var resultadoGuardado = agregarReporteLocal(borradorReporte);
 
     if (!resultadoGuardado.ok) {
@@ -766,9 +855,13 @@ function guardarNuevoReporte() {
       return;
     }
 
+    // Calcular tiempo transcurrido (deseable, no se guarda en el JSON)
     var segundosLlenado = Math.max(1, Math.round((Date.now() - AppEstado.inicioCronometroMs) / 1000));
 
+    // Actualizar estado global y mapas
     sincronizarListaUnicaReportes();
+
+    // Mostrar confirmación visual con desglose y botón "Registrar otro"
     mostrarConfirmacionGuardado(borradorReporte, calculo, segundosLlenado);
   } catch (err) {
     alert("Error al procesar el reporte: " + err.message);
@@ -779,6 +872,9 @@ function guardarNuevoReporte() {
   }
 }
 
+/**
+ * Muestra el resumen del reporte recién guardado con desglose de criticidad.
+ */
 function mostrarConfirmacionGuardado(reporte, calculo, segundos) {
   var tarjeta = document.getElementById("tarjeta-confirmacion");
   var textoDesglose = document.getElementById("confirmacion-desglose");
@@ -800,6 +896,10 @@ function mostrarConfirmacionGuardado(reporte, calculo, segundos) {
   tarjeta.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
+/**
+ * Limpia categoría, actor, foto y observaciones para registrar un nuevo incidente
+ * conservando la vista del mapa.
+ */
 function prepararSiguienteRegistro() {
   AppEstado.categoriaSeleccionada = "";
   AppEstado.actorSeleccionado = "";
@@ -831,6 +931,9 @@ function prepararSiguienteRegistro() {
   AppEstado.inicioCronometroMs = Date.now();
 }
 
+/**
+ * Maneja el error QuotaExceededError sin perder el reporte recién armado.
+ */
 function mostrarAlertaAlmacenamientoLleno(reportePendiente) {
   var aviso = document.getElementById("aviso-quota");
   aviso.hidden = false;
@@ -841,31 +944,14 @@ function mostrarAlertaAlmacenamientoLleno(reportePendiente) {
   };
 }
 
-function abrirModalConfirmarEliminar(idReporte) {
-  idPendienteEliminar = idReporte;
-  var modal = document.getElementById("modal-confirmar-eliminar");
-  var textoEl = document.getElementById("texto-confirmar-eliminar");
-  if (!modal || !textoEl) {
-    if (confirm("¿Seguro que deseas eliminar el reporte local " + idReporte + "?")) {
-      eliminarReporteLocal(idReporte);
-      sincronizarListaUnicaReportes();
-    }
-    return;
-  }
-  textoEl.textContent =
-    "¿Seguro que deseas eliminar el reporte local " + idReporte + "? Esta acción no se puede deshacer.";
-  modal.hidden = false;
-}
-
-function cerrarModalConfirmarEliminar() {
-  idPendienteEliminar = null;
-  var modal = document.getElementById("modal-confirmar-eliminar");
-  if (modal) modal.hidden = true;
-}
-
+/**
+ * Renderiza toda la vista "Registros": meta N de 30, desglose pico/valle y por
+ * cuadra, uso de almacenamiento y lista de tarjetas ordenadas por fecha reciente.
+ */
 function renderizarVistaRegistros() {
   var todos = AppEstado.reportesActivos;
 
+  // Contar solo registros con origen === "campo" para la meta de 30
   var totalCampo = 0;
   var conteoFranja = { pico: 0, valle: 0 };
   var conteoPorCuadra = {};
@@ -886,6 +972,7 @@ function renderizarVistaRegistros() {
   document.getElementById("desglose-franjas").textContent =
     "Hora pico: " + conteoFranja.pico + " · Hora valle: " + conteoFranja.valle;
 
+  // Desglose por cuadra
   var listaCuadrasEl = document.getElementById("desglose-cuadras");
   listaCuadrasEl.innerHTML = "";
   var cuadrasKeys = Object.keys(conteoPorCuadra);
@@ -901,10 +988,14 @@ function renderizarVistaRegistros() {
     }
   }
 
+  // Uso aproximado de localStorage
   var uso = calcularUsoAlmacenamiento();
   document.getElementById("uso-almacenamiento").textContent = "Almacenamiento: " + uso.texto;
+
+  // Actualizar badge en navegación inferior
   document.getElementById("badge-total-registros").textContent = String(todos.length);
 
+  // Lista visible según filtros activos (más recientes primero)
   var listaParaTarjetas = Array.isArray(AppEstado.reportesFiltrados)
     ? AppEstado.reportesFiltrados
     : todos;
@@ -928,6 +1019,7 @@ function renderizarVistaRegistros() {
     var nivel = item.criticidad ? item.criticidad.nivel : "Bajo";
     var puntaje = item.criticidad ? item.criticidad.puntaje : 0;
 
+    // Buscar dirección completa y tipo de vía en vias.json
     var infoCuadra = obtenerCuadraPorId(item.cuadra);
     var direccionCompleta = infoCuadra
       ? infoCuadra.nombre + " (" + item.cuadra + ")"
@@ -936,6 +1028,7 @@ function renderizarVistaRegistros() {
       ? (infoCuadra.tipo_via === "arterial" ? "Vía arterial" : "Vía secundaria")
       : "";
 
+    // Franja horaria y desglose de puntos
     var franjaItem = item._franja || (AppEstado.criterios ? deducirFranja(item.fecha_hora, AppEstado.criterios) : "");
     var textoFranja = franjaItem === "pico" ? "Hora pico" : (franjaItem === "valle" ? "Hora valle" : "");
     var textoDesglose = item._desglose
@@ -945,6 +1038,7 @@ function renderizarVistaRegistros() {
     var card = document.createElement("article");
     card.className = "tarjeta-registro";
 
+    // Resolver ruta de foto (data URL local o ruta relativa dentro de datos/)
     var htmlMiniatura = "";
     var srcFoto = "";
     if (item.foto) {
@@ -955,7 +1049,7 @@ function renderizarVistaRegistros() {
       }
       htmlMiniatura =
         '<div class="contenedor-foto-registro">' +
-          '<img class="miniatura-registro" src="' + escaparHtml(srcFoto) + '" alt="Evidencia ' + escaparHtml(item.id) + '" loading="lazy" />' +
+          '<img class="miniatura-registro" src="' + srcFoto + '" alt="Evidencia ' + item.id + '" loading="lazy" />' +
           '<span class="pie-ampliar-foto">🔍 Ver foto</span>' +
         '</div>';
     } else {
@@ -965,7 +1059,7 @@ function renderizarVistaRegistros() {
     var botonEliminarHtml = "";
     if (item._esLocal) {
       botonEliminarHtml =
-        '<button type="button" class="btn-eliminar-registro" data-id="' + escaparHtml(item.id) + '">Eliminar</button>';
+        '<button type="button" class="btn-eliminar-registro" data-id="' + item.id + '">Eliminar</button>';
     } else {
       botonEliminarHtml = '<span class="etiqueta-precargado">Precargado</span>';
     }
@@ -977,32 +1071,33 @@ function renderizarVistaRegistros() {
     card.innerHTML =
       '<div class="registro-cabecera">' +
         '<div>' +
-          '<strong>' + escaparHtml(item.id) + '</strong> · <span class="texto-mono">' + escaparHtml(item.fecha_hora.replace("T", " ")) + '</span>' +
+          '<strong>' + item.id + '</strong> · <span class="texto-mono">' + item.fecha_hora.replace("T", " ") + '</span>' +
           (textoFranja ? ' <span class="chip-franja">' + textoFranja + '</span>' : '') +
         '</div>' +
-        '<span class="badge-nivel nivel-' + escaparHtml(String(nivel).toLowerCase()) + '">' +
-          escaparHtml(nivel) + ' (' + puntaje + ' pts)' +
+        '<span class="badge-nivel nivel-' + String(nivel).toLowerCase() + '">' +
+          nivel + ' (' + puntaje + ' pts)' +
         '</span>' +
       '</div>' +
       '<div class="registro-cuerpo">' +
         htmlMiniatura +
         '<div class="registro-detalles">' +
-          '<div class="linea-detalle-reg"><strong>Dirección:</strong> ' + escaparHtml(direccionCompleta) +
+          '<div class="linea-detalle-reg"><strong>Dirección:</strong> ' + direccionCompleta +
             (etiquetaTipoVia ? ' · <em>' + etiquetaTipoVia + '</em>' : '') + '</div>' +
-          '<div class="linea-detalle-reg"><strong>Categoría:</strong> ' + escaparHtml(ETIQUETAS_CATEGORIA[item.categoria] || item.categoria) + '</div>' +
-          '<div class="linea-detalle-reg"><strong>Vehículo / Actor:</strong> ' + escaparHtml(ETIQUETAS_ACTOR[item.actor] || item.actor) + '</div>' +
-          '<div class="linea-detalle-reg"><strong>Fecha y hora:</strong> ' + escaparHtml(item.fecha_hora.replace("T", " ")) +
+          '<div class="linea-detalle-reg"><strong>Categoría:</strong> ' + (ETIQUETAS_CATEGORIA[item.categoria] || item.categoria) + '</div>' +
+          '<div class="linea-detalle-reg"><strong>Vehículo / Actor:</strong> ' + (ETIQUETAS_ACTOR[item.actor] || item.actor) + '</div>' +
+          '<div class="linea-detalle-reg"><strong>Fecha y hora:</strong> ' + item.fecha_hora.replace("T", " ") +
             (textoFranja ? ' (' + textoFranja + ')' : '') + '</div>' +
           '<div class="linea-detalle-reg"><strong>Ubicación GPS:</strong> <span class="texto-mono">' + coordsTexto + '</span></div>' +
-          '<div class="linea-detalle-reg texto-suave"><strong>Criticidad:</strong> ' + escaparHtml(nivel) + ' · ' + puntaje + ' puntos' + textoDesglose + '</div>' +
-          (item.observaciones ? '<div class="obs-texto"><strong>Observaciones:</strong> "' + escaparHtml(item.observaciones) + '"</div>' : '') +
+          '<div class="linea-detalle-reg texto-suave"><strong>Criticidad:</strong> ' + nivel + ' · ' + puntaje + ' puntos' + textoDesglose + '</div>' +
+          (item.observaciones ? '<div class="obs-texto"><strong>Observaciones:</strong> "' + item.observaciones + '"</div>' : '') +
         '</div>' +
       '</div>' +
       '<div class="registro-pie">' +
-        '<span class="texto-suave">Origen: ' + escaparHtml(item.origen) + '</span>' +
+        '<span class="texto-suave">Origen: ' + item.origen + '</span>' +
         botonEliminarHtml +
       '</div>';
 
+    // Permitir tocar la foto para abrirla ampliada en modal
     if (srcFoto) {
       (function (urlImagen, rep, dirTexto) {
         var boxFoto = card.querySelector(".contenedor-foto-registro");
@@ -1021,14 +1116,22 @@ function renderizarVistaRegistros() {
     contenedorLista.appendChild(card);
   }
 
+  // Vincular botones "Eliminar" de los reportes locales
   var botonesEliminar = contenedorLista.querySelectorAll(".btn-eliminar-registro");
   for (var b = 0; b < botonesEliminar.length; b++) {
     botonesEliminar[b].addEventListener("click", function () {
       var idBorrar = this.getAttribute("data-id");
-      abrirModalConfirmarEliminar(idBorrar);
+      if (confirm("¿Seguro que deseas eliminar el reporte local " + idBorrar + "?")) {
+        eliminarReporteLocal(idBorrar);
+        sincronizarListaUnicaReportes();
+      }
     });
   }
 }
+
+/**
+ * Abre y cierra el modal de Ajustes (iniciales del integrante y origen por defecto).
+ */
 
 function abrirModalFoto(srcImagen, titulo, descripcion) {
   var modal = document.getElementById("modal-foto");
@@ -1058,6 +1161,9 @@ function cerrarModalAjustes() {
   document.getElementById("modal-ajustes").hidden = true;
 }
 
+/**
+ * Cambia entre las vistas "captura" y "registros" sin recargar la página.
+ */
 function cambiarVista(nombreVista) {
   var vistaCaptura = document.getElementById("vista-captura");
   var vistaRegistros = document.getElementById("vista-registros");
@@ -1079,10 +1185,15 @@ function cambiarVista(nombreVista) {
   }
 }
 
+/**
+ * Punto de entrada al cargar el DOM.
+ */
 document.addEventListener("DOMContentLoaded", function () {
+  // 1. Cargar configuración local (iniciales y origen)
   AppEstado.config = cargarConfiguracion();
   actualizarIndicadorUsuario();
 
+  // 2. Inicializar fecha y hora local del dispositivo
   var ahora = obtenerFechaHoraLocal();
   var inputFecha = document.getElementById("input-fecha-hora");
   inputFecha.value = ahora;
@@ -1093,6 +1204,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("texto-fecha-actual").textContent = inputFecha.value.replace("T", " ");
   });
 
+  // 3. Configurar botones de selección única de Categoría y Actor
   var botonesCategoria = document.querySelectorAll("#grupo-categoria .btn-opcion");
   for (var i = 0; i < botonesCategoria.length; i++) {
     botonesCategoria[i].addEventListener("click", function () {
@@ -1121,6 +1233,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // 4. Configurar eventos de Foto y Pixelado
   document.getElementById("btn-tomar-foto").addEventListener("click", function () {
     document.getElementById("input-foto-camara").click();
   });
@@ -1147,17 +1260,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("btn-quitar-foto").addEventListener("click", quitarFotoFormulario);
 
+  // 5. Contador de caracteres en Observaciones
   var inputObs = document.getElementById("input-observaciones");
   inputObs.addEventListener("input", function () {
     document.getElementById("contador-obs").textContent = inputObs.value.length + " / 140";
   });
 
+  // 6. Selector de cuadra: actualiza tanto la vía como la ubicación en el mapa
   document.getElementById("select-cuadra").addEventListener("change", function () {
     seleccionarCuadraManual(this.value);
   });
 
   configurarBuscadorDireccion();
 
+  // 7. Botones principales del formulario y navegación
   document.getElementById("btn-usar-gps").addEventListener("click", function () {
     AppEstado.seleccionManualCuadra = false;
     solicitarGpsDispositivo(false);
@@ -1172,6 +1288,7 @@ document.addEventListener("DOMContentLoaded", function () {
     cambiarVista("registros");
   });
 
+  // Selector de capas del mapa de registros (Mapa de calor / Puntos / Ambos)
   var botonesCapaMapa = document.querySelectorAll("#grupo-capas-mapa .btn-capa-mapa");
   for (var cm = 0; cm < botonesCapaMapa.length; cm++) {
     botonesCapaMapa[cm].addEventListener("click", function () {
@@ -1185,6 +1302,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Filtros dinámicos (RF-04) e impresión de resumen operativo (RF-05)
   var idsFiltros = [
     { id: "filtro-cuadra", clave: "cuadra" },
     { id: "filtro-franja", clave: "franja" },
@@ -1227,6 +1345,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Modal de foto ampliada
   var btnCerrarModalFoto = document.getElementById("btn-cerrar-modal-foto");
   if (btnCerrarModalFoto) {
     btnCerrarModalFoto.addEventListener("click", cerrarModalFoto);
@@ -1238,27 +1357,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  var btnCancelarEliminar = document.getElementById("btn-cancelar-eliminar");
-  if (btnCancelarEliminar) {
-    btnCancelarEliminar.addEventListener("click", cerrarModalConfirmarEliminar);
-  }
-  var btnConfirmarEliminar = document.getElementById("btn-confirmar-eliminar");
-  if (btnConfirmarEliminar) {
-    btnConfirmarEliminar.addEventListener("click", function () {
-      if (idPendienteEliminar) {
-        eliminarReporteLocal(idPendienteEliminar);
-        cerrarModalConfirmarEliminar();
-        sincronizarListaUnicaReportes();
-      }
-    });
-  }
-  var modalEliminarEl = document.getElementById("modal-confirmar-eliminar");
-  if (modalEliminarEl) {
-    modalEliminarEl.addEventListener("click", function (ev) {
-      if (ev.target === modalEliminarEl) cerrarModalConfirmarEliminar();
-    });
-  }
-
+  // 8. Ajustes (⚙️)
   document.getElementById("btn-abrir-ajustes").addEventListener("click", abrirModalAjustes);
   document.getElementById("btn-cerrar-ajustes").addEventListener("click", cerrarModalAjustes);
   document.getElementById("btn-guardar-ajustes").addEventListener("click", function () {
@@ -1277,6 +1376,7 @@ document.addEventListener("DOMContentLoaded", function () {
     cerrarModalAjustes();
   });
 
+  // 9. Exportar e Importar en Vista Registros
   document.getElementById("btn-exportar-con-fotos").addEventListener("click", function () {
     exportarReportesJSON(AppEstado.reportesLocales, AppEstado.config.iniciales, true);
   });
@@ -1322,7 +1422,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (res.conflictos > 0) {
         html += "<br><strong>Conflictos (" + res.conflictos + "):</strong><ul>";
         for (var c = 0; c < res.detallesConflictos.length; c++) {
-          html += "<li>" + escaparHtml(res.detallesConflictos[c].id) + ": " + escaparHtml(res.detallesConflictos[c].motivo) + "</li>";
+          html += "<li>" + res.detallesConflictos[c].id + ": " + res.detallesConflictos[c].motivo + "</li>";
         }
         html += "</ul>";
       }
@@ -1330,7 +1430,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (res.detallesInvalidos.length > 0) {
         html += "<br><strong>Motivos de inválidos:</strong><ul>";
         for (var inv = 0; inv < res.detallesInvalidos.length; inv++) {
-          html += "<li>" + escaparHtml(res.detallesInvalidos[inv].id) + ": " + escaparHtml(res.detallesInvalidos[inv].motivo) + "</li>";
+          html += "<li>" + res.detallesInvalidos[inv].id + ": " + res.detallesInvalidos[inv].motivo + "</li>";
         }
         html += "</ul>";
       }
@@ -1342,6 +1442,7 @@ document.addEventListener("DOMContentLoaded", function () {
     lector.readAsText(archivo, "utf-8");
   });
 
+  // 10. Cargar datos JSON con fetch y arrancar mapas
   cargarDatosIniciales()
     .then(function (datos) {
       AppEstado.vias = datos[0];
@@ -1350,6 +1451,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       document.getElementById("nombre-zona-header").textContent = AppEstado.vias.zona.nombre;
 
+      // Poblar selector manual de cuadras y selector de filtro de cuadra
       var selectCuadra = document.getElementById("select-cuadra");
       var filtroCuadra = document.getElementById("filtro-cuadra");
       selectCuadra.innerHTML = '<option value="">-- Selecciona una cuadra --</option>';
@@ -1371,6 +1473,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
 
+      // Iniciar mapas con tolerancia a fallas (sin internet)
       var mapaCapOk = iniciarMapaCaptura("mapa-captura", AppEstado.vias, function (lat, lng) {
         fijarUbicacion(lat, lng, null);
       });
@@ -1380,12 +1483,15 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("aviso-sin-mapa").hidden = false;
       }
 
+      // Recalcular criticidad de todos los reportes y pintar UI
       sincronizarListaUnicaReportes();
 
+      // Si es la primera vez y no tiene iniciales, abrir modal de Ajustes
       if (!AppEstado.config.iniciales) {
         abrirModalAjustes();
       }
 
+      // Intentar ubicar por GPS una vez al abrir la vista
       solicitarGpsDispositivo(true);
     })
     .catch(function (err) {
@@ -1404,6 +1510,9 @@ function actualizarIndicadorUsuario() {
   }
 }
 
+/**
+ * Configura el buscador de direcciones estilo mapa sobre la vista de Captura.
+ */
 function configurarBuscadorDireccion() {
   var inputBuscar = document.getElementById("input-buscar-direccion");
   var btnLimpiar = document.getElementById("btn-limpiar-busqueda");
@@ -1461,37 +1570,25 @@ function configurarBuscadorDireccion() {
     var tokenActual = ++tokenBusqueda;
     temporizador = setTimeout(function () {
       mostrarEstado("Buscando ubicación...", false);
-      buscarDireccionesMapa(valor, AppEstado.vias).then(function (resp) {
-        if (tokenActual !== tokenBusqueda || (resp && resp.abortado)) return;
-
-        var sugerencias = resp && Array.isArray(resp.resultados) ? resp.resultados : [];
-        var sinConexionExt = resp && resp.sinConexionExterno;
+      buscarDireccionesMapa(valor, AppEstado.vias).then(function (sugerencias) {
+        if (tokenActual !== tokenBusqueda) return;
 
         listaSug.innerHTML = "";
-        if (sugerencias.length === 0) {
+        if (!sugerencias || sugerencias.length === 0) {
           listaSug.hidden = true;
-          mostrarEstado(
-            sinConexionExt
-              ? "Sin conexión para buscar calles externas. Elige una cuadra local o toca el mapa."
-              : "No se encontraron coincidencias. Toca el mapa para marcar el punto.",
-            true
-          );
+          mostrarEstado("No se encontraron coincidencias. Toca el mapa para marcar el punto.", true);
           return;
         }
 
-        mostrarEstado(
-          sinConexionExt ? "Mostrando solo cuadras locales (sin conexión a internet)." : "",
-          sinConexionExt
-        );
-
+        mostrarEstado("", false);
         for (var i = 0; i < sugerencias.length; i++) {
           (function (sug) {
             var li = document.createElement("li");
             li.className = "item-sugerencia";
             li.setAttribute("role", "option");
             li.innerHTML =
-              '<span class="sugerencia-titulo">' + escaparHtml(sug.titulo) + '</span>' +
-              '<span class="sugerencia-sub">' + escaparHtml(sug.subtitulo) + '</span>';
+              '<span class="sugerencia-titulo">' + sug.titulo + '</span>' +
+              '<span class="sugerencia-sub">' + sug.subtitulo + '</span>';
             li.addEventListener("click", function () {
               elegirSugerencia(sug);
             });

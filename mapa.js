@@ -2,7 +2,7 @@
  * ARCHIVO: mapa.js
  * RESPONSABILIDAD: Gestión de los mapas Leaflet (mapa de captura y mapa de
  * registros con capa de calor Leaflet.heat ponderada por criticidad y capa
- * de puntos individuales), dibujo de cuadras, geocodificación y marcador.
+ * de puntos individuales), dibujo de cuadras y marcador arrastrable.
  * ============================================================================ */
 
 var mapaCaptura = null;
@@ -17,48 +17,34 @@ var capaCalorRegistros = null;
 var modoVisualizacionRegistros = "ambos"; // "ambos" | "calor" | "puntos"
 var ultimosReportesRegistros = [];
 var ultimoViasRegistros = null;
-var controladorBusquedaNominatim = null;
 
+/**
+ * Devuelve true si la librería Leaflet (L) está cargada en el navegador.
+ */
 function leafletDisponible() {
   return typeof L !== "undefined" && L !== null;
 }
 
+/**
+ * Devuelve true si el plugin Leaflet.heat (L.heatLayer) está disponible.
+ */
 function heatDisponible() {
   return leafletDisponible() && typeof L.heatLayer === "function";
 }
 
-function escaparTextoMapa(valor) {
-  return String(valor == null ? "" : valor)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-function obtenerCentroideCuadra(cuadraObj) {
-  if (!cuadraObj || !Array.isArray(cuadraObj.extremos) || cuadraObj.extremos.length === 0) {
-    return null;
-  }
-  var sumaLat = 0;
-  var sumaLng = 0;
-  for (var i = 0; i < cuadraObj.extremos.length; i++) {
-    sumaLat += Number(cuadraObj.extremos[i][0]);
-    sumaLng += Number(cuadraObj.extremos[i][1]);
-  }
-  return {
-    lat: Number((sumaLat / cuadraObj.extremos.length).toFixed(6)),
-    lng: Number((sumaLng / cuadraObj.extremos.length).toFixed(6))
-  };
-}
-
+/**
+ * Devuelve el color hexadecimal asociado a cada nivel de criticidad.
+ */
 function obtenerColorNivel(nivel) {
   var clave = String(nivel || "").toLowerCase();
-  if (clave === "alto") return "#dc2626";
-  if (clave === "medio") return "#d97706";
-  return "#16a34a";
+  if (clave === "alto") return "#dc2626";   // Rojo
+  if (clave === "medio") return "#d97706";  // Ámbar / Naranja
+  return "#16a34a";                         // Verde (Bajo)
 }
 
+/**
+ * Inicializa el mapa de la vista Captura con OpenStreetMap y las cuadras de vias.json.
+ */
 function iniciarMapaCaptura(idContenedor, vias, alElegirUbicacion) {
   if (!leafletDisponible()) {
     return false;
@@ -80,6 +66,7 @@ function iniciarMapaCaptura(idContenedor, vias, alElegirUbicacion) {
   capaReportesCaptura = L.layerGroup().addTo(mapaCaptura);
   polilineasCuadras = {};
 
+  // Dibujar las cuadras definidas en vias.json como líneas interactivas
   if (vias && Array.isArray(vias.cuadras)) {
     for (var i = 0; i < vias.cuadras.length; i++) {
       var cuadra = vias.cuadras[i];
@@ -91,7 +78,7 @@ function iniciarMapaCaptura(idContenedor, vias, alElegirUbicacion) {
         opacity: 0.7
       });
 
-      linea.bindTooltip(escaparTextoMapa(cuadra.nombre + " (" + cuadra.tipo_via + ")"), {
+      linea.bindTooltip(cuadra.nombre + " (" + cuadra.tipo_via + ")", {
         sticky: true
       });
 
@@ -115,6 +102,9 @@ function iniciarMapaCaptura(idContenedor, vias, alElegirUbicacion) {
   return true;
 }
 
+/**
+ * Crea o mueve el marcador arrastrable de ubicación en el mapa de captura.
+ */
 function actualizarMarcadorCaptura(lat, lng, alArrastrar) {
   if (!leafletDisponible() || !mapaCaptura) return;
 
@@ -139,6 +129,9 @@ function actualizarMarcadorCaptura(lat, lng, alArrastrar) {
   mapaCaptura.panTo(posicion);
 }
 
+/**
+ * Resalta visualmente la cuadra asignada en el mapa de captura y atenúa las demás.
+ */
 function resaltarCuadraCaptura(cuadraId) {
   if (!leafletDisponible() || !mapaCaptura) return;
 
@@ -163,6 +156,9 @@ function resaltarCuadraCaptura(cuadraId) {
   }
 }
 
+/**
+ * Dibuja puntos pequeños de referencia de los reportes ya guardados en el mapa de captura.
+ */
 function actualizarPuntosEnMapaCaptura(listaReportes) {
   if (!leafletDisponible() || !mapaCaptura || !capaReportesCaptura) return;
 
@@ -182,14 +178,17 @@ function actualizarPuntosEnMapaCaptura(listaReportes) {
       fillOpacity: 0.85
     })
       .bindPopup(
-        "<strong>" + escaparTextoMapa(r.id) + "</strong><br>" +
-        "Cuadra: " + escaparTextoMapa(r.cuadra) + "<br>" +
-        "Nivel: " + escaparTextoMapa(nivel) + " (" + escaparTextoMapa(r.criticidad ? r.criticidad.puntaje : "-") + ")"
+        "<strong>" + r.id + "</strong><br>" +
+        "Cuadra: " + r.cuadra + "<br>" +
+        "Nivel: " + nivel + " (" + (r.criticidad ? r.criticidad.puntaje : "-") + ")"
       )
       .addTo(capaReportesCaptura);
   }
 }
 
+/**
+ * Recalcula el tamaño del mapa de captura cuando su contenedor pasa de oculto a visible.
+ */
 function redimensionarMapaCaptura() {
   if (leafletDisponible() && mapaCaptura) {
     setTimeout(function () {
@@ -198,6 +197,10 @@ function redimensionarMapaCaptura() {
   }
 }
 
+/**
+ * Inicializa el mapa de la vista Registros con soporte para capa de calor
+ * (Leaflet.heat) y capa de puntos individuales coloreados por criticidad.
+ */
 function iniciarMapaRegistros(idContenedor, vias) {
   if (!leafletDisponible()) {
     return false;
@@ -218,11 +221,13 @@ function iniciarMapaRegistros(idContenedor, vias) {
 
   capaMarcadoresRegistros = L.layerGroup().addTo(mapaRegistros);
 
+  // Avisar si Leaflet.heat no cargó
   var avisoCalor = document.getElementById("aviso-sin-calor");
   if (avisoCalor && !heatDisponible()) {
     avisoCalor.hidden = false;
   }
 
+  // Agregar leyenda de colores por nivel de criticidad
   var leyenda = L.control({ position: "bottomright" });
   leyenda.onAdd = function () {
     var div = L.DomUtil.create("div", "leyenda-mapa");
@@ -238,6 +243,10 @@ function iniciarMapaRegistros(idContenedor, vias) {
   return true;
 }
 
+/**
+ * Aplica la visibilidad de las capas del mapa de registros según el modo elegido:
+ * "ambos" (mapa de calor + puntos), "calor" (solo mapa de calor) o "puntos" (solo marcadores).
+ */
 function aplicarModoCapasRegistros() {
   if (!leafletDisponible() || !mapaRegistros) return;
 
@@ -265,6 +274,9 @@ function aplicarModoCapasRegistros() {
   }
 }
 
+/**
+ * Cambia el modo de visualización del mapa de registros y actualiza las capas al instante.
+ */
 function cambiarModoMapaRegistros(nuevoModo) {
   if (nuevoModo !== "ambos" && nuevoModo !== "calor" && nuevoModo !== "puntos") {
     return;
@@ -273,6 +285,10 @@ function cambiarModoMapaRegistros(nuevoModo) {
   aplicarModoCapasRegistros();
 }
 
+/**
+ * Actualiza tanto la capa de calor (Leaflet.heat ponderada por criticidad.puntaje)
+ * como los marcadores individuales en el mapa de Registros.
+ */
 function actualizarMarcadoresRegistros(listaReportes, vias) {
   ultimosReportesRegistros = Array.isArray(listaReportes) ? listaReportes : [];
   if (vias) ultimoViasRegistros = vias;
@@ -280,6 +296,11 @@ function actualizarMarcadoresRegistros(listaReportes, vias) {
   if (!leafletDisponible() || !mapaRegistros || !capaMarcadoresRegistros) return;
 
   capaMarcadoresRegistros.clearLayers();
+
+  if (capaCalorRegistros && mapaRegistros.hasLayer(capaCalorRegistros)) {
+    mapaRegistros.removeLayer(capaCalorRegistros);
+  }
+  capaCalorRegistros = null;
 
   var coordenadas = [];
   var puntosCalor = [];
@@ -292,6 +313,7 @@ function actualizarMarcadoresRegistros(listaReportes, vias) {
     var puntaje = r.criticidad && typeof r.criticidad.puntaje === "number" ? r.criticidad.puntaje : 1;
     var color = obtenerColorNivel(nivel);
 
+    // Intensidad ponderada por el puntaje de criticidad (escala 0..9 -> 0.25..1.0)
     var intensidad = Math.max(0.25, Math.min(1.0, puntaje / 9));
     puntosCalor.push([r.lat, r.lng, intensidad]);
 
@@ -305,34 +327,31 @@ function actualizarMarcadoresRegistros(listaReportes, vias) {
     });
 
     marcador.bindPopup(
-      "<strong>" + escaparTextoMapa(r.id) + "</strong> (" + escaparTextoMapa(r.origen) + ")<br>" +
-      "Fecha: " + escaparTextoMapa(r.fecha_hora.replace("T", " ")) + "<br>" +
-      "Cuadra: " + escaparTextoMapa(r.cuadra) + "<br>" +
-      "Nivel: <strong>" + escaparTextoMapa(nivel) + " (" + escaparTextoMapa(puntaje) + " pts)</strong>"
+      "<strong>" + r.id + "</strong> (" + r.origen + ")<br>" +
+      "Fecha: " + r.fecha_hora.replace("T", " ") + "<br>" +
+      "Cuadra: " + r.cuadra + "<br>" +
+      "Nivel: <strong>" + nivel + " (" + puntaje + " pts)</strong>"
     );
 
     marcador.addTo(capaMarcadoresRegistros);
     coordenadas.push([r.lat, r.lng]);
   }
 
+  // Crear capa de calor solo si el contenedor ya tiene tamaño visible (> 0 px)
   var tamMapa = mapaRegistros.getSize();
-  if (heatDisponible() && tamMapa.x > 0 && tamMapa.y > 0) {
-    if (!capaCalorRegistros) {
-      capaCalorRegistros = L.heatLayer(puntosCalor, {
-        radius: 28,
-        blur: 20,
-        maxZoom: 18,
-        max: 1.0,
-        minOpacity: 0.45,
-        gradient: {
-          0.30: "#16a34a",
-          0.65: "#f59e0b",
-          1.00: "#dc2626"
-        }
-      });
-    } else {
-      capaCalorRegistros.setLatLngs(puntosCalor);
-    }
+  if (heatDisponible() && puntosCalor.length > 0 && tamMapa.x > 0 && tamMapa.y > 0) {
+    capaCalorRegistros = L.heatLayer(puntosCalor, {
+      radius: 28,
+      blur: 20,
+      maxZoom: 18,
+      max: 1.0,
+      minOpacity: 0.45,
+      gradient: {
+        0.30: "#16a34a",
+        0.65: "#f59e0b",
+        1.00: "#dc2626"
+      }
+    });
   }
 
   aplicarModoCapasRegistros();
@@ -345,52 +364,59 @@ function actualizarMarcadoresRegistros(listaReportes, vias) {
   }
 }
 
+/**
+ * Recalcula el tamaño del mapa de registros cuando se abre la pestaña Registros
+ * y reconstruye la capa de calor para evitar el lienzo 0x0 al estar oculto.
+ */
 function redimensionarMapaRegistros() {
   if (leafletDisponible() && mapaRegistros) {
     setTimeout(function () {
       mapaRegistros.invalidateSize();
-      if (capaCalorRegistros && mapaRegistros.hasLayer(capaCalorRegistros)) {
-        mapaRegistros.removeLayer(capaCalorRegistros);
-        capaCalorRegistros = null;
-      }
       actualizarMarcadoresRegistros(ultimosReportesRegistros, ultimoViasRegistros);
     }, 80);
   }
 }
 
+/**
+ * Busca coincidencias en las cuadras de vias.json y en Nominatim (OpenStreetMap)
+ * priorizando Santa Marta / zona de estudio.
+ * Devuelve Promise<Array<{ titulo, subtitulo, lat, lng, origen }>>.
+ */
 function buscarDireccionesMapa(textoConsulta, vias) {
   var q = String(textoConsulta || "").trim();
   if (q.length < 2) {
-    return Promise.resolve({ resultados: [], sinConexionExterno: false });
+    return Promise.resolve([]);
   }
 
   var qLower = q.toLowerCase();
   var resultados = [];
 
+  // 1. Coincidencias locales en cuadras de vias.json
   if (vias && Array.isArray(vias.cuadras)) {
     for (var i = 0; i < vias.cuadras.length; i++) {
       var c = vias.cuadras[i];
-      var centroide = obtenerCentroideCuadra(c);
-      if (!centroide) continue;
+      if (!Array.isArray(c.extremos) || c.extremos.length === 0) continue;
 
       var textoCuadra = (String(c.nombre || "") + " " + String(c.id || "") + " " + String(c.tipo_via || "")).toLowerCase();
       if (textoCuadra.indexOf(qLower) !== -1) {
+        var sumaLat = 0;
+        var sumaLng = 0;
+        for (var j = 0; j < c.extremos.length; j++) {
+          sumaLat += Number(c.extremos[j][0]);
+          sumaLng += Number(c.extremos[j][1]);
+        }
         resultados.push({
           titulo: c.nombre + " (" + c.id + ")",
           subtitulo: "Cuadra en zona · " + (c.tipo_via === "arterial" ? "Vía arterial" : "Vía secundaria"),
-          lat: centroide.lat,
-          lng: centroide.lng,
+          lat: Number((sumaLat / c.extremos.length).toFixed(6)),
+          lng: Number((sumaLng / c.extremos.length).toFixed(6)),
           origen: "local"
         });
       }
     }
   }
 
-  if (controladorBusquedaNominatim && typeof controladorBusquedaNominatim.abort === "function") {
-    controladorBusquedaNominatim.abort();
-  }
-  controladorBusquedaNominatim = typeof AbortController !== "undefined" ? new AbortController() : null;
-
+  // 2. Consulta a Nominatim (con viewbox si existe zona.limites)
   var consultaConCiudad = qLower.indexOf("santa marta") === -1 ? q + ", Santa Marta, Colombia" : q;
   var url =
     "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&countrycodes=co&q=" +
@@ -404,17 +430,15 @@ function buscarDireccionesMapa(textoConsulta, vias) {
     typeof lim.lng_max === "number" &&
     typeof lim.lat_max === "number"
   ) {
+    // Formato viewbox de Nominatim: lon_min,lat_max,lon_max,lat_min
     url += "&viewbox=" + lim.lng_min + "," + lim.lat_max + "," + lim.lng_max + "," + lim.lat_min;
   }
 
-  var opcionesFetch = {
-    headers: { "Accept": "application/json" }
-  };
-  if (controladorBusquedaNominatim) {
-    opcionesFetch.signal = controladorBusquedaNominatim.signal;
-  }
-
-  return fetch(url, opcionesFetch)
+  return fetch(url, {
+    headers: {
+      "Accept": "application/json"
+    }
+  })
     .then(function (resp) {
       if (!resp.ok) throw new Error("Error consultando servicio de direcciones");
       return resp.json();
@@ -440,12 +464,9 @@ function buscarDireccionesMapa(textoConsulta, vias) {
           });
         }
       }
-      return { resultados: resultados.slice(0, 7), sinConexionExterno: false };
+      return resultados.slice(0, 7);
     })
-    .catch(function (err) {
-      if (err && err.name === "AbortError") {
-        return { resultados: null, abortado: true, sinConexionExterno: false };
-      }
-      return { resultados: resultados.slice(0, 7), sinConexionExterno: true };
+    .catch(function () {
+      return resultados.slice(0, 7);
     });
 }

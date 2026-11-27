@@ -3,460 +3,424 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Control Mal Parqueo · Santa Marta</title>
-
-  <!-- Leaflet CSS desde CDN (la app sigue funcionando en modo respaldo si no hay internet) -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""
-  />
+  <title>Control de Mal Parqueo - Santa Marta</title>
+  <!-- CSS de Leaflet (CDN exacto obligatorio) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="estilos.css" />
 </head>
 <body>
-  <!-- ======================================================================
-       ENCABEZADO SUPERIOR
-       ====================================================================== -->
-  <header class="encabezado-app">
-    <div class="encabezado-izq">
-      <h1 class="titulo-app">Control Mal Parqueo</h1>
+  <!-- Encabezado compacto -->
+  <header class="encabezado">
+    <div>
+      <h1 class="titulo-app">Control Vial Santa Marta</h1>
       <p id="nombre-zona-header" class="subtitulo-zona">Cargando zona de estudio...</p>
     </div>
-    <button
-      type="button"
-      id="btn-abrir-ajustes"
-      class="btn-ajustes"
-      aria-label="Configurar iniciales y origen del observador"
-      title="Configurar iniciales y origen"
-    >
-      <span id="indicador-iniciales">Configurar</span>
-      <span aria-hidden="true">⚙️</span>
+    <button type="button" id="btn-abrir-ajustes" class="btn-ajustes" aria-label="Ajustes del integrante">
+      ⚙️ <span id="indicador-iniciales">Configurar</span>
     </button>
   </header>
 
-  <!-- Aviso si se abrió con file:// sin servidor local -->
-  <div id="aviso-fetch" class="banner-alerta" role="alert" hidden>
-    <strong>Aviso técnico:</strong> No se pudieron leer los archivos <code>datos/*.json</code>.
-    Abre la carpeta con un servidor local (por ejemplo <code>npx serve</code> o <code>python -m http.server</code>) en lugar de doble clic sobre <code>index.html</code>.
+  <!-- Aviso obligatorio si se abre con doble clic sin servidor local -->
+  <div id="aviso-fetch" class="banner-error" hidden>
+    No se pudieron leer los archivos JSON: <strong>abre con Live Server o GitHub Pages</strong>.
   </div>
 
-  <!-- Aviso si Leaflet no cargó (sin conexión a CDN) -->
-  <div id="aviso-sin-mapa" class="banner-info" role="status" hidden>
-    <strong>Modo sin mapa:</strong> No se pudo cargar el mapa en línea. Puedes elegir la cuadra manualmente en la lista desplegable y guardar el reporte con normalidad.
+  <!-- Aviso de contingencia si no hay internet / no cargó Leaflet -->
+  <div id="aviso-sin-mapa" class="aviso-alerta margen-lateral" hidden>
+    Mapa sin conexión: puedes seguir registrando usando el botón <strong>Usar mi ubicación</strong> y el selector de cuadra.
   </div>
 
   <!-- ======================================================================
-       CONTENIDO PRINCIPAL (2 VISTAS: CAPTURA Y REGISTROS)
+       VISTA 1: CAPTURA RÁPIDA (< 30 SEGUNDOS)
        ====================================================================== -->
-  <main class="contenedor-principal">
-    <!-- ====================================================================
-         VISTA 1: CAPTURA EN CAMPO (RF-01)
-         ==================================================================== -->
-    <section id="vista-captura" aria-labelledby="titulo-vista-captura">
-      <h2 id="titulo-vista-captura" class="titulo-seccion-oculta">Registrar evento de mal parqueo</h2>
-
-      <!-- 1. UBICACIÓN Y CUADRA -->
-      <article class="tarjeta">
-        <div class="cabecera-tarjeta">
-          <h3>1. Ubicación y cuadra</h3>
-          <button type="button" id="btn-usar-gps" class="btn-secundario-peq">
-            📍 Usar mi ubicación
-          </button>
-        </div>
-
-        <p id="estado-gps" class="texto-estado" aria-live="polite" hidden></p>
-        <p id="aviso-precision" class="aviso-alerta" role="status" hidden></p>
-        <p id="aviso-fuera-zona" class="aviso-alerta" role="status" hidden></p>
-
-        <div class="fila-coordenadas">
-          <span id="texto-coordenadas" class="texto-mono">Sin ubicación marcada</span>
-        </div>
-
-        <div class="buscador-direccion-wrap">
-          <label for="input-buscar-direccion" class="etiqueta-campo">Buscar calle, carrera o lugar</label>
-          <div class="fila-buscador-direccion">
-            <input
-              type="search"
-              id="input-buscar-direccion"
-              placeholder="Ej: Carrera 5, Calle 15, Parque de los Novios..."
-              autocomplete="off"
-            />
-            <button type="button" id="btn-limpiar-busqueda" class="btn-secundario-peq" hidden>
-              Limpiar
-            </button>
-          </div>
-          <ul id="lista-sugerencias-direccion" class="lista-sugerencias" role="listbox" hidden></ul>
-          <p id="estado-busqueda-direccion" class="texto-suave" aria-live="polite" hidden></p>
-        </div>
-
-        <div id="mapa-captura" class="contenedor-mapa" aria-label="Mapa para marcar la ubicación del evento"></div>
-        <p class="ayuda-campo">Toca el mapa, busca una dirección arriba o arrastra el marcador para ajustar el punto exacto.</p>
-
-        <div class="caja-cuadra-detectada">
-          <div class="fila-cuadra-info">
-            <span id="cuadra-nombre-lectura" class="nombre-cuadra">Sin cuadra asignada</span>
-            <span id="cuadra-tipo-lectura" class="etiqueta-via">Tipo de vía: —</span>
-          </div>
-
-          <label for="select-cuadra" class="etiqueta-campo">Cuadra de la zona de estudio (editable si es necesario)</label>
-          <select id="select-cuadra" name="cuadra">
-            <option value="">-- Selecciona una cuadra --</option>
-          </select>
-        </div>
-        <p id="error-ubicacion" class="mensaje-error" role="alert" hidden></p>
-        <p id="error-cuadra" class="mensaje-error" role="alert" hidden></p>
-      </article>
-
-      <!-- 2. CATEGORÍA DE OBSTRUCCIÓN -->
-      <article class="tarjeta">
-        <h3>2. Categoría de obstrucción *</h3>
-        <div id="grupo-categoria" class="rejilla-botones" role="group" aria-label="Categoría de obstrucción">
-          <button type="button" class="btn-opcion" data-valor="doble_fila" aria-pressed="false">
-            <span class="icono-opcion" aria-hidden="true">🚗🚗</span>
-            <span>Doble fila / vía prohibida</span>
-          </button>
-          <button type="button" class="btn-opcion" data-valor="bloqueo_rampa_cebra_paradero" aria-pressed="false">
-            <span class="icono-opcion" aria-hidden="true">♿</span>
-            <span>Bloqueo rampa, cebra o paradero</span>
-          </button>
-          <button type="button" class="btn-opcion" data-valor="invasion_anden" aria-pressed="false">
-            <span class="icono-opcion" aria-hidden="true">🚶</span>
-            <span>Invasión de andén</span>
-          </button>
-        </div>
-        <p id="error-categoria" class="mensaje-error" role="alert" hidden></p>
-      </article>
-
-      <!-- 3. TIPO DE ACTOR -->
-      <article class="tarjeta">
-        <h3>3. Tipo de actor *</h3>
-        <div id="grupo-actor" class="rejilla-botones rejilla-2col" role="group" aria-label="Tipo de actor">
-          <button type="button" class="btn-opcion" data-valor="vehiculo_particular" aria-pressed="false">
-            <span class="icono-opcion" aria-hidden="true">🚘</span>
-            <span>Vehículo particular</span>
-          </button>
-          <button type="button" class="btn-opcion" data-valor="motocicleta" aria-pressed="false">
-            <span class="icono-opcion" aria-hidden="true">🏍️</span>
-            <span>Motocicleta</span>
-          </button>
-          <button type="button" class="btn-opcion" data-valor="vehiculo_carga" aria-pressed="false">
-            <span class="icono-opcion" aria-hidden="true">🚚</span>
-            <span>Vehículo de carga</span>
-          </button>
-          <button type="button" class="btn-opcion" data-valor="mobiliario_comercial" aria-pressed="false">
-            <span class="icono-opcion" aria-hidden="true">🪧</span>
-            <span>Mobiliario comercial</span>
-          </button>
-        </div>
-        <p id="error-actor" class="mensaje-error" role="alert" hidden></p>
-      </article>
-
-      <!-- 4. FOTO OPCIONAL + PIXELADO -->
-      <article class="tarjeta">
-        <h3>4. Evidencia fotográfica (opcional)</h3>
-        <p class="ayuda-campo">Antes de guardar, pixela placas y rostros arrastrando el dedo sobre la imagen.</p>
-
-        <div class="fila-botones-foto">
-          <button type="button" id="btn-tomar-foto" class="btn-secundario">📷 Tomar foto</button>
-          <button type="button" id="btn-galeria-foto" class="btn-secundario">🖼️ Elegir de galería</button>
-        </div>
-
-        <input type="file" id="input-foto-camara" accept="image/*" capture="environment" hidden />
-        <input type="file" id="input-foto-galeria" accept="image/*" hidden />
-
-        <div id="zona-edicion-foto" class="zona-edicion-foto" hidden>
-          <div class="barra-herramientas-foto">
-            <span class="texto-herramienta">Arrastra sobre la foto para pixelar</span>
-            <div class="acciones-canvas">
-              <button type="button" id="btn-deshacer-pixel" class="btn-secundario-peq">↩️ Deshacer</button>
-              <button type="button" id="btn-quitar-foto" class="btn-peligro-peq">🗑️ Quitar foto</button>
-            </div>
-          </div>
-
-          <canvas id="canvas-foto" class="canvas-foto" aria-label="Vista previa de foto para pixelar placas o rostros"></canvas>
-
-          <label class="casilla-privacidad">
-            <input type="checkbox" id="check-privacidad-foto" />
-            <span>Confirmo que no se ven placas ni rostros en esta foto.</span>
-          </label>
-        </div>
-        <p id="error-foto" class="mensaje-error" role="alert" hidden></p>
-      </article>
-
-      <!-- 5. OBSERVACIONES Y FECHA/HORA -->
-      <article class="tarjeta">
-        <h3>5. Observaciones y hora del evento</h3>
-        <label for="input-observaciones" class="etiqueta-campo">Observaciones breves (opcional, máx. 140 caracteres)</label>
-        <textarea
-          id="input-observaciones"
-          rows="2"
-          maxlength="140"
-          placeholder="Ej: Camioneta bloqueando rampa de esquina frente a local comercial."
-        ></textarea>
-        <div class="fila-contador">
-          <span id="contador-obs" class="texto-suave">0 / 140</span>
-        </div>
-
-        <details id="detalle-fecha-hora" class="detalle-fecha">
-          <summary>Fecha y hora: <strong id="texto-fecha-actual">--</strong> (toca para editar)</summary>
-          <div class="contenido-detalle-fecha">
-            <label for="input-fecha-hora" class="etiqueta-campo">Fecha y hora exacta del evento</label>
-            <input type="datetime-local" id="input-fecha-hora" />
-          </div>
-        </details>
-      </article>
-
-      <!-- Aviso si localStorage se llena (QuotaExceededError) -->
-      <div id="aviso-quota" class="banner-alerta" role="alert" hidden>
-        <p><strong>Almacenamiento lleno:</strong> exporta y borra registros locales.</p>
-        <button type="button" id="btn-exportar-emergencia" class="btn-secundario">
-          ⬇️ Exportar respaldo ahora (.json)
-        </button>
-      </div>
-
-      <!-- BOTÓN PRINCIPAL DE GUARDADO -->
-      <div class="zona-guardar">
-        <button type="button" id="btn-guardar" class="btn-primario">
-          Guardar reporte
-        </button>
-      </div>
-
-      <!-- TARJETA DE CONFIRMACIÓN TRAS GUARDAR -->
-      <article id="tarjeta-confirmacion" class="tarjeta tarjeta-exito" aria-live="polite" hidden>
-        <h3>✅ Reporte guardado localmente</h3>
-        <p id="confirmacion-desglose" class="texto-desglose"></p>
-        <p class="fila-nivel-confirmacion">
-          Nivel de criticidad: <span id="confirmacion-badge-nivel" class="badge-nivel"></span>
-        </p>
-        <p id="confirmacion-tiempo" class="texto-suave"></p>
-        <button type="button" id="btn-registrar-otro" class="btn-primario">
-          Registrar otro evento
-        </button>
-      </article>
+  <main id="vista-captura" class="contenedor-principal">
+    <!-- Tarjeta de confirmación tras guardar -->
+    <section id="tarjeta-confirmacion" class="tarjeta-exito" hidden>
+      <h2>✔ Reporte guardado</h2>
+      <p class="linea-resultado">
+        <span id="confirmacion-desglose"></span>
+        <span id="confirmacion-badge-nivel" class="badge-nivel"></span>
+      </p>
+      <p id="confirmacion-tiempo" class="texto-suave"></p>
+      <button type="button" id="btn-registrar-otro" class="btn-primario btn-ancho">
+        Registrar otro
+      </button>
     </section>
 
-    <!-- ====================================================================
-         VISTA 2: REGISTROS, MAPA Y EXPORTAR / IMPORTAR (RF-04, RF-05, CU-02)
-         ==================================================================== -->
-    <section id="vista-registros" aria-labelledby="titulo-vista-registros" hidden>
-      <h2 id="titulo-vista-registros" class="titulo-seccion-oculta">Registros y resumen de campo</h2>
+    <!-- Alerta de cuota llena (QuotaExceededError) -->
+    <section id="aviso-quota" class="banner-error" hidden>
+      <strong>Almacenamiento lleno: exporta y borra registros locales.</strong>
+      <button type="button" id="btn-exportar-emergencia" class="btn-secundario btn-ancho">
+        Exportar respaldo JSON ahora
+      </button>
+    </section>
 
-      <!-- RESUMEN META DE 30 REGISTROS -->
-      <article class="tarjeta">
-        <div class="cabecera-tarjeta">
-          <h3>Avance de recolección en campo</h3>
-          <span id="uso-almacenamiento" class="texto-suave">Almacenamiento: 0,00 de 5 MB</span>
-        </div>
+    <!-- a) Ubicación -->
+    <section class="tarjeta">
+      <div class="fila-cabecera-seccion">
+        <h2>1. Ubicación</h2>
+        <button type="button" id="btn-usar-gps" class="btn-secundario">
+          📍 Usar mi ubicación
+        </button>
+      </div>
+      <p class="ayuda-campo">Toca el mapa o arrastra el marcador azul hasta el punto exacto.</p>
 
-        <div class="bloque-meta">
-          <div class="numero-meta" id="contador-meta-30">0 de 30</div>
-          <div class="texto-meta">registros con origen <code>campo</code></div>
-        </div>
-
-        <div class="fila-desglose-resumen">
-          <span id="desglose-franjas">Hora pico: 0 · Hora valle: 0</span>
-        </div>
-        <div id="desglose-cuadras" class="lista-chips-cuadra"></div>
-      </article>
-
-      <!-- FILTROS SIN RECARGAR Y PORCENTAJES POR CATEGORÍA (RF-04 / CU-02) -->
-      <article class="tarjeta">
-        <div class="cabecera-tarjeta">
-          <h3>Filtros y participación por categoría</h3>
-          <button type="button" id="btn-limpiar-filtros" class="btn-secundario-peq">
-            Limpiar filtros
+            <div class="buscador-direccion">
+        <label for="input-buscar-direccion" class="etiqueta-control">Buscar calle, carrera o punto en Santa Marta</label>
+        <div class="fila-buscador">
+          <input
+            type="search"
+            id="input-buscar-direccion"
+            class="control-input"
+            placeholder="Ej. Carrera 5 # 14-20, Calle 15, Parque..."
+            autocomplete="off"
+          />
+          <button type="button" id="btn-limpiar-busqueda" class="btn-secundario" hidden aria-label="Limpiar búsqueda">
+            ✕
           </button>
         </div>
+        <ul id="lista-sugerencias-direccion" class="lista-sugerencias" role="listbox" hidden></ul>
+        <div id="estado-busqueda-direccion" class="texto-suave" hidden></div>
+      </div>
 
-        <div class="rejilla-filtros">
-          <div>
-            <label for="filtro-cuadra" class="etiqueta-campo">Cuadra</label>
-            <select id="filtro-cuadra">
-              <option value="todas">Todas las cuadras</option>
-            </select>
-          </div>
-          <div>
-            <label for="filtro-franja" class="etiqueta-campo">Franja horaria</label>
-            <select id="filtro-franja">
-              <option value="todas">Todas (pico y valle)</option>
-              <option value="pico">Hora pico</option>
-              <option value="valle">Hora valle</option>
-            </select>
-          </div>
-          <div>
-            <label for="filtro-categoria" class="etiqueta-campo">Categoría</label>
-            <select id="filtro-categoria">
-              <option value="todas">Todas las categorías</option>
-              <option value="doble_fila">Doble fila / vía prohibida</option>
-              <option value="bloqueo_rampa_cebra_paradero">Bloqueo rampa, cebra o paradero</option>
-              <option value="invasion_anden">Invasión de andén</option>
-            </select>
-          </div>
-          <div>
-            <label for="filtro-actor" class="etiqueta-campo">Actor</label>
-            <select id="filtro-actor">
-              <option value="todas">Todos los actores</option>
-              <option value="vehiculo_particular">Vehículo particular</option>
-              <option value="motocicleta">Motocicleta</option>
-              <option value="vehiculo_carga">Vehículo de carga</option>
-              <option value="mobiliario_comercial">Mobiliario comercial</option>
-            </select>
-          </div>
-        </div>
+      <div id="mapa-captura" class="caja-mapa"></div>
 
-        <p id="conteo-filtrado-texto" class="texto-conteo-filtrado">Mostrando 0 de 0 reportes</p>
-        <div id="desglose-porcentajes-categoria" class="lista-porcentajes"></div>
-      </article>
+      <div class="fila-coords">
+        <span id="texto-coordenadas" class="texto-mono">Sin ubicación marcada</span>
+      </div>
+      <div id="estado-gps" class="aviso-info" hidden></div>
+      <div id="aviso-precision" class="aviso-info" hidden></div>
+      <div id="error-ubicacion" class="error-campo" hidden></div>
+    </section>
 
-      <!-- MAPA GENERAL DE REGISTROS CON CAPA DE CALOR Y PUNTOS (RF-03) -->
-      <article class="tarjeta">
-        <div class="cabecera-tarjeta">
-          <h3>Mapa de calor y puntos</h3>
-          <div id="grupo-capas-mapa" class="grupo-capas-mapa" role="group" aria-label="Modo de visualización del mapa">
-            <button type="button" class="btn-capa-mapa activo" data-modo="ambos" aria-pressed="true">Ambos</button>
-            <button type="button" class="btn-capa-mapa" data-modo="calor" aria-pressed="false">Calor</button>
-            <button type="button" class="btn-capa-mapa" data-modo="puntos" aria-pressed="false">Puntos</button>
-          </div>
-        </div>
-        <p id="aviso-sin-calor" class="aviso-info" role="status" hidden>
-          La capa de calor requiere conexión al complemento Leaflet.heat; se muestran los puntos individuales.
+    <!-- b) Cuadra (asignación automática + respaldo) -->
+    <section class="tarjeta">
+      <h2>2. Cuadra asignada</h2>
+      <div id="aviso-fuera-zona" class="aviso-alerta" hidden></div>
+
+      <div class="caja-cuadra-lectura">
+        <div id="cuadra-nombre-lectura" class="nombre-cuadra">Marca un punto en el mapa</div>
+        <span id="cuadra-tipo-lectura" class="etiqueta-via">Tipo de vía: —</span>
+      </div>
+
+      <label for="select-cuadra" class="etiqueta-control">Cuadra del sector Mercado - CAI (automática al tocar mapa o elegir aquí):</label>
+      <select id="select-cuadra" class="control-select">
+        <option value="">-- Selecciona una cuadra --</option>
+      </select>
+      <div id="error-cuadra" class="error-campo" hidden></div>
+    </section>
+
+    <!-- c) Categoría (3 botones grandes, selección única) -->
+    <section class="tarjeta">
+      <h2>3. Categoría de obstrucción</h2>
+      <div id="grupo-categoria" class="rejilla-opciones" role="group" aria-label="Categoría">
+        <button type="button" class="btn-opcion" data-valor="doble_fila" aria-pressed="false">
+          Doble fila / vía prohibida
+        </button>
+        <button type="button" class="btn-opcion" data-valor="bloqueo_rampa_cebra_paradero" aria-pressed="false">
+          Bloqueo rampa, cebra o paradero
+        </button>
+        <button type="button" class="btn-opcion" data-valor="invasion_anden" aria-pressed="false">
+          Invasión de andén
+        </button>
+      </div>
+      <div id="error-categoria" class="error-campo" hidden></div>
+    </section>
+
+    <!-- d) Actor (4 botones grandes, selección única) -->
+    <section class="tarjeta">
+      <h2>4. Tipo de actor</h2>
+      <div id="grupo-actor" class="rejilla-opciones rejilla-2col" role="group" aria-label="Actor">
+        <button type="button" class="btn-opcion" data-valor="vehiculo_particular" aria-pressed="false">
+          Vehículo particular
+        </button>
+        <button type="button" class="btn-opcion" data-valor="motocicleta" aria-pressed="false">
+          Motocicleta
+        </button>
+        <button type="button" class="btn-opcion" data-valor="vehiculo_carga" aria-pressed="false">
+          Vehículo de carga
+        </button>
+        <button type="button" class="btn-opcion" data-valor="mobiliario_comercial" aria-pressed="false">
+          Mobiliario comercial
+        </button>
+      </div>
+      <div id="error-actor" class="error-campo" hidden></div>
+    </section>
+
+    <!-- e) Foto (opcional, anonimizada con pixelado táctil) -->
+    <section class="tarjeta">
+      <h2>5. Foto (opcional)</h2>
+      <p class="aviso-privacidad">Encuadra la obstrucción, no a las personas.</p>
+
+      <div class="fila-botones-foto">
+        <button type="button" id="btn-tomar-foto" class="btn-secundario">📷 Tomar foto</button>
+        <button type="button" id="btn-galeria-foto" class="btn-secundario">🖼️ Galería</button>
+      </div>
+
+      <input type="file" id="input-foto-camara" accept="image/*" capture="environment" hidden />
+      <input type="file" id="input-foto-galeria" accept="image/*" hidden />
+
+      <div id="zona-edicion-foto" class="zona-canvas" hidden>
+        <p class="ayuda-campo">
+          <strong>Herramienta Pixelar:</strong> arrastra el dedo sobre placas o rostros para pixelarlos.
         </p>
-        <div id="mapa-registros" class="contenedor-mapa contenedor-mapa-registros" aria-label="Mapa de calor y reportes registrados"></div>
-        <p class="ayuda-campo">La intensidad del mapa de calor refleja tanto la concentración espacial como el puntaje de criticidad de cada evento.</p>
-      </article>
+        <canvas id="canvas-foto"></canvas>
 
-      <!-- RESUMEN OPERATIVO: TOP 5 CUADRAS CON MAYOR CRITICIDAD ACUMULADA (RF-05) -->
-      <article class="tarjeta" id="tarjeta-resumen-operativo">
-        <div class="cabecera-tarjeta">
-          <h3>Top 5 cuadras con mayor criticidad acumulada</h3>
-          <button type="button" id="btn-imprimir-resumen" class="btn-secundario-peq">
-            🖨️ Imprimir / PDF
-          </button>
-        </div>
-        <p id="subtitulo-resumen-operativo" class="ayuda-campo">
-          Ranking ordenado por suma de puntajes de criticidad y recomendación operativa por reglas explícitas.
-        </p>
-        <div id="lista-top-5-cuadras" class="lista-top5"></div>
-      </article>
-
-      <!-- EXPORTAR E IMPORTAR -->
-      <article class="tarjeta">
-        <h3>Exportar e importar datos</h3>
-        <p class="ayuda-campo">Descarga tus registros locales o integra los archivos JSON de tus compañeros sin duplicar IDs.</p>
-
-        <div class="rejilla-exportar">
-          <button type="button" id="btn-exportar-con-fotos" class="btn-secundario">
-            ⬇️ Exportar JSON (con fotos)
-          </button>
-          <button type="button" id="btn-exportar-sin-fotos" class="btn-secundario">
-            ⬇️ Exportar JSON (sin fotos)
-          </button>
-          <button type="button" id="btn-exportar-zip" class="btn-secundario">
-            📦 Exportar paquete .zip para datos/
-          </button>
-          <button type="button" id="btn-importar-json" class="btn-primario-outline">
-            ⬆️ Importar JSON de compañero
-          </button>
+        <div class="fila-herramientas-canvas">
+          <button type="button" id="btn-deshacer-pixel" class="btn-secundario">↩ Deshacer</button>
+          <button type="button" id="btn-quitar-foto" class="btn-peligro-suave">Quitar foto</button>
         </div>
 
-        <input type="file" id="input-importar-json" accept=".json,application/json" hidden />
+        <label class="casilla-privacidad">
+          <input type="checkbox" id="check-privacidad-foto" />
+          <span>Confirmo que no se ven placas ni rostros</span>
+        </label>
+      </div>
+      <div id="error-foto" class="error-campo" hidden></div>
+    </section>
 
-        <div id="resultado-importacion" class="caja-resultado-importacion" aria-live="polite" hidden></div>
-      </article>
+    <!-- f) Observaciones (opcional, máx. 140 caracteres) -->
+    <section class="tarjeta">
+      <div class="fila-cabecera-seccion">
+        <label for="input-observaciones"><strong>6. Observaciones (opcional)</strong></label>
+        <span id="contador-obs" class="texto-suave">0 / 140</span>
+      </div>
+      <p class="aviso-privacidad">No escribas placas ni nombres.</p>
+      <textarea
+        id="input-observaciones"
+        class="control-textarea"
+        maxlength="140"
+        rows="2"
+        placeholder="Ej. Camión descargando sobre la esquina norte..."
+      ></textarea>
+    </section>
 
-      <!-- LISTA DE REGISTROS -->
-      <article class="tarjeta">
-        <h3>Listado de reportes (<span id="badge-total-registros">0</span>)</h3>
-        <div id="lista-registros" class="lista-registros"></div>
-      </article>
+    <!-- g) Fecha y hora automática con control colapsado -->
+    <section class="tarjeta">
+      <div class="fila-cabecera-seccion">
+        <span><strong>7. Fecha y hora:</strong> <span id="texto-fecha-actual" class="texto-mono"></span></span>
+      </div>
+      <details id="detalle-fecha-hora" class="control-colapsado">
+        <summary>Corregir fecha y hora</summary>
+        <div class="contenido-colapsado">
+          <label for="input-fecha-hora" class="etiqueta-control">Fecha y hora local:</label>
+          <input type="datetime-local" id="input-fecha-hora" class="control-input" />
+        </div>
+      </details>
+    </section>
+
+    <!-- Espacio reservado para que el botón fijo no tape la última tarjeta -->
+    <div class="espacio-barra-fija"></div>
+
+    <!-- h) Botón fijo Guardar reporte -->
+    <div class="barra-guardar-fija">
+      <button type="button" id="btn-guardar" class="btn-primario btn-ancho">
+        Guardar reporte
+      </button>
+    </div>
+  </main>
+
+  <!-- ======================================================================
+       VISTA 2: REGISTROS Y EXPORTACIÓN / IMPORTACIÓN
+       ====================================================================== -->
+  <main id="vista-registros" class="contenedor-principal" hidden>
+    <!-- Resumen de avance hacia los 30 registros de campo -->
+    <section class="tarjeta no-imprimir">
+      <div class="fila-cabecera-seccion">
+        <h2>Avance de campo</h2>
+        <span id="contador-meta-30" class="contador-grande">0 de 30</span>
+      </div>
+      <p id="desglose-franjas" class="texto-destacado">Hora pico: 0 · Hora valle: 0</p>
+      <div id="desglose-cuadras" class="contenedor-chips"></div>
+      <p id="uso-almacenamiento" class="texto-suave margen-superior">Almacenamiento: 0,00 de 5 MB</p>
+    </section>
+
+    <!-- Exportar e importar (RF-06) -->
+    <section class="tarjeta no-imprimir">
+      <h2>Reunir datos del equipo (RF-06)</h2>
+      <div class="rejilla-exportar">
+        <button type="button" id="btn-exportar-con-fotos" class="btn-secundario">
+          Exportar JSON (con fotos)
+        </button>
+        <button type="button" id="btn-exportar-sin-fotos" class="btn-secundario">
+          Exportar JSON (sin fotos)
+        </button>
+        <button type="button" id="btn-exportar-zip" class="btn-secundario">
+          Exportar paquete (.zip)
+        </button>
+        <button type="button" id="btn-importar-json" class="btn-primario">
+          Importar JSON
+        </button>
+      </div>
+      <input type="file" id="input-importar-json" accept=".json,application/json" hidden />
+      <div id="resultado-importacion" class="aviso-info margen-superior" hidden></div>
+    </section>
+
+    <!-- Panel de filtros dinámicos sin recargar (RF-04 y CU-02) -->
+    <section class="tarjeta no-imprimir" id="seccion-filtros">
+      <div class="fila-cabecera-seccion">
+        <h2>Filtros de análisis (RF-04)</h2>
+        <button type="button" id="btn-limpiar-filtros" class="btn-secundario">
+          Limpiar filtros
+        </button>
+      </div>
+      <p class="ayuda-campo">Combina filtros para actualizar el mapa de calor, los porcentajes por categoría y los conteos al instante.</p>
+
+      <div class="rejilla-filtros">
+        <div>
+          <label for="filtro-cuadra" class="etiqueta-control">Cuadra:</label>
+          <select id="filtro-cuadra" class="control-select">
+            <option value="todas">Todas las cuadras</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="filtro-franja" class="etiqueta-control">Franja horaria:</label>
+          <select id="filtro-franja" class="control-select">
+            <option value="todas">Todas (Pico y Valle)</option>
+            <option value="pico">Hora pico</option>
+            <option value="valle">Hora valle</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="filtro-categoria" class="etiqueta-control">Categoría:</label>
+          <select id="filtro-categoria" class="control-select">
+            <option value="todas">Todas las categorías</option>
+            <option value="doble_fila">Doble fila / vía prohibida</option>
+            <option value="bloqueo_rampa_cebra_paradero">Bloqueo rampa, cebra o paradero</option>
+            <option value="invasion_anden">Invasión de andén</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="filtro-actor" class="etiqueta-control">Tipo de actor:</label>
+          <select id="filtro-actor" class="control-select">
+            <option value="todas">Todos los actores</option>
+            <option value="vehiculo_particular">Vehículo particular</option>
+            <option value="motocicleta">Motocicleta</option>
+            <option value="vehiculo_carga">Vehículo de carga</option>
+            <option value="mobiliario_comercial">Mobiliario comercial</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="caja-resultado-filtros">
+        <div id="conteo-filtrado-texto" class="texto-destacado">Mostrando 0 de 0 reportes</div>
+        <div id="desglose-porcentajes-categoria" class="rejilla-porcentajes"></div>
+      </div>
+    </section>
+
+    <!-- Mapa de calor (Leaflet.heat) y puntos individuales (RF-03) -->
+    <section class="tarjeta no-imprimir">
+      <div class="fila-cabecera-seccion">
+        <h2>Mapa de calor y puntos (RF-03)</h2>
+      </div>
+      <p class="ayuda-campo">La intensidad del calor se pondera según el puntaje de criticidad de cada reporte.</p>
+
+      <div id="grupo-capas-mapa" class="barra-capas-mapa" role="group" aria-label="Capas del mapa">
+        <button type="button" class="btn-capa-mapa activo" data-modo="ambos" aria-pressed="true">
+          🔥 + 📍 Ambos
+        </button>
+        <button type="button" class="btn-capa-mapa" data-modo="calor" aria-pressed="false">
+          🔥 Mapa de calor
+        </button>
+        <button type="button" class="btn-capa-mapa" data-modo="puntos" aria-pressed="false">
+          📍 Puntos
+        </button>
+      </div>
+
+      <div id="aviso-sin-calor" class="aviso-alerta" hidden>
+        La librería Leaflet.heat no cargó (sin conexión); se muestran los puntos individuales.
+      </div>
+
+      <div id="mapa-registros" class="caja-mapa caja-mapa-registros"></div>
+    </section>
+
+    <!-- Resumen operativo Top 5 y vista imprimible (RF-05 y CU-03) -->
+    <section class="tarjeta" id="seccion-resumen-operativo">
+      <div class="fila-cabecera-seccion">
+        <h2>Resumen operativo · Top 5 cuadras críticas (RF-05)</h2>
+        <button type="button" id="btn-imprimir-resumen" class="btn-secundario no-imprimir">
+          🖨️ Imprimir resumen operativo
+        </button>
+      </div>
+      <p id="subtitulo-resumen-operativo" class="ayuda-campo">
+        Ordenadas por puntaje de criticidad acumulado, con recomendación automática y la regla explícita que la produjo.
+      </p>
+      <div id="lista-top-5-cuadras" class="lista-top5"></div>
+    </section>
+
+    <!-- Lista de reportes (más recientes primero) -->
+    <section class="tarjeta no-imprimir">
+      <h2>Reportes (más recientes primero)</h2>
+      <div id="lista-registros" class="lista-tarjetas"></div>
     </section>
   </main>
 
   <!-- ======================================================================
-       MODAL PARA AMPLIAR EVIDENCIA FOTOGRÁFICA DE UN REPORTE
-       ====================================================================== -->
-  <div id="modal-foto" class="fondo-modal" hidden>
-    <div class="caja-modal caja-modal-foto" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-foto">
-      <div class="cabecera-tarjeta">
-        <h2 id="titulo-modal-foto">Evidencia fotográfica</h2>
-        <button type="button" id="btn-cerrar-modal-foto" class="btn-secundario-peq">✕ Cerrar</button>
-      </div>
-      <img id="img-modal-foto" class="imagen-modal-ampliada" src="" alt="Evidencia fotográfica ampliada" />
-      <p id="detalle-modal-foto" class="ayuda-campo"></p>
-    </div>
-  </div>
-
-  <!-- ======================================================================
-       MODAL DE CONFIGURACIÓN INICIAL (INICIALES + ORIGEN)
+       MODAL DE AJUSTES (i)
        ====================================================================== -->
   <div id="modal-ajustes" class="fondo-modal" hidden>
-    <div class="caja-modal" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-ajustes">
-      <h2 id="titulo-modal-ajustes">Configuración del observador</h2>
-      <p class="ayuda-campo">Tus iniciales se usarán para generar el identificador único de cada reporte (ej. <code>MP-JR-001</code>).</p>
+    <div class="caja-modal" role="dialog" aria-modal="true" aria-labelledby="titulo-ajustes">
+      <h2 id="titulo-ajustes">Ajustes del integrante</h2>
+      <p class="ayuda-campo">Tus iniciales identifican los reportes que levantes en este celular.</p>
 
-      <label for="input-iniciales" class="etiqueta-campo">Tus iniciales (2 a 3 letras) *</label>
+      <label for="input-iniciales" class="etiqueta-control">Iniciales (2 a 3 letras):</label>
       <input
         type="text"
         id="input-iniciales"
+        class="control-input"
         maxlength="3"
-        placeholder="Ej: JR"
+        placeholder="Ej. ASO"
         autocomplete="off"
       />
 
-      <label for="select-origen" class="etiqueta-campo">Origen predeterminado de tus registros</label>
-      <select id="select-origen">
-        <option value="campo">campo (recolección oficial del equipo)</option>
-        <option value="ciudadano">ciudadano (reporte comunitario / prueba)</option>
+      <label for="select-origen" class="etiqueta-control">Origen por defecto:</label>
+      <select id="select-origen" class="control-select">
+        <option value="campo">Recorrido de campo</option>
+        <option value="ciudadano">Ciudadano</option>
       </select>
 
-      <p id="error-ajustes" class="mensaje-error" role="alert" hidden></p>
+      <div id="error-ajustes" class="error-campo" hidden></div>
 
       <div class="fila-botones-modal">
         <button type="button" id="btn-cerrar-ajustes" class="btn-secundario">Cancelar</button>
-        <button type="button" id="btn-guardar-ajustes" class="btn-primario">Guardar configuración</button>
+        <button type="button" id="btn-guardar-ajustes" class="btn-primario">Guardar ajustes</button>
       </div>
     </div>
   </div>
 
   <!-- ======================================================================
-       MODAL DE CONFIRMACIÓN PARA ELIMINAR REPORTE LOCAL
+       MODAL VISOR DE FOTO AMPLIADA EN REGISTROS
        ====================================================================== -->
-  <div id="modal-confirmar-eliminar" class="fondo-modal" hidden>
-    <div class="caja-modal" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar-eliminar">
-      <h2 id="titulo-confirmar-eliminar">Eliminar reporte local</h2>
-      <p id="texto-confirmar-eliminar" class="ayuda-campo"></p>
-      <div class="fila-botones-modal">
-        <button type="button" id="btn-cancelar-eliminar" class="btn-secundario">Cancelar</button>
-        <button type="button" id="btn-confirmar-eliminar" class="btn-peligro-suave">Sí, eliminar</button>
+  <div id="modal-foto" class="fondo-modal" hidden>
+    <div class="caja-modal caja-modal-foto" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-foto">
+      <div class="fila-cabecera-seccion">
+        <h2 id="titulo-modal-foto">Evidencia fotográfica</h2>
+        <button type="button" id="btn-cerrar-modal-foto" class="btn-secundario">✕ Cerrar</button>
       </div>
+      <img id="img-modal-foto" class="foto-ampliada-modal" src="" alt="Foto ampliada del reporte" />
+      <p id="detalle-modal-foto" class="texto-suave margen-superior"></p>
     </div>
   </div>
 
   <!-- ======================================================================
-       NAVEGACIÓN INFERIOR FIJA
+       NAVEGACIÓN INFERIOR FIJA (DOS VISTAS SIN RECARGAR)
        ====================================================================== -->
-  <nav class="barra-inferior" aria-label="Navegación principal">
-    <button type="button" id="tab-captura" class="btn-tab activo">
-      <span class="icono-tab" aria-hidden="true">📝</span>
-      <span>Capturar</span>
+  <nav class="nav-inferior no-imprimir" aria-label="Navegación principal">
+    <button type="button" id="tab-captura" class="btn-nav activo">
+      ➕ Captura
     </button>
-    <button type="button" id="tab-registros" class="btn-tab">
-      <span class="icono-tab" aria-hidden="true">📋</span>
-      <span>Registros</span>
+    <button type="button" id="tab-registros" class="btn-nav">
+      📋 Registros (<span id="badge-total-registros">0</span>)
     </button>
   </nav>
 
-  <!-- Scripts externos opcionales (degradación limpia si no hay internet) -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""
-  ></script>
+  <!-- Scripts en el orden estricto indicado (clásicos, sin módulos ES) -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-
-  <!-- Módulos propios de la aplicación -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="criticidad.js"></script>
   <script src="almacenamiento.js"></script>
   <script src="filtros.js"></script>
