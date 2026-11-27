@@ -235,7 +235,7 @@ function iniciarMapaRegistros(idContenedor, vias) {
     div.innerHTML =
       "<strong>Leyenda del mapa</strong>" +
       '<div><span class="linea-leyenda-recorrido"></span> Recorrido de campo</div>' +
-      '<div><span class="punto-leyenda" style="background:#0f766e"></span> Evidencias (aprox.)</div>' +
+      '<div><span class="punto-leyenda" style="background:#dc2626"></span> 30 evidencias (aprox.)</div>' +
       '<div><span class="punto-leyenda" style="background:#dc2626"></span> Reportes altos</div>' +
       '<div><span class="punto-leyenda" style="background:#d97706"></span> Reportes medios</div>' +
       '<div><span class="punto-leyenda" style="background:#16a34a"></span> Reportes bajos</div>';
@@ -284,8 +284,7 @@ function aplicarModoCapasRegistros() {
   var mostrarCalor = modoVisualizacionRegistros === "ambos" || modoVisualizacionRegistros === "calor";
   var mostrarPuntos = modoVisualizacionRegistros === "ambos" || modoVisualizacionRegistros === "puntos";
 
-  // El circuito de campo permanece visible en los tres modos.
-  // Los botones controlan únicamente las capas de análisis de reportes.
+  // El circuito permanece visible en los tres modos; los botones alternan puntos y calor de evidencias y reportes.
   if (capaCalorRegistros) {
     if (mostrarCalor && !mapaRegistros.hasLayer(capaCalorRegistros)) mapaRegistros.addLayer(capaCalorRegistros);
     if (!mostrarCalor && mapaRegistros.hasLayer(capaCalorRegistros)) mapaRegistros.removeLayer(capaCalorRegistros);
