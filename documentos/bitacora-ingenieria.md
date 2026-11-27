@@ -22,7 +22,7 @@ Las fotografías tenían coordenadas y puntajes identificados como simulados. Se
 
 ## 3. Limitación cartográfica pendiente
 
-Las 10 cuadras de `datos/vias.json` siguen definidas por segmentos aproximados. La validación de 90 m mide distancia a esos segmentos y no acredita que una coordenada esté sobre la calzada ni fuera de propiedades privadas. La geometría vial debe verificarse contra cartografía fiable y recorridos de campo antes de interpretar los datos espacialmente.
+Las 10 cuadras de `datos/vias.json` siguen definidas por segmentos aproximados. La validación de 30 m mide distancia a esos segmentos y no acredita que una coordenada esté sobre la calzada ni fuera de propiedades privadas. La geometría vial debe verificarse contra cartografía fiable y recorridos de campo antes de interpretar los datos espacialmente.
 
 ## 4. Pruebas
 
@@ -40,3 +40,10 @@ La validación sintáctica de JavaScript y las pruebas unitarias de criticidad s
 - Se mantuvieron las 30 evidencias como galería independiente; no se les asignan ubicaciones individuales ni puntajes inventados.
 
 Las pruebas de esta actualización verifican sintaxis, integridad de IDs del HTML, existencia de archivos fotográficos, cálculos de criticidad, filtros y validaciones de importación. No sustituyen la comprobación visual final en un navegador real.
+
+
+## 6. Ajustes adicionales de validación — 27 de noviembre de 2026
+
+- La validación de ubicación ahora mantiene un único mensaje de error y diferencia entre ausencia de punto y distancia fuera de tolerancia.
+- La tolerancia respecto al segmento de vía de referencia se ajustó a 30 m. Sigue siendo una aproximación geométrica y no equivale a verificar el polígono real de la calzada.
+- Los paneles de filtros y ranking se muestran cuando existen reportes válidos; se mantienen ocultos si el conjunto está vacío.
