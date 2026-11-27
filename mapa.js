@@ -279,35 +279,48 @@ function cambiarModoMapaRegistros(nuevoModo) {
  * Dibuja evidencias fotográficas con puntos de referencia aproximados.
  * No son coordenadas GPS verificadas y no se usan para cálculos de criticidad.
  */
+/**
+ * Muestra los cinco puntos de referencia compartidos por la usuaria.
+ * Las 30 evidencias se agrupan por referencia; no se inventa una coordenada
+ * distinta para cada fotografía.
+ */
 function actualizarMarcadoresEvidencias(evidencias, vias) {
   if (!leafletDisponible() || !mapaRegistros) return;
   if (!capaEvidenciasAproximadas) {
     capaEvidenciasAproximadas = L.layerGroup().addTo(mapaRegistros);
   }
   capaEvidenciasAproximadas.clearLayers();
-  var lista = Array.isArray(evidencias) ? evidencias : [];
-  var coordenadas = [];
-  lista.forEach(function (e) {
+  var grupos = {};
+  (Array.isArray(evidencias) ? evidencias : []).forEach(function (e) {
     var u = e && e.ubicacion;
     if (!u || typeof u.lat !== "number" || typeof u.lng !== "number") return;
-    var marcador = L.circleMarker([u.lat, u.lng], {
-      radius: 7,
-      fillColor: "#2563eb",
-      color: "#ffffff",
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 0.9
+    var clave = u.grupo || (u.lat + "," + u.lng);
+    if (!grupos[clave]) grupos[clave] = { lat: u.lat, lng: u.lng, items: [] };
+    grupos[clave].items.push(e);
+  });
+  var coordenadas = [];
+  Object.keys(grupos).forEach(function (clave) {
+    var grupo = grupos[clave];
+    var ids = grupo.items.map(function (e) { return e.id; }).join(", ");
+    var marcador = L.marker([grupo.lat, grupo.lng], {
+      icon: L.divIcon({
+        className: "marcador-grupo-evidencias",
+        html: '<span>' + grupo.items.length + '</span>',
+        iconSize: [34, 34],
+        iconAnchor: [17, 17]
+      })
     });
     marcador.bindPopup(
-      "<strong>" + e.id + "</strong><br>" +
-      "Evidencia fotográfica<br>" +
-      "<em>Ubicación aproximada de referencia; no es GPS verificado.</em>"
+      "<strong>" + clave + "</strong><br>" +
+      grupo.items.length + " evidencias asociadas<br>" +
+      "<small>" + ids + "</small><br>" +
+      "<em>Punto de referencia compartido; no es la ubicación exacta de cada fotografía.</em>"
     );
     marcador.addTo(capaEvidenciasAproximadas);
-    coordenadas.push([u.lat, u.lng]);
+    coordenadas.push([grupo.lat, grupo.lng]);
   });
-  if (coordenadas.length && mapaRegistros) {
-    mapaRegistros.fitBounds(L.latLngBounds(coordenadas), { padding: [26, 26], maxZoom: 17 });
+  if (coordenadas.length) {
+    mapaRegistros.fitBounds(L.latLngBounds(coordenadas), { padding: [34, 34], maxZoom: 16 });
   } else if (vias && vias.zona && vias.zona.centro) {
     mapaRegistros.setView(vias.zona.centro, vias.zona.zoom || 16);
   }
