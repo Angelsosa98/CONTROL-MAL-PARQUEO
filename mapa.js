@@ -261,26 +261,24 @@ function dibujarRecorridoCampo(vias) {
   capaRecorridoCampo = L.layerGroup();
   var recorrido = vias && vias.recorrido_campo;
   var hitos = recorrido && Array.isArray(recorrido.hitos) ? recorrido.hitos : [];
-  if (hitos.length < 2) return;
-  var puntos = Array.isArray(recorrido.trazado) && recorrido.trazado.length >= 2
+  var puntos = recorrido && Array.isArray(recorrido.trazado) && recorrido.trazado.length >= 2
     ? recorrido.trazado : hitos.map(function (h) { return h.coordenadas; });
-  L.polyline(puntos, { color: "#2563eb", weight: 4, opacity: 0.85, dashArray: "8 7" })
-    .bindPopup("<strong>Recorrido de campo aproximado</strong><br>Circuito descrito por el equipo; no representa posiciones GPS individuales.")
-    .addTo(capaRecorridoCampo);
-  hitos.forEach(function (h, i) {
-    var icono = L.divIcon({
-      className: "marcador-recorrido",
-      html: "<span>" + (i + 1) + "</span>",
-      iconSize: [25, 25],
-      iconAnchor: [12, 12]
-    });
-    L.marker(h.coordenadas, { icon: icono, keyboard: true, title: h.nombre })
-      .bindPopup("<strong>Parada " + (i + 1) + "</strong><br>" + h.nombre)
-      .addTo(capaRecorridoCampo);
-  });
+  if (puntos.length < 2) return;
+
+  // Línea verde: referencia del recorrido. Los puntos rojos son las 30 evidencias.
+  L.polyline(puntos, {
+    color: "#16a34a",
+    weight: 5,
+    opacity: 0.95,
+    lineCap: "round",
+    lineJoin: "round"
+  }).bindPopup(
+    "<strong>Recorrido de campo</strong><br>" +
+    "Trazado aproximado reconstruido a partir de la línea verde aportada por el equipo."
+  ).addTo(capaRecorridoCampo);
+
   capaRecorridoCampo.addTo(mapaRegistros);
 }
-
 function aplicarModoCapasRegistros() {
   if (!leafletDisponible() || !mapaRegistros) return;
   var mostrarCalor = modoVisualizacionRegistros === "ambos" || modoVisualizacionRegistros === "calor";
@@ -343,8 +341,8 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
     puntosCalor.push([lat, lng, 1]);
 
     var marcador = L.circleMarker([lat, lng], {
-      radius: 5,
-      fillColor: "#0f766e",
+      radius: 6,
+      fillColor: "#dc2626",
       color: "#ffffff",
       weight: 1.5,
       opacity: 1,
@@ -439,8 +437,16 @@ function actualizarMarcadoresRegistros(listaReportes, vias) {
   if (coordenadas.length > 0) {
     var limites = L.latLngBounds(coordenadas);
     mapaRegistros.fitBounds(limites, { padding: [26, 26], maxZoom: 17 });
-  } else if (ultimoViasRegistros && ultimoViasRegistros.zona && ultimoViasRegistros.zona.centro) {
-    mapaRegistros.setView(ultimoViasRegistros.zona.centro, ultimoViasRegistros.zona.zoom || 15);
+  } else {
+    var puntosEvidencia = ultimasEvidenciasMapa.map(function (e) {
+      return e && e.ubicacion_aproximada
+        ? [Number(e.ubicacion_aproximada.lat), Number(e.ubicacion_aproximada.lng)] : null;
+    }).filter(function (p) { return p && isFinite(p[0]) && isFinite(p[1]); });
+    if (puntosEvidencia.length > 0) {
+      mapaRegistros.fitBounds(L.latLngBounds(puntosEvidencia), { padding: [32, 32], maxZoom: 17 });
+    } else if (ultimoViasRegistros && ultimoViasRegistros.zona && ultimoViasRegistros.zona.centro) {
+      mapaRegistros.setView(ultimoViasRegistros.zona.centro, ultimoViasRegistros.zona.zoom || 15);
+    }
   }
 }
 
