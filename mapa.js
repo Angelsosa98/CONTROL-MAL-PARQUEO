@@ -12,6 +12,7 @@ var capaReportesCaptura = null;
 var mapaRegistros = null;
 var capaMarcadoresRegistros = null;
 var capaCalorRegistros = null;
+var capaEvidenciasAproximadas = null;
 var modoVisualizacionRegistros = "ambos"; // "ambos" | "calor" | "puntos"
 var ultimosReportesRegistros = [];
 var ultimoViasRegistros = null;
@@ -274,6 +275,44 @@ function cambiarModoMapaRegistros(nuevoModo) {
  * Actualiza tanto la capa de calor (Leaflet.heat ponderada por criticidad.puntaje)
  * como los marcadores individuales en el mapa de Registros.
  */
+/**
+ * Dibuja evidencias fotográficas con puntos de referencia aproximados.
+ * No son coordenadas GPS verificadas y no se usan para cálculos de criticidad.
+ */
+function actualizarMarcadoresEvidencias(evidencias, vias) {
+  if (!leafletDisponible() || !mapaRegistros) return;
+  if (!capaEvidenciasAproximadas) {
+    capaEvidenciasAproximadas = L.layerGroup().addTo(mapaRegistros);
+  }
+  capaEvidenciasAproximadas.clearLayers();
+  var lista = Array.isArray(evidencias) ? evidencias : [];
+  var coordenadas = [];
+  lista.forEach(function (e) {
+    var u = e && e.ubicacion;
+    if (!u || typeof u.lat !== "number" || typeof u.lng !== "number") return;
+    var marcador = L.circleMarker([u.lat, u.lng], {
+      radius: 7,
+      fillColor: "#2563eb",
+      color: "#ffffff",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.9
+    });
+    marcador.bindPopup(
+      "<strong>" + e.id + "</strong><br>" +
+      "Evidencia fotográfica<br>" +
+      "<em>Ubicación aproximada de referencia; no es GPS verificado.</em>"
+    );
+    marcador.addTo(capaEvidenciasAproximadas);
+    coordenadas.push([u.lat, u.lng]);
+  });
+  if (coordenadas.length && mapaRegistros) {
+    mapaRegistros.fitBounds(L.latLngBounds(coordenadas), { padding: [26, 26], maxZoom: 17 });
+  } else if (vias && vias.zona && vias.zona.centro) {
+    mapaRegistros.setView(vias.zona.centro, vias.zona.zoom || 16);
+  }
+}
+
 function actualizarMarcadoresRegistros(listaReportes, vias) {
   ultimosReportesRegistros = Array.isArray(listaReportes) ? listaReportes : [];
   if (vias) ultimoViasRegistros = vias;
