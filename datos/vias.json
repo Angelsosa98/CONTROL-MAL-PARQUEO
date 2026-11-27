@@ -238,6 +238,40 @@
         ]
       }
     ],
-    "fuente_referencias": "Secuencia inferida de la descripción del equipo y trazada sobre los segmentos de vía existentes en datos/vias.json; requiere confirmación de campo para considerarse recorrido GPS."
+    "fuente_referencias": "Secuencia inferida de la descripción del equipo y trazada sobre los segmentos de vía existentes en datos/vias.json; requiere confirmación de campo para considerarse recorrido GPS.",
+    "trazado": [
+      [
+        11.2248,
+        -74.1879
+      ],
+      [
+        11.2238,
+        -74.188
+      ],
+      [
+        11.2229,
+        -74.1881
+      ],
+      [
+        11.2214,
+        -74.1882
+      ],
+      [
+        11.2216,
+        -74.18975
+      ],
+      [
+        11.2231,
+        -74.1896
+      ],
+      [
+        11.2229,
+        -74.1881
+      ],
+      [
+        11.2235,
+        -74.18805
+      ]
+    ]
   }
 }
