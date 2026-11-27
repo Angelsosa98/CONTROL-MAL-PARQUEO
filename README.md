@@ -2,7 +2,7 @@
 
 Aplicación web estática desarrollada con HTML, CSS, JavaScript y Leaflet para registrar reportes de mal parqueo, georreferenciarlos y calcular su criticidad en el entorno de la Universidad del Magdalena, Villa Marbella y Cañaveral, Santa Marta, Colombia.
 
-**Despliegue:** https://angelospinososa-del.github.io/CONTROL-MAL-PARQUEO/
+**Publicación:** GitHub Pages se administra desde la configuración de este repositorio. La dirección activa debe consultarse en `Settings → Pages`.
 
 ## Estado real de los datos
 
@@ -10,7 +10,7 @@ Aplicación web estática desarrollada con HTML, CSS, JavaScript y Leaflet para 
 - `datos/evidencias_nuevas.json` contiene **30 fotografías** conservadas para revisión.
 - Las 30 fotografías están pendientes de georreferenciación y clasificación verificadas.
 - Las coordenadas y puntajes sintéticos anteriores fueron retirados del archivo de evidencias.
-- Las fotografías no se dibujan en el mapa ni se utilizan para calcular calor, porcentajes, criticidad o ranking.
+- Las fotografías se consultan en Evidencias. No se dibujan como puntos ni se utilizan para calcular calor, porcentajes, criticidad o ranking.
 - Los seis registros históricos del Mercado Público no forman parte del conjunto activo.
 
 **Importante:** la configuración de 10 cuadras en `datos/vias.json` utiliza segmentos de referencia aproximados. El límite de 90 m comprueba distancia a esos segmentos, no demuestra que el punto esté sobre la calzada. Antes de usar los registros como evidencia espacial del estudio, deben verificarse las geometrías viales y los puntos con cartografía y trabajo de campo.
@@ -23,8 +23,9 @@ Aplicación web estática desarrollada con HTML, CSS, JavaScript y Leaflet para 
 - Clasificación de criticidad según categoría, tipo de vía y franja horaria.
 - Evidencia fotográfica opcional y herramienta de pixelado.
 - Almacenamiento local, exportación e importación JSON y paquete ZIP.
-- Mapa de puntos y mapa de calor basados exclusivamente en reportes georreferenciados.
-- Galería independiente de fotografías pendientes de georreferenciación.
+- Mapa de puntos y mapa de calor basados exclusivamente en reportes con coordenadas y datos completos.
+- Línea azul con el circuito aproximado descrito por el equipo, dibujada sobre los segmentos de vía configurados.
+- Galería independiente de evidencias fotográficas.
 
 ## Criterios de criticidad
 
