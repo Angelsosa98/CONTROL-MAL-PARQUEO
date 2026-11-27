@@ -268,8 +268,8 @@ function dibujarRecorridoCampo(vias) {
   // Línea verde: referencia del recorrido. Los puntos rojos son las 30 evidencias.
   L.polyline(puntos, {
     color: "#15803d",
-    weight: 3,
-    opacity: 0.7,
+    weight: 2.5,
+    opacity: 0.58,
     lineCap: "round",
     lineJoin: "round"
   }).bindPopup(
@@ -340,7 +340,7 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
     puntosCalor.push([lat, lng, 1]);
 
     var marcador = L.circleMarker([lat, lng], {
-      radius: 6,
+      radius: 5,
       fillColor: "#7c3aed",
       color: "#ffffff",
       weight: 1.5,
@@ -361,11 +361,11 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
   var tamMapa = mapaRegistros.getSize();
   if (heatDisponible() && puntosCalor.length > 0 && tamMapa.x > 0 && tamMapa.y > 0) {
     capaCalorEvidencias = L.heatLayer(puntosCalor, {
-      radius: 34,
-      blur: 24,
+      radius: 22,
+      blur: 14,
       maxZoom: 19,
       max: 1,
-      minOpacity: 0.4,
+      minOpacity: 0.32,
       gradient: { 0.25: "#a78bfa", 0.55: "#f59e0b", 0.85: "#ef4444", 1: "#991b1b" }
     });
   }

@@ -60,3 +60,11 @@ Las pruebas de esta actualización verifican sintaxis, integridad de IDs del HTM
 ## 10. Corrección de inicialización del mapa de calor — versión 0.9.1.1
 
 Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tiene ancho o alto cero (al cargar la aplicación con esa pestaña oculta). La capa se construye al abrir la pestaña y recalcular el mapa después de invalidateSize(). Esto evita que Leaflet.heat ejecute getImageData() sobre un canvas sin dimensiones y bloquee el resto de la aplicación.
+
+
+## 11. Ajuste fino de calzadas y mapa de calor — versión 0.9.1.2
+
+- Se desplazó el trazado y las 30 posiciones sectoriales aproximadamente 2,8 m hacia el sur de la vista para centrarlos mejor sobre la calzada, manteniendo la forma de cada curva y giro.
+- Se redujo el grosor y la opacidad de la línea de recorrido.
+- Se redujeron radio y desenfoque de Leaflet.heat para que la concentración no se extienda tanto sobre las manzanas.
+- Se conservaron 5 puntos en Calle 29H y 25 en las vías interiores de Villa Marbella. Las ubicaciones siguen identificadas como aproximadas, no GPS individual.

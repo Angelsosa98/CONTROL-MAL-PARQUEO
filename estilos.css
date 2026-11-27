@@ -1150,7 +1150,7 @@ button {
   display: inline-block;
   width: 18px;
   margin: 0 5px 3px 0;
-  border-top: 3px solid #15803d;
+  border-top: 2.5px solid #15803d;
   vertical-align: middle;
 }
 .marcador-recorrido {
@@ -1203,4 +1203,4 @@ button {
 }
 
 /* Versión 0.9.1: línea de recorrido fina para no ocultar la cartografía. */
-.linea-leyenda-recorrido { border-top-width: 3px; opacity: 0.75; }
+.linea-leyenda-recorrido { border-top-width: 2.5px; opacity: 0.62; }
