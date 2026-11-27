@@ -299,7 +299,7 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
     puntosCalor.push([u.lat, u.lng, intensidad]);
 
     var marcador = L.circleMarker([u.lat, u.lng], {
-      radius: 7,
+      radius: 5,
       fillColor: "#2563eb",
       color: "#ffffff",
       weight: 2,
@@ -314,7 +314,6 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
       "<br><img src='datos/fotos/" + archivo + "' alt='" + e.id +
       "' style='width:190px;max-height:140px;object-fit:contain;margin-top:6px'>";
     marcador.bindPopup(contenido, { maxWidth: 230 });
-    marcador.bindTooltip(e.id, { direction: "top", opacity: 0.9 });
     marcador.addTo(capaEvidenciasAproximadas);
     coordenadas.push([u.lat, u.lng]);
   });
@@ -329,10 +328,12 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
       gradient: { 0.25: "#16a34a", 0.55: "#f59e0b", 1: "#dc2626" }
     }).addTo(mapaRegistros);
   }
-  if (coordenadas.length) {
-    mapaRegistros.fitBounds(L.latLngBounds(coordenadas), { padding: [28, 28], maxZoom: 17 });
-  } else if (vias && vias.zona && vias.zona.centro) {
-    mapaRegistros.setView(vias.zona.centro, vias.zona.zoom || 16);
+  aplicarModoCapasRegistros();
+  if (vias && vias.zona && vias.zona.limites) {
+    var b = vias.zona.limites;
+    mapaRegistros.fitBounds([[b.lat_min, b.lng_min], [b.lat_max, b.lng_max]], { padding: [18, 18], maxZoom: 16 });
+  } else if (coordenadas.length) {
+    mapaRegistros.fitBounds(L.latLngBounds(coordenadas), { padding: [28, 28], maxZoom: 16 });
   }
 }
 
