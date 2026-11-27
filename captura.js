@@ -93,7 +93,9 @@ function cargarJSON(ruta) {
 /* ------------------------------ Cuadras ----------------------------------- */
 
 function listaCuadras() {
-  return AppEstado.vias && Array.isArray(AppEstado.vias.cuadras) ? AppEstado.vias.cuadras : [];
+  return AppEstado.vias && Array.isArray(AppEstado.vias.cuadras)
+    ? AppEstado.vias.cuadras.filter(function (cuadra) { return cuadra.activa !== false; })
+    : [];
 }
 
 function obtenerCuadraPorId(cuadraId) {
@@ -667,8 +669,8 @@ function leerFiltros() {
 function renderizarAvance() {
   var totalEvidencias = AppEstado.evidenciasFotograficas.length;
   porId("contador-meta-30").textContent = totalEvidencias + " de 30";
-  porId("desglose-franjas").textContent = "Evidencias fotográficas disponibles para consulta.";
-  porId("desglose-cuadras").textContent = "Las fotografías se muestran en esta galería. La línea azul representa el circuito aproximado del equipo.";
+  porId("desglose-franjas").textContent = totalEvidencias + " evidencias de vehículos mal parqueados.";
+  porId("desglose-cuadras").textContent = "Distribución indicada en campo: 5 puntos en la calle de la Universidad y 25 en el Parque Villa Marbella y sus alrededores. Los puntos del mapa son aproximados.";
   porId("uso-almacenamiento").textContent = "Reportes: " + AppEstado.reportesUnificados.length;
   porId("badge-total-registros").textContent = totalEvidencias;
   var hayReportes = AppEstado.reportesUnificados.length > 0;
@@ -676,9 +678,8 @@ function renderizarAvance() {
   porId("seccion-resumen-operativo").hidden = !hayReportes;
   var estadoMapa = porId("estado-mapa-registros");
   if (estadoMapa) {
-    estadoMapa.textContent = AppEstado.reportesUnificados.length
-      ? "Se muestran los reportes registrados junto al recorrido aproximado de campo. Las evidencias están disponibles en la galería."
-      : "Aún no hay reportes registrados. Las evidencias disponibles se consultan en la galería; la línea azul representa el recorrido aproximado.";
+    estadoMapa.textContent = "Mapa de evidencias: " + totalEvidencias +
+      " puntos sectoriales aproximados (5 en el corredor universitario y 25 en Villa Marbella). La línea verde representa el recorrido. No son coordenadas GPS individuales.";
   }
 }
 
