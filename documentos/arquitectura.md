@@ -16,7 +16,7 @@ La aplicación adopta una **arquitectura cliente estática modular (Single Page 
 ```text
 +-----------------------------------------------------------------------------------+
 |                        CAPA DE PRESENTACIÓN (index.html + estilos.css)            |
-|  [Vista 1: Captura Rápida]     [Vista 2: Registros y Mapa]    [Vista 3: Resumen]  |
+|  [Vista 1: Captura Rápida]     [Vista 2: Registros, Mapa y Resumen]  |
 +-------------------+------------------------+------------------------+-------------+
                     |                        |                        |
                     v                        v                        v
@@ -52,10 +52,10 @@ La aplicación adopta una **arquitectura cliente estática modular (Single Page 
 
 ## 3. Descripción de Módulos
 
-1. **`index.html` y `estilos.css`:** Estructura semántica con tres vistas conmutables mediante pestañas inferiores y diseño adaptable a pantallas móviles en campo.
+1. **`index.html` y `estilos.css`:** Estructura semántica con dos vistas conmutables mediante pestañas inferiores; el resumen operativo está integrado en la vista Registros y diseño adaptable a pantallas móviles en campo.
 2. **`captura.js`:** Gestiona el ciclo de vida de la app, obtiene coordenadas mediante Geolocation API o clic en mapa, calcula la distancia geométrica punto-segmento para asignar la cuadra más cercana y controla el `<canvas>` de pixelado irreversible.
 3. **`criticidad.js` (Lógica pura):** Deduce si la hora local cae en rango pico (`06:30–08:30`, `11:30–14:00`, `17:00–19:30`) y suma los pesos definidos en `datos/criterios.json`.
-4. **`mapa.js`:** Administra los dos mapas Leaflet (captura y registros), dibuja las polilíneas de las 10 cuadras, genera la capa de calor `L.heatLayer` ponderada por `puntaje / 9` y permite alternar entre *Ambos*, *Solo calor* y *Solo puntos*.
+4. **`mapa.js`:** Administra los dos mapas Leaflet (captura y registros), administra los mapas y las capas de puntos y calor, genera la capa de calor `L.heatLayer` ponderada por `puntaje / 9` y permite alternar entre *Ambos*, *Solo calor* y *Solo puntos*.
 5. **`filtros.js` y `resumen.js` (Lógica pura):** Filtran el arreglo unificado de reportes (precargados + locales) y calculan el ranking Top 5 con recomendaciones operativas deterministas (`R1` a `R6`).
 6. **`almacenamiento.js`:** Administra `localStorage`, captura `QuotaExceededError` sin pérdida de datos y valida estructura, límites geográficos y duplicados al importar archivos JSON externos.
 
