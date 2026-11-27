@@ -55,3 +55,8 @@ Las pruebas de esta actualización verifican sintaxis, integridad de IDs del HTM
 - Se afinó y transparentó la línea verde para mantener visibles las calles y etiquetas del mapa.
 - Las 30 evidencias se distribuyen sectorialmente: 5 sobre Calle 29H y 25 en los tres tramos del parque. Se conserva `ubicacion: null`; `ubicacion_aproximada` no se presenta como GPS individual.
 - La geometría se calibró con referencias ATESA de Calle 29H y Parque Villa Marbella y con el croquis satelital del equipo.
+
+
+## 10. Corrección de inicialización del mapa de calor — versión 0.9.1.1
+
+Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tiene ancho o alto cero (al cargar la aplicación con esa pestaña oculta). La capa se construye al abrir la pestaña y recalcular el mapa después de invalidateSize(). Esto evita que Leaflet.heat ejecute getImageData() sobre un canvas sin dimensiones y bloquee el resto de la aplicación.

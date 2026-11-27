@@ -355,7 +355,11 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
     marcador.addTo(capaPuntosEvidencias);
   });
 
-  if (heatDisponible() && puntosCalor.length > 0) {
+  // No crear Leaflet.heat mientras la pestaña Registros está oculta.
+  // En ese estado Leaflet informa 0x0 y heat.js puede llamar getImageData
+  // sobre un canvas de ancho/alto cero, interrumpiendo el arranque completo.
+  var tamMapa = mapaRegistros.getSize();
+  if (heatDisponible() && puntosCalor.length > 0 && tamMapa.x > 0 && tamMapa.y > 0) {
     capaCalorEvidencias = L.heatLayer(puntosCalor, {
       radius: 34,
       blur: 24,
