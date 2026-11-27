@@ -13,7 +13,7 @@
 | **2** | Implementación de captura rápida (< 30 s), geolocalización, asignación de cuadra más cercana y pixelado en `<canvas>`. | Angel Sosa | Registro funcional offline en `localStorage` con control de cuota. |
 | **3** | Implementación del motor de criticidad (`criticidad.js`) y suite de pruebas unitarias (`pruebas.html`). | Adrian Marquez, Angel Sosa | 100 % de los casos de prueba aprobados frente al cálculo manual. |
 | **4** | Integración de mapa de calor ponderado (`Leaflet.heat`), filtros combinados y resumen operativo Top 5. | Josue Rodriguez, Angel Sosa | Visualización interactiva con modos *Ambos / Calor / Puntos*. |
-| **5** | Levantamiento de 30 evidencias reales en Santa Marta, auditoría de coordenadas y anonimización de imágenes. | Johan Acosta, Todo el equipo | 24 reportes en Unimagdalena/Villa Marbella y 6 en Mercado Público. |
+| **5** | Consolidación del conjunto de análisis en el sector Unimagdalena–Villa Marbella–Cañaveral, revisión de coordenadas y anonimización de evidencias. | Johan Acosta, Todo el equipo | 24 reportes activos en Unimagdalena/Villa Marbella/Cañaveral; los seis registros del Mercado Público quedan fuera del alcance vigente. |
 
 ---
 
@@ -21,7 +21,7 @@
 
 Durante la construcción del prototipo se identificaron cuatro fallos técnicos en el código o datos generados inicialmente por la IA, los cuales fueron diagnosticados y corregidos por el equipo:
 
-### Ajuste 1: Desfase geográfico en reportes del Mercado Público
+### Ajuste 1: Delimitación del conjunto de análisis
 * **Fallo detectado:** Al generar inicialmente el archivo `reportes.json` a partir de las descripciones de las fotos, la IA ubicó los 30 registros únicamente en el polígono de Unimagdalena – Villa Marbella, asignando coordenadas de la Calle 29/Cañaveral a las evidencias `MP-ASO-024` a `MP-ASO-029`, que en realidad fueron tomadas en el **Mercado Público de Santa Marta** (sector CAI Mercado, Carrera 9 frente a Mundo Fiesta, Galería Alameda y Calle 11 # 12-42).
 * **Corrección aplicada:** Se auditó visualmente cada fotografía, se incorporaron 5 cuadras reales del Mercado Público en `datos/vias.json` (`CR9-C11-C12`, `C11-CR8-CR9`, `C11-CR9-CR10`, `C11-CR12-CR13`, `C12-CR9-CR10`) y se reasignaron las coordenadas exactas en `datos/reportes.json`.
 
@@ -36,3 +36,8 @@ Durante la construcción del prototipo se identificaron cuatro fallos técnicos 
 ### Ajuste 4: Fallo de despliegue en GitHub Pages por procesamiento Jekyll
 * **Fallo detectado:** El flujo de despliegue en GitHub Pages falló al intentar procesar carpetas y archivos con Jekyll.
 * **Corrección aplicada:** Se incorporó el archivo vacío `.nojekyll` en la raíz del repositorio y se mantuvieron todas las rutas relativas en minúsculas (`datos/vias.json`, `datos/fotos/mp-aso-001.jpg`).
+
+
+### Ajuste 5: Coherencia entre captura e importación geográfica
+* **Fallo detectado:** La captura permitía guardar puntos fuera de la zona o asignar la cuadra más cercana aunque estuviera demasiado lejos; la importación aplicaba un límite rectangular distinto.
+* **Corrección aplicada:** La captura y la importación ahora validan el área configurada y una distancia máxima de 90 m entre el punto y la cuadra asignada. Los puntos sin una cuadra suficientemente cercana no se aceptan como reportes válidos.
