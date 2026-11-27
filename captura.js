@@ -11,6 +11,7 @@ var AppEstado = {
   reportesPrecargados: [],
   reportesLocales: [],
   reportesUnificados: [],
+  evidenciasFotograficas: [],
   ubicacion: null,          // { lat, lng }
   cuadraId: "",
   categoria: "",
@@ -658,19 +659,36 @@ function leerFiltros() {
 }
 
 function renderizarAvance() {
-  var campo = AppEstado.reportesUnificados.filter(function (r) { return r.origen === "campo"; });
-  var pico = campo.filter(function (r) { return r._franja === "pico"; }).length;
-  porId("contador-meta-30").textContent = campo.length + " de 24";
-  porId("desglose-franjas").textContent = "Hora pico: " + pico + " · Hora valle: " + (campo.length - pico);
+  var totalEvidencias = AppEstado.evidenciasFotograficas.length;
+  porId("contador-meta-30").textContent = totalEvidencias + " de 30";
+  porId("desglose-franjas").textContent = "Evidencias fotográficas seleccionadas para la nueva muestra.";
+  porId("desglose-cuadras").textContent = "Las ubicaciones no forman parte de esta versión de la muestra.";
+  porId("uso-almacenamiento").textContent = "Reportes georreferenciados: " + AppEstado.reportesUnificados.length;
+  porId("badge-total-registros").textContent = totalEvidencias;
+}
 
-  var chips = porId("desglose-cuadras");
-  chips.innerHTML = "";
-  listaCuadras().forEach(function (c) {
-    var n = campo.filter(function (r) { return r.cuadra === c.id; }).length;
-    if (n > 0) chips.appendChild(crear("span", "chip-conteo", c.id + ": " + n));
+function renderizarGaleriaEvidencias() {
+  var contenedor = porId("galeria-evidencias");
+  if (!contenedor) return;
+  contenedor.innerHTML = "";
+  AppEstado.evidenciasFotograficas.forEach(function (e) {
+    var tarjeta = crear("article", "tarjeta-evidencia");
+    var img = crear("img", "imagen-evidencia");
+    img.src = "datos/" + e.foto;
+    img.alt = "Evidencia fotográfica " + e.id;
+    img.loading = "lazy";
+    img.addEventListener("error", function () {
+      img.alt = "No se pudo cargar " + e.foto;
+      img.classList.add("imagen-evidencia-error");
+    });
+    tarjeta.appendChild(img);
+    var info = crear("div", "detalle-evidencia");
+    info.appendChild(crear("strong", "", e.id));
+    info.appendChild(crear("span", "estado-evidencia", "Evidencia fotográfica · ubicación no registrada"));
+    tarjeta.appendChild(info);
+    contenedor.appendChild(tarjeta);
   });
-  porId("uso-almacenamiento").textContent = "Almacenamiento: " + calcularUsoAlmacenamiento().texto;
-  porId("badge-total-registros").textContent = AppEstado.reportesUnificados.length;
+  porId("titulo-galeria-evidencias").textContent = "Evidencias fotográficas (" + AppEstado.evidenciasFotograficas.length + ")";
 }
 
 function renderizarPorcentajes(filtrados) {
@@ -964,13 +982,17 @@ function configurarEventos() {
 }
 
 function inicializarApp() {
-  AppEstado.reportesLocales = cargarReportesLocales();
+  AppEstado.reportesLocales = cargarReportesLocales().filter(function (r) {
+    return !/^MP-ASO-\\d{3}$/.test(String(r && r.id || ""));
+  });
+  guardarListaReportesLocales(AppEstado.reportesLocales);
   porId("btn-guardar").disabled = true; // hasta que carguen los datos
 
   Promise.all([
     cargarJSON("datos/vias.json"),
     cargarJSON("datos/criterios.json"),
-    cargarJSON("datos/reportes.json")
+    cargarJSON("datos/reportes.json"),
+    cargarJSON("datos/evidencias_nuevas.json")
   ]).then(function (datos) {
     var vias = datos[0];
     var criterios = datos[1];
@@ -984,6 +1006,7 @@ function inicializarApp() {
     AppEstado.vias = vias;
     AppEstado.criterios = criterios;
     AppEstado.reportesPrecargados = Array.isArray(datos[2]) ? datos[2] : [];
+    AppEstado.evidenciasFotograficas = Array.isArray(datos[3]) ? datos[3] : [];
     porId("nombre-zona-header").textContent = vias.zona.nombre;
     poblarSelectoresCuadras();
 
@@ -998,6 +1021,7 @@ function inicializarApp() {
     actualizarIndicadorIniciales();
     actualizarReloj();
     refrescarTodo();
+    renderizarGaleriaEvidencias();
     porId("btn-guardar").disabled = false;
   });
 }
