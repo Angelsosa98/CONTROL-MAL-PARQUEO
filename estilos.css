@@ -1054,3 +1054,24 @@ button {
     height: 180px;
   }
 }
+
+
+/* Marcadores agrupados por los cinco puntos de referencia de Google Maps */
+.marcador-grupo-evidencias {
+  background: transparent;
+  border: 0;
+}
+.marcador-grupo-evidencias span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 1px 6px rgba(0,0,0,.4);
+}
