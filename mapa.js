@@ -341,13 +341,13 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
     puntosCalor.forEach(function (punto) {
       var intensidad = punto[2];
       var tono = intensidad >= 0.78 ? "220,38,38" : (intensidad >= 0.45 ? "245,158,11" : "22,163,74");
-      var diametro = Math.round(58 + intensidad * 24);
+      var diametro = Math.round(24 + intensidad * 12);
       var iconoCalor = L.divIcon({
         className: "evidencia-calor-icono",
         html: '<div style="width:' + diametro + 'px;height:' + diametro +
           'px;border-radius:50%;background:radial-gradient(circle,rgba(' + tono +
-          ',0.48) 0%,rgba(' + tono + ',0.27) 34%,rgba(' + tono +
-          ',0.10) 62%,rgba(' + tono + ',0) 100%);"></div>',
+          ',0.38) 0%,rgba(' + tono + ',0.20) 34%,rgba(' + tono +
+          ',0.07) 62%,rgba(' + tono + ',0) 100%);"></div>',
         iconSize: [diametro, diametro],
         iconAnchor: [diametro / 2, diametro / 2]
       });
