@@ -1028,7 +1028,6 @@ function inicializarApp() {
     actualizarReloj();
     refrescarTodo();
     renderizarGaleriaEvidencias();
-    actualizarMarcadoresEvidencias(AppEstado.evidenciasFotograficas, AppEstado.vias);
     porId("btn-guardar").disabled = false;
   });
 }
