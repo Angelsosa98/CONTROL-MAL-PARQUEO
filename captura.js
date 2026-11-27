@@ -810,7 +810,7 @@ function aplicarFiltros() {
 
 function refrescarTodo() {
   sincronizarReportes();
-  actualizarPuntosEnMapaCaptura(AppEstado.reportesUnificados);
+  actualizarPuntosEnMapaCaptura(AppEstado.reportesUnificados, AppEstado.vias);
   renderizarAvance();
   aplicarFiltros();
 }
