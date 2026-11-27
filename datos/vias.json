@@ -1,16 +1,16 @@
 {
   "zona": {
-    "nombre": "Universidad del Magdalena y circuito de campo en Villa Marbella",
+    "nombre": "Universidad del Magdalena — Parque Villa Marbella",
     "centro": [
-      11.2229,
-      -74.1887
+      11.22425,
+      -74.19005
     ],
-    "zoom": 16,
+    "zoom": 17,
     "limites": {
-      "lat_min": 11.2198,
-      "lat_max": 11.2252,
-      "lng_min": -74.1904,
-      "lng_max": -74.1867
+      "lat_min": 11.2228,
+      "lat_max": 11.226,
+      "lng_min": -74.1915,
+      "lng_max": -74.1883
     },
     "radio_max_m": 30
   },
@@ -29,7 +29,9 @@
           11.2238,
           -74.188
         ]
-      ]
+      ],
+      "activa": false,
+      "nota": "Segmento anterior conservado para interpretar registros históricos; no se usa en la nueva zona de campo."
     },
     {
       "id": "CR32-C24-C26",
@@ -45,7 +47,9 @@
           11.2229,
           -74.1881
         ]
-      ]
+      ],
+      "activa": false,
+      "nota": "Segmento anterior conservado para interpretar registros históricos; no se usa en la nueva zona de campo."
     },
     {
       "id": "CR32-C26-C28",
@@ -61,7 +65,9 @@
           11.2214,
           -74.1882
         ]
-      ]
+      ],
+      "activa": false,
+      "nota": "Segmento anterior conservado para interpretar registros históricos; no se usa en la nueva zona de campo."
     },
     {
       "id": "CR32-C28-C29",
@@ -77,7 +83,9 @@
           11.2202,
           -74.1883
         ]
-      ]
+      ],
+      "activa": false,
+      "nota": "Segmento anterior conservado para interpretar registros históricos; no se usa en la nueva zona de campo."
     },
     {
       "id": "C29-CR31-CR32",
@@ -93,7 +101,9 @@
           11.2202,
           -74.1883
         ]
-      ]
+      ],
+      "activa": false,
+      "nota": "Segmento anterior conservado para interpretar registros históricos; no se usa en la nueva zona de campo."
     },
     {
       "id": "C25-CR31-CR32",
@@ -109,7 +119,9 @@
           11.2234,
           -74.188
         ]
-      ]
+      ],
+      "activa": false,
+      "nota": "Segmento anterior conservado para interpretar registros históricos; no se usa en la nueva zona de campo."
     },
     {
       "id": "C26-CR31-CR32",
@@ -125,7 +137,9 @@
           11.2229,
           -74.1881
         ]
-      ]
+      ],
+      "activa": false,
+      "nota": "Segmento anterior conservado para interpretar registros históricos; no se usa en la nueva zona de campo."
     },
     {
       "id": "C27-CR31-CR32",
@@ -141,7 +155,9 @@
           11.2221,
           -74.18815
         ]
-      ]
+      ],
+      "activa": false,
+      "nota": "Segmento anterior conservado para interpretar registros históricos; no se usa en la nueva zona de campo."
     },
     {
       "id": "CR31-C26-C28",
@@ -157,7 +173,9 @@
           11.2216,
           -74.18975
         ]
-      ]
+      ],
+      "activa": false,
+      "nota": "Segmento anterior conservado para interpretar registros históricos; no se usa en la nueva zona de campo."
     },
     {
       "id": "C28-CR31-CR32",
@@ -173,105 +191,301 @@
           11.2214,
           -74.1882
         ]
+      ],
+      "activa": false,
+      "nota": "Segmento anterior conservado para interpretar registros históricos; no se usa en la nueva zona de campo."
+    },
+    {
+      "id": "CALLE29H-UNIMAG",
+      "nombre": "Calle 29H — corredor de la Universidad del Magdalena",
+      "sector": "Corredor universitario",
+      "tipo_via": "arterial",
+      "activa": true,
+      "extremos": [
+        [
+          11.225586,
+          -74.188874
+        ],
+        [
+          11.22545,
+          -74.18907
+        ],
+        [
+          11.22531,
+          -74.1893
+        ],
+        [
+          11.22516,
+          -74.18951
+        ],
+        [
+          11.225,
+          -74.18972
+        ],
+        [
+          11.22483,
+          -74.18994
+        ],
+        [
+          11.22464,
+          -74.19015
+        ],
+        [
+          11.22445,
+          -74.19039
+        ],
+        [
+          11.22424,
+          -74.1907
+        ],
+        [
+          11.22406,
+          -74.19097
+        ]
+      ]
+    },
+    {
+      "id": "PARQUE-ACCESO",
+      "nombre": "Acceso hacia Parque Villa Marbella",
+      "sector": "Parque Villa Marbella",
+      "tipo_via": "secundaria",
+      "activa": true,
+      "extremos": [
+        [
+          11.22464,
+          -74.19015
+        ],
+        [
+          11.22443,
+          -74.19005
+        ],
+        [
+          11.22419,
+          -74.19003
+        ],
+        [
+          11.22392,
+          -74.18998
+        ]
+      ]
+    },
+    {
+      "id": "PARQUE-INTERIOR-ESTE",
+      "nombre": "Vía interior — costado oriental del parque",
+      "sector": "Parque Villa Marbella",
+      "tipo_via": "secundaria",
+      "activa": true,
+      "extremos": [
+        [
+          11.22392,
+          -74.18998
+        ],
+        [
+          11.22365,
+          -74.18992
+        ],
+        [
+          11.22349,
+          -74.18991
+        ],
+        [
+          11.2233,
+          -74.19005
+        ]
+      ]
+    },
+    {
+      "id": "PARQUE-INTERIOR-SUR",
+      "nombre": "Vía interior — retorno sur del parque",
+      "sector": "Parque Villa Marbella",
+      "tipo_via": "secundaria",
+      "activa": true,
+      "extremos": [
+        [
+          11.2233,
+          -74.19005
+        ],
+        [
+          11.22314,
+          -74.19027
+        ],
+        [
+          11.22347,
+          -74.19063
+        ]
+      ]
+    },
+    {
+      "id": "PARQUE-RETORNO-OESTE",
+      "nombre": "Vía de retorno — alrededores del parque",
+      "sector": "Parque Villa Marbella",
+      "tipo_via": "secundaria",
+      "activa": true,
+      "extremos": [
+        [
+          11.22347,
+          -74.19063
+        ],
+        [
+          11.2238,
+          -74.19087
+        ],
+        [
+          11.22406,
+          -74.19097
+        ]
       ]
     }
   ],
   "recorrido_campo": {
-    "tipo": "esquematico_aproximado",
-    "descripcion": "Recorrido descrito por el equipo: salida por el corredor de la Universidad del Magdalena, avance aproximado de seis cuadras, giro a la izquierda hacia Villa Marbella, retorno de dos cuadras por vías interiores, avance de una cuadra y salida de nuevo hacia el corredor universitario.",
-    "nota": "La línea representa un circuito aproximado siguiendo los ejes de vía configurados. No es una traza GPS ni asigna una coordenada exacta a cada fotografía.",
+    "tipo": "reconstruccion_visual_aproximada",
+    "descripcion": "Recorrido dibujado siguiendo la línea verde de la imagen aportada por el equipo: ingreso desde Calle 29H por el sector de la Universidad del Magdalena, avance hacia Villa Marbella, circuito por las calles interiores junto al parque y retorno al corredor universitario.",
+    "nota": "La geometría sigue el trazado dibujado por el equipo y las referencias cartográficas del sector. Es una reconstrucción aproximada, no una traza GPS.",
+    "trazado": [
+      [
+        11.225586,
+        -74.188874
+      ],
+      [
+        11.22545,
+        -74.18907
+      ],
+      [
+        11.22531,
+        -74.1893
+      ],
+      [
+        11.22516,
+        -74.18951
+      ],
+      [
+        11.225,
+        -74.18972
+      ],
+      [
+        11.22483,
+        -74.18994
+      ],
+      [
+        11.22464,
+        -74.19015
+      ],
+      [
+        11.22445,
+        -74.19039
+      ],
+      [
+        11.22424,
+        -74.1907
+      ],
+      [
+        11.22406,
+        -74.19097
+      ],
+      [
+        11.22443,
+        -74.19005
+      ],
+      [
+        11.22419,
+        -74.19003
+      ],
+      [
+        11.22392,
+        -74.18998
+      ],
+      [
+        11.22365,
+        -74.18992
+      ],
+      [
+        11.22349,
+        -74.18991
+      ],
+      [
+        11.2233,
+        -74.19005
+      ],
+      [
+        11.22314,
+        -74.19027
+      ],
+      [
+        11.22347,
+        -74.19063
+      ],
+      [
+        11.2238,
+        -74.19087
+      ],
+      [
+        11.22406,
+        -74.19097
+      ]
+    ],
     "hitos": [
       {
         "id": "R1",
-        "nombre": "Inicio del recorrido — corredor de la Universidad",
+        "nombre": "Corredor de Calle 29H — sector Universidad",
         "coordenadas": [
-          11.2248,
-          -74.1879
+          11.225586,
+          -74.188874
         ]
       },
       {
         "id": "R2",
-        "nombre": "Avance por el corredor — sector Calle 24",
+        "nombre": "Avance por Calle 29H hacia Villa Marbella",
         "coordenadas": [
-          11.2238,
-          -74.188
+          11.225,
+          -74.18972
         ]
       },
       {
         "id": "R3",
-        "nombre": "Giro a la izquierda hacia Villa Marbella — sector Calle 28",
+        "nombre": "Llegada al sector del parque",
         "coordenadas": [
-          11.2214,
-          -74.1882
+          11.22406,
+          -74.19097
         ]
       },
       {
         "id": "R4",
-        "nombre": "Ingreso al tramo interior — Carrera 31",
+        "nombre": "Giro hacia calles interiores",
         "coordenadas": [
-          11.2216,
-          -74.18975
+          11.22419,
+          -74.19003
         ]
       },
       {
         "id": "R5",
-        "nombre": "Retorno aproximado de dos cuadras — sector Calle 26",
+        "nombre": "Vuelta por costado oriental",
         "coordenadas": [
-          11.2231,
-          -74.1896
+          11.22349,
+          -74.18991
         ]
       },
       {
         "id": "R6",
-        "nombre": "Giro hacia el corredor de salida — sector Calle 26",
+        "nombre": "Retorno por calles interiores",
         "coordenadas": [
-          11.2229,
-          -74.1881
+          11.22347,
+          -74.19063
         ]
       },
       {
         "id": "R7",
-        "nombre": "Salida hacia el corredor de la Universidad",
+        "nombre": "Salida al corredor universitario",
         "coordenadas": [
-          11.2235,
-          -74.18805
+          11.22406,
+          -74.19097
         ]
       }
     ],
-    "fuente_referencias": "Secuencia inferida de la descripción del equipo y trazada sobre los segmentos de vía existentes en datos/vias.json; requiere confirmación de campo para considerarse recorrido GPS.",
-    "trazado": [
-      [
-        11.2248,
-        -74.1879
-      ],
-      [
-        11.2238,
-        -74.188
-      ],
-      [
-        11.2229,
-        -74.1881
-      ],
-      [
-        11.2214,
-        -74.1882
-      ],
-      [
-        11.2216,
-        -74.18975
-      ],
-      [
-        11.2231,
-        -74.1896
-      ],
-      [
-        11.2229,
-        -74.1881
-      ],
-      [
-        11.2235,
-        -74.18805
-      ]
-    ]
+    "distribucion_evidencias": {
+      "corredor_universidad": 5,
+      "parque_villa_marbella_y_alrededores": 25,
+      "total": 30,
+      "fuente": "Conteo aproximado comunicado por el equipo; coordenadas sectoriales reconstruidas para visualización."
+    }
   }
 }
