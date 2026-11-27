@@ -290,84 +290,19 @@ function cambiarModoMapaRegistros(nuevoModo) {
  * distribuidas sobre los ejes de las cuadras configuradas. No son GPS reales.
  * La intensidad del mapa de calor también es simulada.
  */
+/**
+ * Las fotografías sin coordenadas verificadas no se dibujan en el mapa.
+ * La capa espacial se alimenta exclusivamente de reportes georreferenciados.
+ * Se conserva esta función por compatibilidad con llamadas antiguas.
+ */
 function actualizarMarcadoresEvidencias(evidencias, vias) {
   if (!leafletDisponible() || !mapaRegistros) return;
-  if (!capaEvidenciasAproximadas) {
-    capaEvidenciasAproximadas = L.layerGroup().addTo(mapaRegistros);
-  }
-  capaEvidenciasAproximadas.clearLayers();
+  if (capaEvidenciasAproximadas) capaEvidenciasAproximadas.clearLayers();
   if (capaCalorEvidencias && mapaRegistros.hasLayer(capaCalorEvidencias)) {
     mapaRegistros.removeLayer(capaCalorEvidencias);
   }
   capaCalorEvidencias = null;
-
-  var lista = Array.isArray(evidencias) ? evidencias : [];
-  var coordenadas = [];
-  var puntosCalor = [];
-  lista.forEach(function (e) {
-    var u = e && e.ubicacion;
-    if (!u || typeof u.lat !== "number" || typeof u.lng !== "number") return;
-    var score = e.criticidad_simulada && typeof e.criticidad_simulada.puntaje === "number"
-      ? e.criticidad_simulada.puntaje : 5;
-    var intensidad = Math.max(0.2, Math.min(1, score / 9));
-    puntosCalor.push([u.lat, u.lng, intensidad]);
-
-    var marcador = L.circleMarker([u.lat, u.lng], {
-      pane: "evidenciasPointsPane",
-      radius: 5,
-      fillColor: "#2563eb",
-      color: "#ffffff",
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 0.95
-    });
-    var archivo = String(e.foto || "").replace(/^.*\//, "");
-    var contenido = "<strong>" + e.id + "</strong><br>" +
-      "Ubicación y puntaje simulados para demostración<br>" +
-      "Cuadra de referencia: " + String(u.cuadra_referencia || "No asignada") +
-      "<br>Intensidad simulada: " + score + "/9" +
-      "<br><img src='datos/fotos/" + archivo + "' alt='" + e.id +
-      "' style='width:190px;max-height:140px;object-fit:contain;margin-top:6px'>";
-    marcador.bindPopup(contenido, { maxWidth: 230 });
-    marcador.addTo(capaEvidenciasAproximadas);
-    coordenadas.push([u.lat, u.lng]);
-  });
-
-  // Mapa de calor sintético sin Leaflet.heat: se dibuja con círculos
-  // radiales HTML en un pane propio. Así evitamos el error de canvas 0x0
-  // (getImageData) que aparece cuando el mapa se inicializa en una pestaña oculta.
-  if (puntosCalor.length) {
-    capaCalorEvidencias = L.layerGroup();
-    puntosCalor.forEach(function (punto) {
-      var intensidad = punto[2];
-      var tono = intensidad >= 0.78 ? "220,38,38" : (intensidad >= 0.45 ? "245,158,11" : "22,163,74");
-      var diametro = Math.round(24 + intensidad * 12);
-      var iconoCalor = L.divIcon({
-        className: "evidencia-calor-icono",
-        html: '<div style="width:' + diametro + 'px;height:' + diametro +
-          'px;border-radius:50%;background:radial-gradient(circle,rgba(' + tono +
-          ',0.38) 0%,rgba(' + tono + ',0.20) 34%,rgba(' + tono +
-          ',0.07) 62%,rgba(' + tono + ',0) 100%);"></div>',
-        iconSize: [diametro, diametro],
-        iconAnchor: [diametro / 2, diametro / 2]
-      });
-      L.marker([punto[0], punto[1]], {
-        pane: "evidenciasHeatPane",
-        icon: iconoCalor,
-        interactive: false,
-        keyboard: false,
-        zIndexOffset: -100
-      }).addTo(capaCalorEvidencias);
-    });
-    capaCalorEvidencias.addTo(mapaRegistros);
-  }
   aplicarModoCapasRegistros();
-  if (vias && vias.zona && vias.zona.limites) {
-    var b = vias.zona.limites;
-    mapaRegistros.fitBounds([[b.lat_min, b.lng_min], [b.lat_max, b.lng_max]], { padding: [18, 18], maxZoom: 16 });
-  } else if (coordenadas.length) {
-    mapaRegistros.fitBounds(L.latLngBounds(coordenadas), { padding: [28, 28], maxZoom: 16 });
-  }
 }
 
 function actualizarMarcadoresRegistros(listaReportes, vias) {
