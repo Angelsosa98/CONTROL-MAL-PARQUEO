@@ -661,15 +661,15 @@ function leerFiltros() {
 function renderizarAvance() {
   var totalEvidencias = AppEstado.evidenciasFotograficas.length;
   porId("contador-meta-30").textContent = totalEvidencias + " de 30";
-  porId("desglose-franjas").textContent = "Fotografías conservadas; pendientes de georreferenciación y clasificación.";
-  porId("desglose-cuadras").textContent = "No se asignan calles ni coordenadas a las fotografías sin verificación de campo.";
-  porId("uso-almacenamiento").textContent = "Reportes georreferenciados: " + AppEstado.reportesUnificados.length;
+  porId("desglose-franjas").textContent = "Evidencias fotográficas conservadas para consulta.";
+  porId("desglose-cuadras").textContent = "Las evidencias se consultan en la galería; el recorrido de campo se muestra como referencia aproximada.";
+  porId("uso-almacenamiento").textContent = "Reportes: " + AppEstado.reportesUnificados.length;
   porId("badge-total-registros").textContent = totalEvidencias;
   var estadoMapa = porId("estado-mapa-registros");
   if (estadoMapa) {
     estadoMapa.textContent = AppEstado.reportesUnificados.length
-      ? "Se muestran reportes georreferenciados registrados. Las fotografías sin coordenadas verificadas no se incluyen en el mapa."
-      : "Aún no hay reportes georreferenciados. Las fotografías disponibles están en la galería y no tienen una ubicación verificada.";
+      ? "Se muestran los reportes registrados junto al recorrido aproximado de campo. Las evidencias están disponibles en la galería."
+      : "Aún no hay reportes registrados. Las evidencias disponibles se consultan en la galería; la línea azul representa el recorrido aproximado.";
   }
 }
 
