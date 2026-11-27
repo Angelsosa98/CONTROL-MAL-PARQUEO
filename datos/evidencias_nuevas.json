@@ -7,12 +7,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.224556,
-      "lng": -74.187946,
+      "lat": 11.22462,
+      "lng": -74.187918,
       "cuadra_referencia": "CR32-C22-C24"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 4,
       "nivel": "Bajo"
@@ -26,12 +26,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.223602,
-      "lng": -74.188034,
+      "lat": 11.223638,
+      "lng": -74.188018,
       "cuadra_referencia": "CR32-C24-C26"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 2,
       "nivel": "Bajo"
@@ -45,12 +45,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.222594,
-      "lng": -74.188122,
+      "lat": 11.22263,
+      "lng": -74.188118,
       "cuadra_referencia": "CR32-C26-C28"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 9,
       "nivel": "Alto"
@@ -64,12 +64,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.221124,
-      "lng": -74.18821,
+      "lat": 11.221184,
+      "lng": -74.188218,
       "cuadra_referencia": "CR32-C28-C29"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 7,
       "nivel": "Alto"
@@ -84,11 +84,11 @@
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
       "lat": 11.220446,
-      "lng": -74.189524,
+      "lng": -74.189612,
       "cuadra_referencia": "C29-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 5,
       "nivel": "Medio"
@@ -102,12 +102,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.223532,
-      "lng": -74.189194,
+      "lat": 11.223564,
+      "lng": -74.18923,
       "cuadra_referencia": "C25-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 3,
       "nivel": "Bajo"
@@ -121,12 +121,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.223056,
-      "lng": -74.189282,
+      "lat": 11.223064,
+      "lng": -74.18933,
       "cuadra_referencia": "C26-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 1,
       "nivel": "Bajo"
@@ -140,12 +140,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.22228,
-      "lng": -74.189359,
+      "lat": 11.222264,
+      "lng": -74.189421,
       "cuadra_referencia": "C27-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 8,
       "nivel": "Alto"
@@ -159,12 +159,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.222758,
-      "lng": -74.189621,
+      "lat": 11.22283,
+      "lng": -74.189627,
       "cuadra_referencia": "CR31-C26-C28"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 6,
       "nivel": "Medio"
@@ -178,12 +178,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.221568,
-      "lng": -74.189385,
+      "lat": 11.221564,
+      "lng": -74.189471,
       "cuadra_referencia": "C28-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 4,
       "nivel": "Bajo"
@@ -197,12 +197,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.224276,
-      "lng": -74.187974,
+      "lat": 11.22442,
+      "lng": -74.187938,
       "cuadra_referencia": "CR32-C22-C24"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 2,
       "nivel": "Bajo"
@@ -216,12 +216,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.22335,
-      "lng": -74.188062,
+      "lat": 11.223458,
+      "lng": -74.188038,
       "cuadra_referencia": "CR32-C24-C26"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 9,
       "nivel": "Alto"
@@ -235,12 +235,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.222174,
-      "lng": -74.18815,
+      "lat": 11.22233,
+      "lng": -74.188138,
       "cuadra_referencia": "CR32-C26-C28"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 7,
       "nivel": "Alto"
@@ -254,12 +254,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.220788,
+      "lat": 11.220944,
       "lng": -74.188238,
       "cuadra_referencia": "CR32-C28-C29"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 5,
       "nivel": "Medio"
@@ -273,12 +273,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.220362,
-      "lng": -74.189076,
+      "lat": 11.220386,
+      "lng": -74.189292,
       "cuadra_referencia": "C29-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 3,
       "nivel": "Bajo"
@@ -292,12 +292,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.223476,
-      "lng": -74.188774,
+      "lat": 11.223524,
+      "lng": -74.18893,
       "cuadra_referencia": "C25-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 1,
       "nivel": "Bajo"
@@ -311,12 +311,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.223,
-      "lng": -74.188862,
+      "lat": 11.223024,
+      "lng": -74.18903,
       "cuadra_referencia": "C26-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 8,
       "nivel": "Alto"
@@ -331,11 +331,11 @@
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
       "lat": 11.222224,
-      "lng": -74.188925,
+      "lng": -74.189111,
       "cuadra_referencia": "C27-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 6,
       "nivel": "Medio"
@@ -349,12 +349,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.222338,
-      "lng": -74.189663,
+      "lat": 11.22253,
+      "lng": -74.189657,
       "cuadra_referencia": "CR31-C26-C28"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 4,
       "nivel": "Bajo"
@@ -368,12 +368,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.221512,
-      "lng": -74.188951,
+      "lat": 11.221524,
+      "lng": -74.189161,
       "cuadra_referencia": "C28-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 2,
       "nivel": "Bajo"
@@ -387,12 +387,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.223996,
-      "lng": -74.188002,
+      "lat": 11.22422,
+      "lng": -74.187958,
       "cuadra_referencia": "CR32-C22-C24"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 9,
       "nivel": "Alto"
@@ -406,12 +406,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.223098,
-      "lng": -74.18809,
+      "lat": 11.223278,
+      "lng": -74.188058,
       "cuadra_referencia": "CR32-C24-C26"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 7,
       "nivel": "Alto"
@@ -425,12 +425,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.221754,
-      "lng": -74.188178,
+      "lat": 11.22203,
+      "lng": -74.188158,
       "cuadra_referencia": "CR32-C26-C28"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 5,
       "nivel": "Medio"
@@ -444,12 +444,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.220452,
-      "lng": -74.188266,
+      "lat": 11.220704,
+      "lng": -74.188258,
       "cuadra_referencia": "CR32-C28-C29"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 3,
       "nivel": "Bajo"
@@ -463,12 +463,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.220278,
-      "lng": -74.188628,
+      "lat": 11.220326,
+      "lng": -74.188972,
       "cuadra_referencia": "C29-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 1,
       "nivel": "Bajo"
@@ -482,12 +482,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.22342,
-      "lng": -74.188354,
+      "lat": 11.223484,
+      "lng": -74.18863,
       "cuadra_referencia": "C25-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 8,
       "nivel": "Alto"
@@ -501,12 +501,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.222944,
-      "lng": -74.188442,
+      "lat": 11.222984,
+      "lng": -74.18873,
       "cuadra_referencia": "C26-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 6,
       "nivel": "Medio"
@@ -520,12 +520,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.222168,
-      "lng": -74.188491,
+      "lat": 11.222184,
+      "lng": -74.188801,
       "cuadra_referencia": "C27-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 4,
       "nivel": "Bajo"
@@ -539,12 +539,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.221918,
-      "lng": -74.189705,
+      "lat": 11.22223,
+      "lng": -74.189687,
       "cuadra_referencia": "CR31-C26-C28"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 2,
       "nivel": "Bajo"
@@ -558,12 +558,12 @@
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
       "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.221456,
-      "lng": -74.188517,
+      "lat": 11.221484,
+      "lng": -74.188851,
       "cuadra_referencia": "C28-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
     "criticidad_simulada": {
       "puntaje": 9,
       "nivel": "Alto"
