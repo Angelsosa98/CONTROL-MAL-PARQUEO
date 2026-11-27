@@ -2,14 +2,12 @@
  * ARCHIVO: mapa.js
  * RESPONSABILIDAD: Gestión de los mapas Leaflet (mapa de captura y mapa de
  * registros con capa de calor Leaflet.heat ponderada por criticidad y capa
- * de puntos individuales), dibujo de cuadras y marcador arrastrable.
+ * de puntos individuales), marcador arrastrable y búsqueda de direcciones.
  * ============================================================================ */
 
 var mapaCaptura = null;
 var marcadorCaptura = null;
-var capaCuadrasCaptura = null;
 var capaReportesCaptura = null;
-var polilineasCuadras = {};
 
 var mapaRegistros = null;
 var capaMarcadoresRegistros = null;
@@ -43,15 +41,16 @@ function obtenerColorNivel(nivel) {
 }
 
 /**
- * Inicializa el mapa de la vista Captura con OpenStreetMap y las cuadras de vias.json.
+ * Inicializa el mapa de la vista Captura con OpenStreetMap (sin dibujar líneas
+ * de cuadras) y permite elegir ubicación tocando el mapa o arrastrando el pin.
  */
 function iniciarMapaCaptura(idContenedor, vias, alElegirUbicacion) {
   if (!leafletDisponible()) {
     return false;
   }
 
-  var centro = (vias && vias.zona && vias.zona.centro) ? vias.zona.centro : [11.2450, -74.2064];
-  var zoom = (vias && vias.zona && vias.zona.zoom) ? vias.zona.zoom : 17;
+  var centro = (vias && vias.zona && vias.zona.centro) ? vias.zona.centro : [11.2335, -74.1972];
+  var zoom = (vias && vias.zona && vias.zona.zoom) ? vias.zona.zoom : 15;
 
   mapaCaptura = L.map(idContenedor, {
     zoomControl: true
@@ -62,36 +61,7 @@ function iniciarMapaCaptura(idContenedor, vias, alElegirUbicacion) {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(mapaCaptura);
 
-  capaCuadrasCaptura = L.layerGroup().addTo(mapaCaptura);
   capaReportesCaptura = L.layerGroup().addTo(mapaCaptura);
-  polilineasCuadras = {};
-
-  // Dibujar las cuadras definidas en vias.json como líneas interactivas
-  if (vias && Array.isArray(vias.cuadras)) {
-    for (var i = 0; i < vias.cuadras.length; i++) {
-      var cuadra = vias.cuadras[i];
-      if (!Array.isArray(cuadra.extremos) || cuadra.extremos.length < 2) continue;
-
-      var linea = L.polyline(cuadra.extremos, {
-        color: "#475569",
-        weight: 5,
-        opacity: 0.7
-      });
-
-      linea.bindTooltip(cuadra.nombre + " (" + cuadra.tipo_via + ")", {
-        sticky: true
-      });
-
-      linea.on("click", function (e) {
-        if (typeof alElegirUbicacion === "function") {
-          alElegirUbicacion(e.latlng.lat, e.latlng.lng);
-        }
-      });
-
-      linea.addTo(capaCuadrasCaptura);
-      polilineasCuadras[cuadra.id] = linea;
-    }
-  }
 
   mapaCaptura.on("click", function (e) {
     if (typeof alElegirUbicacion === "function") {
@@ -130,34 +100,14 @@ function actualizarMarcadorCaptura(lat, lng, alArrastrar) {
 }
 
 /**
- * Resalta visualmente la cuadra asignada en el mapa de captura y atenúa las demás.
+ * Mantenida por compatibilidad sin dibujar líneas de cuadras.
  */
 function resaltarCuadraCaptura(cuadraId) {
-  if (!leafletDisponible() || !mapaCaptura) return;
-
-  var ids = Object.keys(polilineasCuadras);
-  for (var i = 0; i < ids.length; i++) {
-    var id = ids[i];
-    var linea = polilineasCuadras[id];
-    if (id === cuadraId) {
-      linea.setStyle({
-        color: "#0284c7",
-        weight: 9,
-        opacity: 1
-      });
-      linea.bringToFront();
-    } else {
-      linea.setStyle({
-        color: "#64748b",
-        weight: 5,
-        opacity: 0.55
-      });
-    }
-  }
+  return cuadraId;
 }
 
 /**
- * Dibuja puntos pequeños de referencia de los reportes ya guardados en el mapa de captura.
+ * Dibuja los puntos de los reportes ya guardados en el mapa de captura.
  */
 function actualizarPuntosEnMapaCaptura(listaReportes) {
   if (!leafletDisponible() || !mapaCaptura || !capaReportesCaptura) return;
@@ -166,6 +116,8 @@ function actualizarPuntosEnMapaCaptura(listaReportes) {
 
   for (var i = 0; i < listaReportes.length; i++) {
     var r = listaReportes[i];
+    if (typeof r.lat !== "number" || typeof r.lng !== "number") continue;
+
     var nivel = r.criticidad ? r.criticidad.nivel : "Bajo";
     var color = obtenerColorNivel(nivel);
 
@@ -207,8 +159,8 @@ function iniciarMapaRegistros(idContenedor, vias) {
   }
 
   ultimoViasRegistros = vias;
-  var centro = (vias && vias.zona && vias.zona.centro) ? vias.zona.centro : [11.2450, -74.2064];
-  var zoom = (vias && vias.zona && vias.zona.zoom) ? vias.zona.zoom : 17;
+  var centro = (vias && vias.zona && vias.zona.centro) ? vias.zona.centro : [11.2335, -74.1972];
+  var zoom = (vias && vias.zona && vias.zona.zoom) ? vias.zona.zoom : 15;
 
   mapaRegistros = L.map(idContenedor, {
     zoomControl: true
@@ -221,13 +173,11 @@ function iniciarMapaRegistros(idContenedor, vias) {
 
   capaMarcadoresRegistros = L.layerGroup().addTo(mapaRegistros);
 
-  // Avisar si Leaflet.heat no cargó
   var avisoCalor = document.getElementById("aviso-sin-calor");
   if (avisoCalor && !heatDisponible()) {
     avisoCalor.hidden = false;
   }
 
-  // Agregar leyenda de colores por nivel de criticidad
   var leyenda = L.control({ position: "bottomright" });
   leyenda.onAdd = function () {
     var div = L.DomUtil.create("div", "leyenda-mapa");
@@ -313,7 +263,6 @@ function actualizarMarcadoresRegistros(listaReportes, vias) {
     var puntaje = r.criticidad && typeof r.criticidad.puntaje === "number" ? r.criticidad.puntaje : 1;
     var color = obtenerColorNivel(nivel);
 
-    // Intensidad ponderada por el puntaje de criticidad (escala 0..9 -> 0.25..1.0)
     var intensidad = Math.max(0.25, Math.min(1.0, puntaje / 9));
     puntosCalor.push([r.lat, r.lng, intensidad]);
 
@@ -337,7 +286,6 @@ function actualizarMarcadoresRegistros(listaReportes, vias) {
     coordenadas.push([r.lat, r.lng]);
   }
 
-  // Crear capa de calor solo si el contenedor ya tiene tamaño visible (> 0 px)
   var tamMapa = mapaRegistros.getSize();
   if (heatDisponible() && puntosCalor.length > 0 && tamMapa.x > 0 && tamMapa.y > 0) {
     capaCalorRegistros = L.heatLayer(puntosCalor, {
@@ -360,7 +308,7 @@ function actualizarMarcadoresRegistros(listaReportes, vias) {
     var limites = L.latLngBounds(coordenadas);
     mapaRegistros.fitBounds(limites, { padding: [26, 26], maxZoom: 17 });
   } else if (ultimoViasRegistros && ultimoViasRegistros.zona && ultimoViasRegistros.zona.centro) {
-    mapaRegistros.setView(ultimoViasRegistros.zona.centro, ultimoViasRegistros.zona.zoom || 17);
+    mapaRegistros.setView(ultimoViasRegistros.zona.centro, ultimoViasRegistros.zona.zoom || 15);
   }
 }
 
@@ -391,7 +339,6 @@ function buscarDireccionesMapa(textoConsulta, vias) {
   var qLower = q.toLowerCase();
   var resultados = [];
 
-  // 1. Coincidencias locales en cuadras de vias.json
   if (vias && Array.isArray(vias.cuadras)) {
     for (var i = 0; i < vias.cuadras.length; i++) {
       var c = vias.cuadras[i];
@@ -416,7 +363,6 @@ function buscarDireccionesMapa(textoConsulta, vias) {
     }
   }
 
-  // 2. Consulta a Nominatim (con viewbox si existe zona.limites)
   var consultaConCiudad = qLower.indexOf("santa marta") === -1 ? q + ", Santa Marta, Colombia" : q;
   var url =
     "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&countrycodes=co&q=" +
@@ -430,7 +376,6 @@ function buscarDireccionesMapa(textoConsulta, vias) {
     typeof lim.lng_max === "number" &&
     typeof lim.lat_max === "number"
   ) {
-    // Formato viewbox de Nominatim: lon_min,lat_max,lon_max,lat_min
     url += "&viewbox=" + lim.lng_min + "," + lim.lat_max + "," + lim.lng_max + "," + lim.lat_min;
   }
 
