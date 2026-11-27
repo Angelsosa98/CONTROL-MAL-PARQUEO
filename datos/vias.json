@@ -1,16 +1,16 @@
 {
   "zona": {
-    "nombre": "Santa Marta — Villa Marbella, Semáforo de Cañaveral y Mercado Público",
+    "nombre": "Santa Marta — Universidad del Magdalena, Villa Marbella y Cañaveral",
     "centro": [
-      11.2232,
+      11.2225,
       -74.1885
     ],
     "zoom": 16,
     "limites": {
-      "lat_min": 11.18,
-      "lat_max": 11.3,
-      "lng_min": -74.27,
-      "lng_max": -74.15
+      "lat_min": 11.2198,
+      "lat_max": 11.2252,
+      "lng_min": -74.1904,
+      "lng_max": -74.1867
     },
     "radio_max_m": 90
   },
@@ -172,86 +172,6 @@
         [
           11.2214,
           -74.1882
-        ]
-      ]
-    },
-    {
-      "id": "CR9-C11-C12",
-      "nombre": "Carrera 9 entre Calles 11 y 12 (Frente al CAI Mercado Público)",
-      "sector": "Mercado Público",
-      "tipo_via": "arterial",
-      "extremos": [
-        [
-          11.24455,
-          -74.20665
-        ],
-        [
-          11.24535,
-          -74.20635
-        ]
-      ]
-    },
-    {
-      "id": "C11-CR8-CR9",
-      "nombre": "Calle 11 entre Carreras 8 y 9 (Esquina CAI Mercado Público)",
-      "sector": "Mercado Público",
-      "tipo_via": "arterial",
-      "extremos": [
-        [
-          11.24565,
-          -74.20745
-        ],
-        [
-          11.24535,
-          -74.20635
-        ]
-      ]
-    },
-    {
-      "id": "C11-CR9-CR10",
-      "nombre": "Calle 11 entre Carreras 9 y 10 (Galería Mercado · Sector Alameda)",
-      "sector": "Mercado Público",
-      "tipo_via": "arterial",
-      "extremos": [
-        [
-          11.24535,
-          -74.20635
-        ],
-        [
-          11.24505,
-          -74.20525
-        ]
-      ]
-    },
-    {
-      "id": "C11-CR12-CR13",
-      "nombre": "Calle 11 entre Carreras 12 y 13 (Sector Comercial Ferreterías · Calle 11 # 12-42)",
-      "sector": "Mercado Público",
-      "tipo_via": "arterial",
-      "extremos": [
-        [
-          11.24445,
-          -74.20305
-        ],
-        [
-          11.24415,
-          -74.20195
-        ]
-      ]
-    },
-    {
-      "id": "C12-CR9-CR10",
-      "nombre": "Calle 12 entre Carreras 9 y 10 (Zona Comercial Mercado Público)",
-      "sector": "Mercado Público",
-      "tipo_via": "secundaria",
-      "extremos": [
-        [
-          11.24455,
-          -74.20665
-        ],
-        [
-          11.24425,
-          -74.20555
         ]
       ]
     }
