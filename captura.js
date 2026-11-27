@@ -585,7 +585,7 @@ function guardarReporte() {
   }
 
   var reporte = {
-    id: generarSiguienteId(config.iniciales, AppEstado.reportesUnificados),
+    id: generarSiguienteId(config.iniciales, AppEstado.reportesPrecargados.concat(AppEstado.reportesLocales)),
     origen: config.origen,
     fecha_hora: porId("input-fecha-hora").value.slice(0, 16),
     lat: AppEstado.ubicacion.lat,
@@ -690,7 +690,7 @@ function renderizarGaleriaEvidencias() {
     tarjeta.appendChild(img);
     var info = crear("div", "detalle-evidencia");
     info.appendChild(crear("strong", "", e.id));
-    info.appendChild(crear("span", "estado-evidencia", "Fotografía · pendiente de ubicación y clasificación verificadas"));
+    info.appendChild(crear("span", "estado-evidencia", "Evidencia fotográfica de campo"));
     tarjeta.appendChild(info);
     contenedor.appendChild(tarjeta);
   });
