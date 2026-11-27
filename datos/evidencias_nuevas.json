@@ -6,13 +6,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.22622,
-      "lng": -74.188556,
-      "grupo": "Referencia 1"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.224556,
+      "lng": -74.187946,
+      "cuadra_referencia": "CR32-C22-C24"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 4,
+      "nivel": "Bajo"
+    }
   },
   {
     "id": "EVID-002",
@@ -21,13 +25,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.22622,
-      "lng": -74.188556,
-      "grupo": "Referencia 1"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.223602,
+      "lng": -74.188034,
+      "cuadra_referencia": "CR32-C24-C26"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 2,
+      "nivel": "Bajo"
+    }
   },
   {
     "id": "EVID-003",
@@ -36,13 +44,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.22622,
-      "lng": -74.188556,
-      "grupo": "Referencia 1"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.222594,
+      "lng": -74.188122,
+      "cuadra_referencia": "CR32-C26-C28"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 9,
+      "nivel": "Alto"
+    }
   },
   {
     "id": "EVID-004",
@@ -51,13 +63,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.22622,
-      "lng": -74.188556,
-      "grupo": "Referencia 1"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.221124,
+      "lng": -74.18821,
+      "cuadra_referencia": "CR32-C28-C29"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 7,
+      "nivel": "Alto"
+    }
   },
   {
     "id": "EVID-005",
@@ -66,13 +82,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.22622,
-      "lng": -74.188556,
-      "grupo": "Referencia 1"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.220446,
+      "lng": -74.189524,
+      "cuadra_referencia": "C29-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 5,
+      "nivel": "Medio"
+    }
   },
   {
     "id": "EVID-006",
@@ -81,13 +101,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.22622,
-      "lng": -74.188556,
-      "grupo": "Referencia 1"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.223532,
+      "lng": -74.189194,
+      "cuadra_referencia": "C25-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 3,
+      "nivel": "Bajo"
+    }
   },
   {
     "id": "EVID-007",
@@ -96,13 +120,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.224553,
-      "lng": -74.191182,
-      "grupo": "Referencia 2"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.223056,
+      "lng": -74.189282,
+      "cuadra_referencia": "C26-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 1,
+      "nivel": "Bajo"
+    }
   },
   {
     "id": "EVID-008",
@@ -111,13 +139,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.224553,
-      "lng": -74.191182,
-      "grupo": "Referencia 2"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.22228,
+      "lng": -74.189359,
+      "cuadra_referencia": "C27-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 8,
+      "nivel": "Alto"
+    }
   },
   {
     "id": "EVID-009",
@@ -126,13 +158,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.224553,
-      "lng": -74.191182,
-      "grupo": "Referencia 2"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.222758,
+      "lng": -74.189621,
+      "cuadra_referencia": "CR31-C26-C28"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 6,
+      "nivel": "Medio"
+    }
   },
   {
     "id": "EVID-010",
@@ -141,13 +177,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.224553,
-      "lng": -74.191182,
-      "grupo": "Referencia 2"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.221568,
+      "lng": -74.189385,
+      "cuadra_referencia": "C28-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 4,
+      "nivel": "Bajo"
+    }
   },
   {
     "id": "EVID-011",
@@ -156,13 +196,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.224553,
-      "lng": -74.191182,
-      "grupo": "Referencia 2"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.224276,
+      "lng": -74.187974,
+      "cuadra_referencia": "CR32-C22-C24"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 2,
+      "nivel": "Bajo"
+    }
   },
   {
     "id": "EVID-012",
@@ -171,13 +215,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.224553,
-      "lng": -74.191182,
-      "grupo": "Referencia 2"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.22335,
+      "lng": -74.188062,
+      "cuadra_referencia": "CR32-C24-C26"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 9,
+      "nivel": "Alto"
+    }
   },
   {
     "id": "EVID-013",
@@ -186,13 +234,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.223676,
-      "lng": -74.190561,
-      "grupo": "Referencia 3"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.222174,
+      "lng": -74.18815,
+      "cuadra_referencia": "CR32-C26-C28"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 7,
+      "nivel": "Alto"
+    }
   },
   {
     "id": "EVID-014",
@@ -201,13 +253,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.223676,
-      "lng": -74.190561,
-      "grupo": "Referencia 3"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.220788,
+      "lng": -74.188238,
+      "cuadra_referencia": "CR32-C28-C29"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 5,
+      "nivel": "Medio"
+    }
   },
   {
     "id": "EVID-015",
@@ -216,13 +272,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.223676,
-      "lng": -74.190561,
-      "grupo": "Referencia 3"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.220362,
+      "lng": -74.189076,
+      "cuadra_referencia": "C29-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 3,
+      "nivel": "Bajo"
+    }
   },
   {
     "id": "EVID-016",
@@ -231,13 +291,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.223676,
-      "lng": -74.190561,
-      "grupo": "Referencia 3"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.223476,
+      "lng": -74.188774,
+      "cuadra_referencia": "C25-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 1,
+      "nivel": "Bajo"
+    }
   },
   {
     "id": "EVID-017",
@@ -246,13 +310,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.223676,
-      "lng": -74.190561,
-      "grupo": "Referencia 3"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.223,
+      "lng": -74.188862,
+      "cuadra_referencia": "C26-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 8,
+      "nivel": "Alto"
+    }
   },
   {
     "id": "EVID-018",
@@ -261,13 +329,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.223676,
-      "lng": -74.190561,
-      "grupo": "Referencia 3"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.222224,
+      "lng": -74.188925,
+      "cuadra_referencia": "C27-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 6,
+      "nivel": "Medio"
+    }
   },
   {
     "id": "EVID-019",
@@ -276,13 +348,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.224123,
-      "lng": -74.189855,
-      "grupo": "Referencia 4"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.222338,
+      "lng": -74.189663,
+      "cuadra_referencia": "CR31-C26-C28"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 4,
+      "nivel": "Bajo"
+    }
   },
   {
     "id": "EVID-020",
@@ -291,13 +367,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.224123,
-      "lng": -74.189855,
-      "grupo": "Referencia 4"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.221512,
+      "lng": -74.188951,
+      "cuadra_referencia": "C28-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 2,
+      "nivel": "Bajo"
+    }
   },
   {
     "id": "EVID-021",
@@ -306,13 +386,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.224123,
-      "lng": -74.189855,
-      "grupo": "Referencia 4"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.223996,
+      "lng": -74.188002,
+      "cuadra_referencia": "CR32-C22-C24"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 9,
+      "nivel": "Alto"
+    }
   },
   {
     "id": "EVID-022",
@@ -321,13 +405,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.224123,
-      "lng": -74.189855,
-      "grupo": "Referencia 4"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.223098,
+      "lng": -74.18809,
+      "cuadra_referencia": "CR32-C24-C26"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 7,
+      "nivel": "Alto"
+    }
   },
   {
     "id": "EVID-023",
@@ -336,13 +424,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.224123,
-      "lng": -74.189855,
-      "grupo": "Referencia 4"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.221754,
+      "lng": -74.188178,
+      "cuadra_referencia": "CR32-C26-C28"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 5,
+      "nivel": "Medio"
+    }
   },
   {
     "id": "EVID-024",
@@ -351,13 +443,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.224123,
-      "lng": -74.189855,
-      "grupo": "Referencia 4"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.220452,
+      "lng": -74.188266,
+      "cuadra_referencia": "CR32-C28-C29"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 3,
+      "nivel": "Bajo"
+    }
   },
   {
     "id": "EVID-025",
@@ -366,13 +462,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.22518,
-      "lng": -74.190385,
-      "grupo": "Referencia 5"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.220278,
+      "lng": -74.188628,
+      "cuadra_referencia": "C29-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 1,
+      "nivel": "Bajo"
+    }
   },
   {
     "id": "EVID-026",
@@ -381,13 +481,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.22518,
-      "lng": -74.190385,
-      "grupo": "Referencia 5"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.22342,
+      "lng": -74.188354,
+      "cuadra_referencia": "C25-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 8,
+      "nivel": "Alto"
+    }
   },
   {
     "id": "EVID-027",
@@ -396,13 +500,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.22518,
-      "lng": -74.190385,
-      "grupo": "Referencia 5"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.222944,
+      "lng": -74.188442,
+      "cuadra_referencia": "C26-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 6,
+      "nivel": "Medio"
+    }
   },
   {
     "id": "EVID-028",
@@ -411,13 +519,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.22518,
-      "lng": -74.190385,
-      "grupo": "Referencia 5"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.222168,
+      "lng": -74.188491,
+      "cuadra_referencia": "C27-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 4,
+      "nivel": "Bajo"
+    }
   },
   {
     "id": "EVID-029",
@@ -426,13 +538,17 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.22518,
-      "lng": -74.190385,
-      "grupo": "Referencia 5"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.221918,
+      "lng": -74.189705,
+      "cuadra_referencia": "CR31-C26-C28"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 2,
+      "nivel": "Bajo"
+    }
   },
   {
     "id": "EVID-030",
@@ -441,12 +557,16 @@
     "estado": "pendiente_de_validacion",
     "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
     "ubicacion": {
-      "tipo": "punto_referencia_google_maps",
-      "lat": 11.22518,
-      "lng": -74.190385,
-      "grupo": "Referencia 5"
+      "tipo": "simulada_sobre_eje_vial",
+      "lat": 11.221456,
+      "lng": -74.188517,
+      "cuadra_referencia": "C28-CR31-CR32"
     },
     "fecha_hora": null,
-    "nota_ubicacion": "Referencia aproximada derivada de uno de los cinco enlaces de Google Maps compartidos; no identifica la ubicación exacta de esta fotografía."
+    "nota_ubicacion": "Coordenada sintética de demostración generada sobre el eje de una cuadra configurada. No es una observación GPS ni una ubicación real de la fotografía.",
+    "criticidad_simulada": {
+      "puntaje": 9,
+      "nivel": "Alto"
+    }
   }
 ]
