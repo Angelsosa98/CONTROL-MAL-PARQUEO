@@ -1,16 +1,16 @@
 {
   "zona": {
-    "nombre": "Santa Marta — Universidad del Magdalena, Villa Marbella y Cañaveral",
+    "nombre": "Recorrido de campo — Universidad del Magdalena y Parque Villa Marbella",
     "centro": [
-      11.2225,
-      -74.1885
+      11.2248,
+      -74.1905
     ],
     "zoom": 16,
     "limites": {
-      "lat_min": 11.2198,
-      "lat_max": 11.2252,
-      "lng_min": -74.1904,
-      "lng_max": -74.1867
+      "lat_min": 11.2228,
+      "lat_max": 11.227,
+      "lng_min": -74.193,
+      "lng_max": -74.1875
     },
     "radio_max_m": 90
   },
@@ -175,5 +175,69 @@
         ]
       ]
     }
-  ]
+  ],
+  "recorrido_campo": {
+    "tipo": "esquematico_aproximado",
+    "descripcion": "Circuito descrito por el equipo: vía de la Universidad del Magdalena, avance aproximado de seis cuadras, giro a la izquierda hacia Villa Marbella, dos cuadras al interior, giro, una cuadra más y retorno a la vía de la Universidad.",
+    "nota": "Los hitos son referencias del sector; no son un trazado GPS levantado en campo ni ubicaciones exactas de las fotografías.",
+    "hitos": [
+      {
+        "id": "R15",
+        "nombre": "Referencia de inicio — Calle 29H, sector La U",
+        "coordenadas": [
+          11.225135,
+          -74.190833
+        ]
+      },
+      {
+        "id": "R12",
+        "nombre": "Referencia del tramo — Calle 29H, sector La U",
+        "coordenadas": [
+          11.226321,
+          -74.189069
+        ]
+      },
+      {
+        "id": "R2",
+        "nombre": "Referencia del giro hacia Villa Marbella",
+        "coordenadas": [
+          11.224755,
+          -74.191224
+        ]
+      },
+      {
+        "id": "R3",
+        "nombre": "Ingreso al sector del parque Villa Marbella",
+        "coordenadas": [
+          11.224274,
+          -74.191058
+        ]
+      },
+      {
+        "id": "R5",
+        "nombre": "Tramo interior del recorrido",
+        "coordenadas": [
+          11.223982,
+          -74.191079
+        ]
+      },
+      {
+        "id": "R6",
+        "nombre": "Retorno del circuito — sector Villa Marbella",
+        "coordenadas": [
+          11.2238,
+          -74.191002
+        ]
+      },
+      {
+        "id": "R1",
+        "nombre": "Salida hacia la vía de la Universidad",
+        "coordenadas": [
+          11.223948,
+          -74.192187
+        ]
+      }
+    ],
+    "fuente_referencias": "Coordenadas de referencias de cestas reportadas para Calle 29H sector La U y Parque Villa Marbella en relación de ATESA (2025); secuencia aproximada según descripción del equipo."
+  }
 }
