@@ -314,9 +314,9 @@
     <!-- Mapa de calor (Leaflet.heat) y puntos individuales (RF-03) -->
     <section class="tarjeta no-imprimir">
       <div class="fila-cabecera-seccion">
-        <h2>Mapa de evidencias fotográficas</h2>
+        <h2>Mapa de reportes georreferenciados</h2>
       </div>
-      <p class="ayuda-campo">Se muestran 30 puntos individuales y un mapa de calor con posiciones e intensidades sintéticas distribuidas sobre los ejes de las cuadras del área de estudio. Son datos simulados para demostración académica; no representan ubicaciones GPS ni observaciones verificadas.</p>
+      <p class="ayuda-campo">El mapa y el calor utilizan únicamente reportes con coordenadas registradas y validadas. Las 30 fotografías pendientes de georreferenciación se conservan en la galería y no se ubican artificialmente.</p>
 
       <div id="grupo-capas-mapa" class="barra-capas-mapa" role="group" aria-label="Capas del mapa">
         <button type="button" class="btn-capa-mapa activo" data-modo="ambos" aria-pressed="true">
@@ -331,10 +331,10 @@
       </div>
 
       <div id="aviso-sin-calor" class="aviso-alerta" hidden>
-        La librería Leaflet.heat no cargó (sin conexión); se muestran los puntos individuales.
+        La librería Leaflet.heat no cargó (sin conexión). Los reportes se muestran como puntos individuales.
       </div>
 
-      <div id="mapa-registros" class="caja-mapa caja-mapa-registros"></div>
+      <div id="mapa-registros" class="caja-mapa caja-mapa-registros"></div>\n      <p id="estado-mapa-registros" class="aviso-info margen-superior" role="status">Cargando reportes georreferenciados...</p>
     </section>
 
     <!-- Resumen operativo Top 5 y vista imprimible (RF-05 y CU-03) -->
