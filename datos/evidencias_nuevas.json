@@ -1,0 +1,802 @@
+[
+  {
+    "id": "MP-ASO-001",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-001.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-002",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-002.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-003",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-003.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-004",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-004.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-005",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-005.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-006",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-006.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-007",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-007.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-008",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-008.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-009",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-009.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-010",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-010.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-011",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-011.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-012",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-012.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-013",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-013.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-014",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-014.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-015",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-015.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-016",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-016.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-017",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-017.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-018",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-018.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-019",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-019.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-020",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-020.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-021",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-021.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-022",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-022.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-023",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-023.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-024",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-024.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-025",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-025.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-026",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-026.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-027",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-027.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-028",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-028.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-029",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-029.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-030",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-030.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-031",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-031.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-032",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-032.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-033",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-033.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-034",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-034.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-035",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-035.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-036",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-036.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-037",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-037.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-038",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-038.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-039",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-039.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  },
+  {
+    "id": "MP-ASO-040",
+    "origen": "evidencia_fotografica_nueva",
+    "foto": "fotos/evidencia-040.jpg",
+    "ubicacion": {
+      "tipo": "pendiente_estimacion",
+      "lat": null,
+      "lng": null
+    },
+    "clasificacion": {
+      "categoria": null,
+      "actor": null,
+      "estado": "pendiente_revision_visual"
+    },
+    "fecha_hora": {
+      "valor": null,
+      "estado": "no_verificada"
+    },
+    "observaciones": "Evidencia fotográfica nueva. Clasificación y ubicación aproximada pendientes de validación."
+  }
+]
