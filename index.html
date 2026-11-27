@@ -232,7 +232,7 @@
       </div>
       <p id="desglose-franjas" class="texto-destacado">Evidencias fotográficas seleccionadas.</p>
       <div id="desglose-cuadras" class="texto-suave"></div>
-      <p id="uso-almacenamiento" class="texto-suave margen-superior">Reportes georreferenciados: 0</p>
+      <p id="uso-almacenamiento" class="texto-suave margen-superior">Reportes: 0</p>
     </section>
 
     <!-- Exportar e importar (RF-06) -->
@@ -314,9 +314,9 @@
     <!-- Mapa de calor (Leaflet.heat) y puntos individuales (RF-03) -->
     <section class="tarjeta no-imprimir">
       <div class="fila-cabecera-seccion">
-        <h2>Mapa de reportes georreferenciados</h2>
+        <h2>Recorrido y puntos de reporte</h2>
       </div>
-      <p class="ayuda-campo">El mapa y el calor utilizan únicamente reportes con coordenadas registradas y validadas. Las 30 fotografías pendientes de georreferenciación se conservan en la galería y no se ubican artificialmente.</p>
+      <p class="ayuda-campo">La línea azul muestra el recorrido aproximado realizado por el equipo. Los puntos y el mapa de calor representan reportes con ubicación registrada; las fotografías se conservan en Evidencias.</p>
 
       <div id="grupo-capas-mapa" class="barra-capas-mapa" role="group" aria-label="Capas del mapa">
         <button type="button" class="btn-capa-mapa activo" data-modo="ambos" aria-pressed="true">
@@ -331,10 +331,10 @@
       </div>
 
       <div id="aviso-sin-calor" class="aviso-alerta" hidden>
-        La librería Leaflet.heat no cargó (sin conexión). Los reportes se muestran como puntos individuales.
+        La capa de calor no está disponible sin conexión. Los reportes se muestran como puntos individuales.
       </div>
 
-      <div id="mapa-registros" class="caja-mapa caja-mapa-registros"></div>\n      <p id="estado-mapa-registros" class="aviso-info margen-superior" role="status">Cargando reportes georreferenciados...</p>
+      <div id="mapa-registros" class="caja-mapa caja-mapa-registros"></div>\n      <p id="estado-mapa-registros" class="aviso-info margen-superior" role="status">Cargando recorrido y reportes...</p>
     </section>
 
     <!-- Resumen operativo Top 5 y vista imprimible (RF-05 y CU-03) -->
@@ -353,7 +353,7 @@
 
     <!-- Lista de reportes (más recientes primero) -->
     <section class="tarjeta no-imprimir">
-      <h2>Reportes georreferenciados</h2>
+      <h2>Reportes</h2>
       <div id="lista-registros" class="lista-tarjetas"></div>
     </section>
 
