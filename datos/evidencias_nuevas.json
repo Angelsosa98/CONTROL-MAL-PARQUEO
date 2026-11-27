@@ -3,570 +3,300 @@
     "id": "EVID-001",
     "foto": "fotos/evidencia-001.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.22462,
-      "lng": -74.187918,
-      "cuadra_referencia": "CR32-C22-C24"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 4,
-      "nivel": "Bajo"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-002",
     "foto": "fotos/evidencia-002.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.223638,
-      "lng": -74.188018,
-      "cuadra_referencia": "CR32-C24-C26"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 2,
-      "nivel": "Bajo"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-003",
     "foto": "fotos/evidencia-003.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.22263,
-      "lng": -74.188118,
-      "cuadra_referencia": "CR32-C26-C28"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 9,
-      "nivel": "Alto"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-004",
     "foto": "fotos/evidencia-004.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.221184,
-      "lng": -74.188218,
-      "cuadra_referencia": "CR32-C28-C29"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 7,
-      "nivel": "Alto"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-005",
     "foto": "fotos/evidencia-005.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.220446,
-      "lng": -74.189612,
-      "cuadra_referencia": "C29-CR31-CR32"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 5,
-      "nivel": "Medio"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-006",
     "foto": "fotos/evidencia-006.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.223564,
-      "lng": -74.18923,
-      "cuadra_referencia": "C25-CR31-CR32"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 3,
-      "nivel": "Bajo"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-007",
     "foto": "fotos/evidencia-009.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.223064,
-      "lng": -74.18933,
-      "cuadra_referencia": "C26-CR31-CR32"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 1,
-      "nivel": "Bajo"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-008",
     "foto": "fotos/evidencia-010.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.222264,
-      "lng": -74.189421,
-      "cuadra_referencia": "C27-CR31-CR32"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 8,
-      "nivel": "Alto"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-009",
     "foto": "fotos/evidencia-011.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.22283,
-      "lng": -74.189627,
-      "cuadra_referencia": "CR31-C26-C28"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 6,
-      "nivel": "Medio"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-010",
     "foto": "fotos/evidencia-012.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.221564,
-      "lng": -74.189471,
-      "cuadra_referencia": "C28-CR31-CR32"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 4,
-      "nivel": "Bajo"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-011",
     "foto": "fotos/evidencia-014.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.22442,
-      "lng": -74.187938,
-      "cuadra_referencia": "CR32-C22-C24"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 2,
-      "nivel": "Bajo"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-012",
     "foto": "fotos/evidencia-015.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.223458,
-      "lng": -74.188038,
-      "cuadra_referencia": "CR32-C24-C26"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 9,
-      "nivel": "Alto"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-013",
     "foto": "fotos/evidencia-016.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.22233,
-      "lng": -74.188138,
-      "cuadra_referencia": "CR32-C26-C28"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 7,
-      "nivel": "Alto"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-014",
     "foto": "fotos/evidencia-017.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.220944,
-      "lng": -74.188238,
-      "cuadra_referencia": "CR32-C28-C29"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 5,
-      "nivel": "Medio"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-015",
     "foto": "fotos/evidencia-018.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.220386,
-      "lng": -74.189292,
-      "cuadra_referencia": "C29-CR31-CR32"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 3,
-      "nivel": "Bajo"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-016",
     "foto": "fotos/evidencia-019.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.223524,
-      "lng": -74.18893,
-      "cuadra_referencia": "C25-CR31-CR32"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 1,
-      "nivel": "Bajo"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-017",
     "foto": "fotos/evidencia-020.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.223024,
-      "lng": -74.18903,
-      "cuadra_referencia": "C26-CR31-CR32"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 8,
-      "nivel": "Alto"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-018",
     "foto": "fotos/evidencia-023.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.222224,
-      "lng": -74.189111,
-      "cuadra_referencia": "C27-CR31-CR32"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 6,
-      "nivel": "Medio"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-019",
     "foto": "fotos/evidencia-024.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.22253,
-      "lng": -74.189657,
-      "cuadra_referencia": "CR31-C26-C28"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 4,
-      "nivel": "Bajo"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-020",
     "foto": "fotos/evidencia-025.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.221524,
-      "lng": -74.189161,
-      "cuadra_referencia": "C28-CR31-CR32"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 2,
-      "nivel": "Bajo"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-021",
     "foto": "fotos/evidencia-028.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.22422,
-      "lng": -74.187958,
-      "cuadra_referencia": "CR32-C22-C24"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 9,
-      "nivel": "Alto"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-022",
     "foto": "fotos/evidencia-031.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.223278,
-      "lng": -74.188058,
-      "cuadra_referencia": "CR32-C24-C26"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 7,
-      "nivel": "Alto"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-023",
     "foto": "fotos/evidencia-033.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.22203,
-      "lng": -74.188158,
-      "cuadra_referencia": "CR32-C26-C28"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 5,
-      "nivel": "Medio"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-024",
     "foto": "fotos/evidencia-034.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.220704,
-      "lng": -74.188258,
-      "cuadra_referencia": "CR32-C28-C29"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 3,
-      "nivel": "Bajo"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-025",
     "foto": "fotos/evidencia-035.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.220326,
-      "lng": -74.188972,
-      "cuadra_referencia": "C29-CR31-CR32"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 1,
-      "nivel": "Bajo"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-026",
     "foto": "fotos/evidencia-036.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.223484,
-      "lng": -74.18863,
-      "cuadra_referencia": "C25-CR31-CR32"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 8,
-      "nivel": "Alto"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-027",
     "foto": "fotos/evidencia-037.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.222984,
-      "lng": -74.18873,
-      "cuadra_referencia": "C26-CR31-CR32"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 6,
-      "nivel": "Medio"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-028",
     "foto": "fotos/evidencia-038.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.222184,
-      "lng": -74.188801,
-      "cuadra_referencia": "C27-CR31-CR32"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 4,
-      "nivel": "Bajo"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-029",
     "foto": "fotos/evidencia-039.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.22223,
-      "lng": -74.189687,
-      "cuadra_referencia": "CR31-C26-C28"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 2,
-      "nivel": "Bajo"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   },
   {
     "id": "EVID-030",
     "foto": "fotos/evidencia-040.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_validacion",
-    "descripcion": "Registro fotográfico de un vehículo en vía o junto al espacio peatonal. La imagen por sí sola no confirma una infracción.",
-    "ubicacion": {
-      "tipo": "simulada_sobre_eje_vial",
-      "lat": 11.221484,
-      "lng": -74.188851,
-      "cuadra_referencia": "C28-CR31-CR32"
-    },
+    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
+    "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Coordenada sintética colocada exactamente sobre el eje vial configurado para la cuadra. No es GPS real.",
-    "criticidad_simulada": {
-      "puntaje": 9,
-      "nivel": "Alto"
-    }
+    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
   }
 ]
