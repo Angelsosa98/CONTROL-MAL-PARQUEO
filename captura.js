@@ -661,8 +661,8 @@ function leerFiltros() {
 function renderizarAvance() {
   var totalEvidencias = AppEstado.evidenciasFotograficas.length;
   porId("contador-meta-30").textContent = totalEvidencias + " de 30";
-  porId("desglose-franjas").textContent = "Evidencias fotográficas conservadas para consulta.";
-  porId("desglose-cuadras").textContent = "Las evidencias se consultan en la galería; el recorrido de campo se muestra como referencia aproximada.";
+  porId("desglose-franjas").textContent = "Evidencias fotográficas disponibles para consulta.";
+  porId("desglose-cuadras").textContent = "Las fotografías se muestran en esta galería. La línea azul representa el circuito aproximado del equipo.";
   porId("uso-almacenamiento").textContent = "Reportes: " + AppEstado.reportesUnificados.length;
   porId("badge-total-registros").textContent = totalEvidencias;
   var estadoMapa = porId("estado-mapa-registros");
@@ -988,10 +988,8 @@ function configurarEventos() {
 }
 
 function inicializarApp() {
-  AppEstado.reportesLocales = cargarReportesLocales().filter(function (r) {
-    return !/^MP-ASO-\d{3}$/.test(String(r && r.id || ""));
-  });
-  guardarListaReportesLocales(AppEstado.reportesLocales);
+  // No eliminar registros del almacenamiento al iniciar: los datos locales son del equipo.
+  AppEstado.reportesLocales = cargarReportesLocales();
   porId("btn-guardar").disabled = true; // hasta que carguen los datos
 
   Promise.all([
@@ -1007,7 +1005,14 @@ function inicializarApp() {
       porId("nombre-zona-header").textContent = "No se pudo cargar la zona de estudio";
       return;
     }
-    if (!Array.isArray(datos[2])) porId("aviso-fetch").hidden = false;
+    if (!Array.isArray(datos[2])) {
+      porId("aviso-fetch").hidden = false;
+      porId("aviso-fetch").textContent = "No se pudo cargar datos/reportes.json. La captura seguirá disponible, pero los reportes iniciales no se mostrarán.";
+    }
+    if (!Array.isArray(datos[3])) {
+      porId("aviso-fetch").hidden = false;
+      porId("aviso-fetch").textContent = "No se pudieron cargar las evidencias. Revisa datos/evidencias_nuevas.json y vuelve a cargar la página.";
+    }
 
     AppEstado.vias = vias;
     AppEstado.criterios = criterios;
@@ -1016,11 +1021,20 @@ function inicializarApp() {
     porId("nombre-zona-header").textContent = vias.zona.nombre;
     poblarSelectoresCuadras();
 
-    var hayMapa = iniciarMapaCaptura("mapa-captura", vias, function (lat, lng) {
-      marcarInicioCaptura();
-      fijarUbicacion(lat, lng);
-    });
-    iniciarMapaRegistros("mapa-registros", vias);
+    var hayMapa = false;
+    try {
+      hayMapa = iniciarMapaCaptura("mapa-captura", vias, function (lat, lng) {
+        marcarInicioCaptura();
+        fijarUbicacion(lat, lng);
+      });
+    } catch (errMapaCaptura) {
+      console.error("No se pudo iniciar el mapa de captura:", errMapaCaptura);
+    }
+    try {
+      iniciarMapaRegistros("mapa-registros", vias);
+    } catch (errMapaRegistros) {
+      console.error("No se pudo iniciar el mapa de registros:", errMapaRegistros);
+    }
     porId("aviso-sin-mapa").hidden = Boolean(hayMapa);
 
     configurarEventos();
@@ -1029,6 +1043,11 @@ function inicializarApp() {
     refrescarTodo();
     renderizarGaleriaEvidencias();
     porId("btn-guardar").disabled = false;
+  }).catch(function (err) {
+    console.error("Error al iniciar la aplicación:", err);
+    porId("aviso-fetch").hidden = false;
+    porId("aviso-fetch").textContent = "No se pudo iniciar la aplicación. Comprueba la conexión y recarga la página.";
+    porId("nombre-zona-header").textContent = "Error de carga de datos";
   });
 }
 
