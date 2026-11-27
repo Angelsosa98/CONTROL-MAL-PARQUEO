@@ -53,6 +53,24 @@ function cargarJSON(ruta, valorDefecto) {
 }
 
 /**
+ * Garantiza un objeto vias con arreglo 'cuadras' válido para evitar errores
+ * en módulos que requieren vias.cuadras.
+ */
+function normalizarViasSeguras(vias) {
+  if (vias && Array.isArray(vias.cuadras)) {
+    return vias;
+  }
+  return {
+    zona: (vias && vias.zona) || {
+      nombre: "Santa Marta",
+      centro: [11.2232, -74.1885],
+      zoom: 15
+    },
+    cuadras: []
+  };
+}
+
+/**
  * Calcula la distancia en metros entre un punto (lat, lng) y un segmento
  * definido por dos puntos [lat1, lng1] y [lat2, lng2] usando proyección
  * equirectangular local (precisa a escala urbana).
@@ -112,15 +130,16 @@ function distanciaACuadraMetros(lat, lng, cuadra) {
  * Siempre permite reportar en cualquier punto sin mostrar advertencia de fuera de zona.
  */
 function encontrarCuadraMasCercana(lat, lng, vias) {
-  if (!vias || !Array.isArray(vias.cuadras) || vias.cuadras.length === 0) {
+  var viasSeguras = normalizarViasSeguras(vias);
+  if (viasSeguras.cuadras.length === 0) {
     return { cuadra: null, distanciaM: null, fueraDeZona: false };
   }
 
   var mejorCuadra = null;
   var mejorDistancia = Infinity;
 
-  for (var i = 0; i < vias.cuadras.length; i++) {
-    var c = vias.cuadras[i];
+  for (var i = 0; i < viasSeguras.cuadras.length; i++) {
+    var c = viasSeguras.cuadras[i];
     var dist = distanciaACuadraMetros(lat, lng, c);
     if (dist < mejorDistancia) {
       mejorDistancia = dist;
@@ -158,31 +177,41 @@ function estaDentroDeLimitesZona(lat, lng, vias) {
  * Busca un objeto cuadra por su id.
  */
 function obtenerCuadraPorId(cuadraId) {
-  if (!AppEstado.vias || !Array.isArray(AppEstado.vias.cuadras)) return null;
-  for (var i = 0; i < AppEstado.vias.cuadras.length; i++) {
-    if (AppEstado.vias.cuadras[i].id === cuadraId) {
-      return AppEstado.vias.cuadras[i];
+  var viasSeguras = normalizarViasSeguras(AppEstado.vias);
+  for (var i = 0; i < viasSeguras.cuadras.length; i++) {
+    if (viasSeguras.cuadras[i].id === cuadraId) {
+      return viasSeguras.cuadras[i];
     }
   }
   return null;
 }
 
 /**
- * Recalcula criticidad de todos los reportes usando los criterios vigentes.
+ * Recalcula criticidad de todos los reportes usando los criterios vigentes y
+ * garantizando que 'vias' tenga arreglo 'cuadras'.
  */
 function recalcularTodosLosReportes(lista, criterios, vias) {
+  var viasSeguras = normalizarViasSeguras(vias);
   var resultado = [];
+
   for (var i = 0; i < lista.length; i++) {
     var item = Object.assign({}, lista[i]);
     var cuadraObj = obtenerCuadraPorId(item.cuadra);
     var tipoVia = cuadraObj ? cuadraObj.tipo_via : "secundaria";
-    if (typeof calcularCriticidad === "function") {
-      item.criticidad = calcularCriticidad(item, criterios, tipoVia);
+
+    if (typeof calcularCriticidad === "function" && criterios && viasSeguras.cuadras.length > 0) {
+      try {
+        item.criticidad = calcularCriticidad(item, criterios, tipoVia);
+      } catch (err) {
+        item.criticidad = item.criticidad || { puntaje: 5, nivel: "Medio", franja: "valle" };
+      }
     } else if (!item.criticidad) {
       item.criticidad = { puntaje: 5, nivel: "Medio", franja: "valle" };
     }
+
     resultado.push(item);
   }
+
   return resultado;
 }
 
@@ -401,6 +430,7 @@ function solicitarGeolocalizacion(esAutomaticaAlInicio) {
  * Pobla el selector manual de cuadras y el filtro de cuadras en Registros.
  */
 function poblarSelectoresCuadras(vias) {
+  var viasSeguras = normalizarViasSeguras(vias);
   var selectManual = document.getElementById("select-cuadra-manual");
   var filtroCuadra = document.getElementById("filtro-cuadra");
 
@@ -411,10 +441,8 @@ function poblarSelectoresCuadras(vias) {
     filtroCuadra.innerHTML = '<option value="">Todas las cuadras</option>';
   }
 
-  if (!vias || !Array.isArray(vias.cuadras)) return;
-
-  for (var i = 0; i < vias.cuadras.length; i++) {
-    var c = vias.cuadras[i];
+  for (var i = 0; i < viasSeguras.cuadras.length; i++) {
+    var c = viasSeguras.cuadras[i];
 
     if (selectManual) {
       var opt1 = document.createElement("option");
@@ -839,8 +867,9 @@ function limpiarFormularioCaptura() {
   seleccionarCategoria("");
   seleccionarActor("");
 
-  var centro = (AppEstado.vias && AppEstado.vias.zona && AppEstado.vias.zona.centro)
-    ? AppEstado.vias.zona.centro
+  var viasSeguras = normalizarViasSeguras(AppEstado.vias);
+  var centro = (viasSeguras.zona && viasSeguras.zona.centro)
+    ? viasSeguras.zona.centro
     : [11.2232, -74.1885];
   fijarUbicacion(centro[0], centro[1], { conservarManual: false });
 }
@@ -967,9 +996,12 @@ function guardarReporteDesdeFormulario(evento) {
     observaciones: observaciones
   };
 
-  reporteObjeto.criticidad = typeof calcularCriticidad === "function"
-    ? calcularCriticidad(reporteObjeto, AppEstado.criterios, tipoVia)
-    : { puntaje: 5, nivel: "Medio", franja: "valle" };
+  var viasSeguras = normalizarViasSeguras(AppEstado.vias);
+  if (typeof calcularCriticidad === "function" && AppEstado.criterios && viasSeguras.cuadras.length > 0) {
+    reporteObjeto.criticidad = calcularCriticidad(reporteObjeto, AppEstado.criterios, tipoVia);
+  } else {
+    reporteObjeto.criticidad = { puntaje: 5, nivel: "Medio", franja: "valle" };
+  }
 
   var nuevaListaLocal = [];
   var reemplazado = false;
@@ -1173,9 +1205,10 @@ function renderizarListaRegistros(listaFiltrada) {
 function renderizarResumenOperativo(listaFiltrada) {
   var contenedorTop = document.getElementById("top5-cuadras");
   var contenedorStats = document.getElementById("estadisticas-resumen");
-  if (!contenedorTop || !contenedorStats || typeof generarResumenOperativo !== "function") return;
+  var viasSeguras = normalizarViasSeguras(AppEstado.vias);
+  if (!contenedorTop || !contenedorStats || typeof generarResumenOperativo !== "function" || viasSeguras.cuadras.length === 0) return;
 
-  var resumen = generarResumenOperativo(listaFiltrada, AppEstado.vias, AppEstado.criterios);
+  var resumen = generarResumenOperativo(listaFiltrada, viasSeguras, AppEstado.criterios);
 
   contenedorStats.innerHTML =
     '<div class="kpi-grid">' +
@@ -1282,7 +1315,7 @@ function aplicarFiltrosYActualizarVistas() {
 
   renderizarListaRegistros(filtrados);
   if (typeof actualizarMarcadoresRegistros === "function") {
-    actualizarMarcadoresRegistros(filtrados, AppEstado.vias);
+    actualizarMarcadoresRegistros(filtrados, normalizarViasSeguras(AppEstado.vias));
   }
   renderizarResumenOperativo(filtrados);
 }
@@ -1315,7 +1348,7 @@ function configurarExportarImportar() {
       var archivo = inputImportar.files && inputImportar.files[0];
       if (!archivo) return;
 
-      importarReportesDesdeArchivo(archivo, AppEstado.reportesLocales, AppEstado.vias, function (res) {
+      importarReportesDesdeArchivo(archivo, AppEstado.reportesLocales, normalizarViasSeguras(AppEstado.vias), function (res) {
         inputImportar.value = "";
         if (!msgEl) return;
 
@@ -1436,7 +1469,7 @@ function inicializarApp() {
     cargarJSON("datos/criterios.json", null),
     cargarJSON("datos/reportes.json", [])
   ]).then(function (resultados) {
-    AppEstado.vias = resultados[0];
+    AppEstado.vias = normalizarViasSeguras(resultados[0]);
     AppEstado.criterios = resultados[1];
     AppEstado.reportesPrecargados = Array.isArray(resultados[2]) ? resultados[2] : [];
 
