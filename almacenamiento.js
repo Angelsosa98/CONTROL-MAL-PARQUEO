@@ -332,7 +332,18 @@ function validarReporteImportado(item, criterios, vias) {
   if (typeof item.fecha_hora !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(item.fecha_hora)) {
     return { valido: false, motivo: "Fecha/hora inválida ('" + item.fecha_hora + "')." };
   }
-  if (typeof item.lat !== "number" || typeof item.lng !== "number" || isNaN(item.lat) || isNaN(item.lng)) {
+  var partesFecha = item.fecha_hora.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
+  var fechaPrueba = new Date(Number(partesFecha[1]), Number(partesFecha[2]) - 1, Number(partesFecha[3]), Number(partesFecha[4]), Number(partesFecha[5]));
+  if (
+    fechaPrueba.getFullYear() !== Number(partesFecha[1]) ||
+    fechaPrueba.getMonth() !== Number(partesFecha[2]) - 1 ||
+    fechaPrueba.getDate() !== Number(partesFecha[3]) ||
+    fechaPrueba.getHours() !== Number(partesFecha[4]) ||
+    fechaPrueba.getMinutes() !== Number(partesFecha[5])
+  ) {
+    return { valido: false, motivo: "Fecha/hora fuera de calendario o de rango válido." };
+  }
+  if (typeof item.lat !== "number" || typeof item.lng !== "number" || !isFinite(item.lat) || !isFinite(item.lng)) {
     return { valido: false, motivo: "Coordenadas lat/lng no numéricas." };
   }
 
@@ -382,7 +393,9 @@ function validarReporteImportado(item, criterios, vias) {
   }
 
   // Verificar categoría y actor permitidos
-  if (CATEGORIAS_PERMITIDAS.indexOf(item.categoria) === -1 || !(item.categoria in criterios.categoria)) {
+  if (CATEGORIAS_PERMITIDAS.indexOf(item.categoria) === -1 ||
+      !criterios || !criterios.categoria ||
+      !Object.prototype.hasOwnProperty.call(criterios.categoria, item.categoria)) {
     return { valido: false, motivo: "Categoría no permitida ('" + item.categoria + "')." };
   }
   if (ACTORES_PERMITIDOS.indexOf(item.actor) === -1) {
@@ -431,7 +444,7 @@ function importarReportesDesdeTexto(textoJson, reportesPrecargados, criterios, v
   }
 
   var locales = cargarReportesLocales();
-  var mapaExistentes = {};
+  var mapaExistentes = Object.create(null);
 
   // Indexar tanto precargados como locales por ID
   for (var i = 0; i < reportesPrecargados.length; i++) {
@@ -477,7 +490,17 @@ function importarReportesDesdeTexto(textoJson, reportesPrecargados, criterios, v
     }
 
     // Recalcular criticidad con las reglas vigentes antes de guardar
-    var crit = calcularCriticidad(item, criterios, vias);
+    var crit;
+    try {
+      crit = calcularCriticidad(item, criterios, vias);
+    } catch (errCriticidad) {
+      invalidos++;
+      detallesInvalidos.push({
+        id: item.id,
+        motivo: "No se pudo recalcular la criticidad: " + errCriticidad.message
+      });
+      continue;
+    }
     var reporteNormalizado = {
       id: item.id,
       origen: item.origen,
