@@ -14,7 +14,7 @@ Aplicación cliente estática modular, sin backend, desplegable en GitHub Pages.
 1. **`index.html` y `estilos.css`:** dos vistas conmutables: captura y registros/evidencias.
 2. **`captura.js`:** ciclo de vida, GPS, selección de ubicación, validación de formulario, galería y actualización de indicadores.
 3. **`criticidad.js`:** deducción de franja horaria y cálculo de criticidad a partir de reportes completos.
-4. **`mapa.js`:** mapas Leaflet, marcadores de reportes georreferenciados y mapa de calor basado en esos reportes. Las fotografías sin coordenadas verificadas no se dibujan.
+4. **`mapa.js`:** mapas Leaflet, línea azul y paradas numeradas para el circuito aproximado de campo, marcadores de reportes y mapa de calor. Las fotografías no se dibujan como puntos.
 5. **`filtros.js` y `resumen.js`:** filtros, estadísticas y ranking operativo calculados sobre reportes, no sobre fotografías aisladas.
 6. **`almacenamiento.js`:** persistencia local, importación/exportación JSON y validación estructural y geográfica.
 
