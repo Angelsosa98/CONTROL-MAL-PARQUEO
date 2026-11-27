@@ -17,6 +17,8 @@ var capaCalorEvidencias = null;
 var modoVisualizacionRegistros = "ambos"; // "ambos" | "calor" | "puntos"
 var ultimosReportesRegistros = [];
 var ultimoViasRegistros = null;
+var panePuntosEvidencias = null;
+var paneCalorEvidencias = null;
 
 /**
  * Devuelve true si la librería Leaflet (L) está cargada en el navegador.
@@ -203,6 +205,13 @@ function iniciarMapaRegistros(idContenedor, vias) {
     zoomControl: true
   }).setView(centro, zoom);
 
+  // Paneles independientes: permiten ocultar visualmente el calor sin que
+  // queden píxeles/canvas residuales al cambiar entre los tres modos.
+  paneCalorEvidencias = mapaRegistros.createPane("evidenciasHeatPane");
+  paneCalorEvidencias.style.zIndex = 410;
+  panePuntosEvidencias = mapaRegistros.createPane("evidenciasPointsPane");
+  panePuntosEvidencias.style.zIndex = 620;
+
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -236,32 +245,23 @@ function iniciarMapaRegistros(idContenedor, vias) {
  */
 function aplicarModoCapasRegistros() {
   if (!leafletDisponible() || !mapaRegistros) return;
-
   var mostrarCalor = modoVisualizacionRegistros === "ambos" || modoVisualizacionRegistros === "calor";
   var mostrarPuntos = modoVisualizacionRegistros === "ambos" || modoVisualizacionRegistros === "puntos";
 
-  // Cambiar la visibilidad de cada capa de forma explícita.
-  // Esto evita que una capa de calor recién creada quede visible al seleccionar
-  // "Puntos", o que sobrevivan capas anteriores después de actualizar los datos.
-  var capasCalor = [capaCalorRegistros, capaCalorEvidencias];
-  capasCalor.forEach(function (capa) {
-    if (!capa) return;
-    if (mostrarCalor) {
-      if (!mapaRegistros.hasLayer(capa)) mapaRegistros.addLayer(capa);
-    } else {
-      mapaRegistros.removeLayer(capa);
-    }
-  });
+  // Las evidencias tienen paneles Leaflet exclusivos: ocultarlos elimina
+  // por completo el calor o los puntos, incluso si Leaflet conserva sus capas.
+  if (paneCalorEvidencias) paneCalorEvidencias.style.display = mostrarCalor ? "" : "none";
+  if (panePuntosEvidencias) panePuntosEvidencias.style.display = mostrarPuntos ? "" : "none";
 
-  var capasPuntos = [capaMarcadoresRegistros, capaEvidenciasAproximadas];
-  capasPuntos.forEach(function (capa) {
-    if (!capa) return;
-    if (mostrarPuntos) {
-      if (!mapaRegistros.hasLayer(capa)) mapaRegistros.addLayer(capa);
-    } else {
-      mapaRegistros.removeLayer(capa);
-    }
-  });
+  // Los reportes georreferenciados mantienen su propio comportamiento.
+  if (capaCalorRegistros) {
+    if (mostrarCalor && !mapaRegistros.hasLayer(capaCalorRegistros)) mapaRegistros.addLayer(capaCalorRegistros);
+    if (!mostrarCalor && mapaRegistros.hasLayer(capaCalorRegistros)) mapaRegistros.removeLayer(capaCalorRegistros);
+  }
+  if (capaMarcadoresRegistros) {
+    if (mostrarPuntos && !mapaRegistros.hasLayer(capaMarcadoresRegistros)) mapaRegistros.addLayer(capaMarcadoresRegistros);
+    if (!mostrarPuntos && mapaRegistros.hasLayer(capaMarcadoresRegistros)) mapaRegistros.removeLayer(capaMarcadoresRegistros);
+  }
 }
 
 function cambiarModoMapaRegistros(nuevoModo) {
@@ -313,6 +313,7 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
     puntosCalor.push([u.lat, u.lng, intensidad]);
 
     var marcador = L.circleMarker([u.lat, u.lng], {
+      pane: "evidenciasPointsPane",
       radius: 5,
       fillColor: "#2563eb",
       color: "#ffffff",
@@ -334,6 +335,7 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
 
   if (heatDisponible() && puntosCalor.length) {
     capaCalorEvidencias = L.heatLayer(puntosCalor, {
+      pane: "evidenciasHeatPane",
       radius: 30,
       blur: 22,
       maxZoom: 18,
