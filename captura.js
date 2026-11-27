@@ -263,7 +263,8 @@ function seleccionarCuadraManual(cuadraId) {
   var cuadra = obtenerCuadraPorId(cuadraId);
   if (!cuadra || !Array.isArray(cuadra.extremos) || cuadra.extremos.length === 0) return;
 
-  if (!AppEstado.ubicacion || distanciaACuadraMetros(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng, cuadra) >
+  if (!AppEstado.ubicacion || !estaDentroDeLimitesZona(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng) ||
+      distanciaACuadraMetros(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng, cuadra) >
       (AppEstado.vias.zona.radio_max_m || 90)) {
     var n = cuadra.extremos.length;
     var lat = cuadra.extremos.reduce(function (s, p) { return s + p[0]; }, 0) / n;
