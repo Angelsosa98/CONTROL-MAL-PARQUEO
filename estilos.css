@@ -1075,3 +1075,38 @@ button {
   font-weight: 800;
   box-shadow: 0 1px 6px rgba(0,0,0,.4);
 }
+
+
+/* Conteo visible de fotografías asociadas a cada punto de referencia */
+.etiqueta-conteo-evidencias {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 3px #12345a, 1px 0 3px #12345a, 0 -1px 3px #12345a, -1px 0 3px #12345a !important;
+}
+.etiqueta-conteo-evidencias::before {
+  display: none !important;
+}
+.popup-nota-evidencia {
+  margin: 5px 0 8px;
+  font-size: 11px;
+}
+.popup-item-evidencia {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-top: 1px solid #e2e8f0;
+}
+.popup-item-evidencia img {
+  width: 58px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.popup-item-evidencia span {
+  font-size: 12px;
+}
