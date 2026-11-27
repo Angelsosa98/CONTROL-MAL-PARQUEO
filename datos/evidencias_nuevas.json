@@ -3,300 +3,480 @@
     "id": "EVID-001",
     "foto": "fotos/evidencia-001.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.225439,
+      "lng": -74.189088,
+      "sector": "Corredor Calle 29H — Universidad del Magdalena",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-002",
     "foto": "fotos/evidencia-002.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.225152,
+      "lng": -74.189521,
+      "sector": "Corredor Calle 29H — Universidad del Magdalena",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-003",
     "foto": "fotos/evidencia-003.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.224836,
+      "lng": -74.189932,
+      "sector": "Corredor Calle 29H — Universidad del Magdalena",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-004",
     "foto": "fotos/evidencia-004.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.2245,
+      "lng": -74.190327,
+      "sector": "Corredor Calle 29H — Universidad del Magdalena",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-005",
     "foto": "fotos/evidencia-005.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.224204,
+      "lng": -74.190754,
+      "sector": "Corredor Calle 29H — Universidad del Magdalena",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-006",
     "foto": "fotos/evidencia-006.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.224588,
+      "lng": -74.190125,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-007",
     "foto": "fotos/evidencia-009.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.224485,
+      "lng": -74.190076,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-008",
     "foto": "fotos/evidencia-010.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.224377,
+      "lng": -74.190046,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-009",
     "foto": "fotos/evidencia-011.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.224263,
+      "lng": -74.190036,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-010",
     "foto": "fotos/evidencia-012.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.22415,
+      "lng": -74.190023,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-011",
     "foto": "fotos/evidencia-014.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.224037,
+      "lng": -74.190002,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-012",
     "foto": "fotos/evidencia-015.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.223925,
+      "lng": -74.189981,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-013",
     "foto": "fotos/evidencia-016.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.223814,
+      "lng": -74.189956,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-014",
     "foto": "fotos/evidencia-017.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.223702,
+      "lng": -74.189932,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-015",
     "foto": "fotos/evidencia-018.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.223589,
+      "lng": -74.189916,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-016",
     "foto": "fotos/evidencia-019.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.223478,
+      "lng": -74.189919,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-017",
     "foto": "fotos/evidencia-020.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.223386,
+      "lng": -74.189987,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-018",
     "foto": "fotos/evidencia-023.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.223295,
+      "lng": -74.190057,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-019",
     "foto": "fotos/evidencia-024.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.223227,
+      "lng": -74.19015,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-020",
     "foto": "fotos/evidencia-025.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.223159,
+      "lng": -74.190244,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-021",
     "foto": "fotos/evidencia-028.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.223196,
+      "lng": -74.190331,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-022",
     "foto": "fotos/evidencia-031.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.223274,
+      "lng": -74.190416,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-023",
     "foto": "fotos/evidencia-033.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.223352,
+      "lng": -74.190501,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-024",
     "foto": "fotos/evidencia-034.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.22343,
+      "lng": -74.190586,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-025",
     "foto": "fotos/evidencia-035.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.223515,
+      "lng": -74.190663,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-026",
     "foto": "fotos/evidencia-036.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.223608,
+      "lng": -74.19073,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-027",
     "foto": "fotos/evidencia-037.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.223701,
+      "lng": -74.190798,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-028",
     "foto": "fotos/evidencia-038.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.223794,
+      "lng": -74.190866,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-029",
     "foto": "fotos/evidencia-039.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.2239,
+      "lng": -74.190908,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   },
   {
     "id": "EVID-030",
     "foto": "fotos/evidencia-040.jpg",
     "tipo": "evidencia_fotografica",
-    "estado": "pendiente_de_georreferenciacion_y_clasificacion",
+    "estado": "ubicacion_sectorial_aproximada",
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Sin coordenada verificada. No se representa en el mapa ni se utiliza en estadísticas espaciales o de criticidad."
+    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "ubicacion_aproximada": {
+      "lat": 11.224007,
+      "lng": -74.190949,
+      "sector": "Parque Villa Marbella y calles aledañas",
+      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+    }
   }
 ]
