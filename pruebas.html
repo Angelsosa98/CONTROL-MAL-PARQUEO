@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pruebas Unitarias - Índice de Criticidad (RF-02)</title>
+  <title>Suite de Pruebas Unitarias - Control Vial Santa Marta</title>
   <style>
     body {
       font-family: system-ui, -apple-system, sans-serif;
-      max-width: 900px;
+      max-width: 960px;
       margin: 24px auto;
       padding: 0 16px;
       background: #f8fafc;
@@ -15,6 +15,7 @@
       line-height: 1.5;
     }
     h1 { font-size: 1.4rem; margin-bottom: 4px; }
+    h2 { font-size: 1.1rem; margin: 24px 0 8px; color: #1e293b; }
     p.sub { color: #475569; margin-top: 0; }
     .resumen {
       padding: 12px 16px;
@@ -31,13 +32,14 @@
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      margin-bottom: 18px;
     }
     th, td {
-      padding: 12px;
+      padding: 11px 12px;
       border-bottom: 1px solid #e2e8f0;
       text-align: left;
       vertical-align: top;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
     }
     th { background: #1e293b; color: #ffffff; }
     .badge-pass {
@@ -47,6 +49,7 @@
       font-weight: 700;
       padding: 4px 10px;
       border-radius: 999px;
+      white-space: nowrap;
     }
     .badge-fail {
       display: inline-block;
@@ -55,6 +58,7 @@
       font-weight: 700;
       padding: 4px 10px;
       border-radius: 999px;
+      white-space: nowrap;
     }
     code {
       background: #f1f5f9;
@@ -65,11 +69,12 @@
   </style>
 </head>
 <body>
-  <h1>Pruebas de <code>criticidad.js</code> (RF-02)</h1>
-  <p class="sub">Verificación automatizada frente al cálculo manual con los pesos de ejemplo.</p>
+  <h1>Suite de Pruebas Unitarias — Control Vial Santa Marta</h1>
+  <p class="sub">Verificación automatizada de los módulos puros: <code>criticidad.js</code>, <code>filtros.js</code>, <code>resumen.js</code> y <code>almacenamiento.js</code>.</p>
 
   <div id="banner-resumen" class="resumen">Ejecutando pruebas...</div>
 
+  <h2>1. Motor de Criticidad (<code>criticidad.js</code> · RF-02)</h2>
   <table>
     <thead>
       <tr>
@@ -80,13 +85,28 @@
         <th>Estado</th>
       </tr>
     </thead>
-    <tbody id="tabla-resultados"></tbody>
+    <tbody id="tabla-criticidad"></tbody>
   </table>
 
-  <!-- Cargamos el módulo puro criticidad.js -->
+  <h2>2. Filtros, Estadísticas, Resumen Operativo Top 5 y Validación (<code>filtros.js</code>, <code>resumen.js</code>, <code>almacenamiento.js</code>)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Módulo y caso</th>
+        <th>Descripción</th>
+        <th>Esperado</th>
+        <th>Obtenido</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody id="tabla-modulos"></tbody>
+  </table>
+
   <script src="criticidad.js"></script>
+  <script src="filtros.js"></script>
+  <script src="resumen.js"></script>
+  <script src="almacenamiento.js"></script>
   <script>
-    // 1. Datos de prueba autocontenidos dentro de la página (no requiere servidor)
     var criteriosPrueba = {
       categoria: {
         doble_fila: 3,
@@ -110,96 +130,87 @@
     };
 
     var viasPrueba = {
-      zona: { nombre: "Zona de prueba" },
+      zona: {
+        nombre: "Zona de prueba",
+        limites: { lat_min: 11.20, lat_max: 11.26, lng_min: -74.23, lng_max: -74.18 }
+      },
       cuadras: [
         { id: "CR5-C14-C15", nombre: "Carrera 5 (14-15)", tipo_via: "arterial" },
-        { id: "C15-CR4-CR5", nombre: "Calle 15 (4-5)", tipo_via: "secundaria" }
+        { id: "C15-CR4-CR5", nombre: "Calle 15 (4-5)", tipo_via: "secundaria" },
+        { id: "CR32-C22-C25", nombre: "Carrera 32 (22-25)", tipo_via: "arterial" }
       ]
     };
 
-    // 2. Definición de los 4 casos obligatorios + 1 caso de manejo de error
-    var casos = [
+    var totalPruebas = 0;
+    var aprobados = 0;
+
+    function agregarFila(tbody, col1, col2, col3, col4, pasa) {
+      totalPruebas++;
+      if (pasa) aprobados++;
+      var fila = document.createElement("tr");
+      fila.innerHTML =
+        "<td><strong>" + col1 + "</strong></td>" +
+        "<td>" + col2 + "</td>" +
+        "<td>" + col3 + "</td>" +
+        "<td>" + col4 + "</td>" +
+        "<td>" + (pasa ? '<span class="badge-pass">✔ PASA</span>' : '<span class="badge-fail">✘ FALLA</span>') + "</td>";
+      tbody.appendChild(fila);
+    }
+
+    var tbodyCrit = document.getElementById("tabla-criticidad");
+    var casosCrit = [
       {
         titulo: "Caso 1 (Ejemplo PDF): Invasión de andén + arterial + 11:40",
-        calculoManual: "Categoría (invasion_anden = 2) + Vía (arterial = 3) + Franja (11:40 en 11:30-14:00 → pico = 3) = 8 → Alto",
-        reporte: {
-          categoria: "invasion_anden",
-          cuadra: "CR5-C14-C15",
-          fecha_hora: "2026-11-18T11:40"
-        },
+        calculoManual: "Categoría (2) + Vía arterial (3) + Franja pico 11:40 (3) = 8 → Alto",
+        reporte: { categoria: "invasion_anden", cuadra: "CR5-C14-C15", fecha_hora: "2026-11-18T11:40" },
         esperado: { puntaje: 8, nivel: "Alto", franja: "pico" }
       },
       {
         titulo: "Caso 2: Invasión de andén + secundaria + 15:00",
-        calculoManual: "Categoría (invasion_anden = 2) + Vía (secundaria = 1) + Franja (15:00 fuera de pico → valle = 1) = 4 → Bajo",
-        reporte: {
-          categoria: "invasion_anden",
-          cuadra: "C15-CR4-CR5",
-          fecha_hora: "2026-11-18T15:00"
-        },
+        calculoManual: "Categoría (2) + Vía secundaria (1) + Franja valle 15:00 (1) = 4 → Bajo",
+        reporte: { categoria: "invasion_anden", cuadra: "C15-CR4-CR5", fecha_hora: "2026-11-18T15:00" },
         esperado: { puntaje: 4, nivel: "Bajo", franja: "valle" }
       },
       {
         titulo: "Caso 3: Doble fila + secundaria + 15:00",
-        calculoManual: "Categoría (doble_fila = 3) + Vía (secundaria = 1) + Franja (15:00 → valle = 1) = 5 → Medio",
-        reporte: {
-          categoria: "doble_fila",
-          cuadra: "C15-CR4-CR5",
-          fecha_hora: "2026-11-18T15:00"
-        },
+        calculoManual: "Categoría (3) + Vía secundaria (1) + Franja valle 15:00 (1) = 5 → Medio",
+        reporte: { categoria: "doble_fila", cuadra: "C15-CR4-CR5", fecha_hora: "2026-11-18T15:00" },
         esperado: { puntaje: 5, nivel: "Medio", franja: "valle" }
       },
       {
         titulo: "Caso 4 (Límite excluido): Doble fila + arterial + 14:00",
-        calculoManual: "Categoría (doble_fila = 3) + Vía (arterial = 3) + Franja (14:00 es fin excluido de 11:30-14:00 → valle = 1) = 7 → Alto",
-        reporte: {
-          categoria: "doble_fila",
-          cuadra: "CR5-C14-C15",
-          fecha_hora: "2026-11-18T14:00"
-        },
+        calculoManual: "Categoría (3) + Vía arterial (3) + Franja valle 14:00 fin excluido (1) = 7 → Alto",
+        reporte: { categoria: "doble_fila", cuadra: "CR5-C14-C15", fecha_hora: "2026-11-18T14:00" },
         esperado: { puntaje: 7, nivel: "Alto", franja: "valle" }
       }
     ];
 
-    // 3. Ejecución y renderizado de resultados
-    var tbody = document.getElementById("tabla-resultados");
-    var aprobados = 0;
-
-    for (var i = 0; i < casos.length; i++) {
-      var c = casos[i];
+    for (var i = 0; i < casosCrit.length; i++) {
+      var c = casosCrit[i];
       var obtenidoTexto = "";
       var pasa = false;
-
       try {
         var res = calcularCriticidad(c.reporte, criteriosPrueba, viasPrueba);
         obtenidoTexto =
-          "Puntaje: " + res.puntaje +
-          " | Nivel: " + res.nivel +
-          " | Franja: " + res.franja +
+          "Puntaje: " + res.puntaje + " | Nivel: " + res.nivel + " | Franja: " + res.franja +
           " (" + res.desglose.categoria + "+" + res.desglose.via + "+" + res.desglose.franja + ")";
-
         pasa =
           res.puntaje === c.esperado.puntaje &&
           res.nivel === c.esperado.nivel &&
           res.franja === c.esperado.franja;
       } catch (err) {
         obtenidoTexto = "ERROR: " + err.message;
-        pasa = false;
       }
-
-      if (pasa) aprobados++;
-
-      var fila = document.createElement("tr");
-      fila.innerHTML =
-        "<td><strong>" + c.titulo + "</strong></td>" +
-        "<td>" + c.calculoManual + "</td>" +
-        "<td>Puntaje: " + c.esperado.puntaje + "<br>Nivel: " + c.esperado.nivel + "<br>Franja: " + c.esperado.franja + "</td>" +
-        "<td>" + obtenidoTexto + "</td>" +
-        "<td>" + (pasa ? '<span class="badge-pass">✔ PASA</span>' : '<span class="badge-fail">✘ FALLA</span>') + "</td>";
-      tbody.appendChild(fila);
+      agregarFila(
+        tbodyCrit,
+        c.titulo,
+        c.calculoManual,
+        "Puntaje: " + c.esperado.puntaje + "<br>Nivel: " + c.esperado.nivel + "<br>Franja: " + c.esperado.franja,
+        obtenidoTexto,
+        pasa
+      );
     }
 
-    // Prueba adicional: verificar que un dato inválido lanza error y no devuelve 0
     var errorLanzado = false;
     var msgError = "";
     try {
@@ -212,18 +223,92 @@
       errorLanzado = true;
       msgError = e.message;
     }
+    agregarFila(
+      tbodyCrit,
+      "Caso 5 (Seguridad): Categoría desconocida",
+      "Debe lanzar un Error claro, nunca devolver 0 en silencio.",
+      "Lanza Error",
+      errorLanzado ? "Error lanzado: " + msgError : "No lanzó error",
+      errorLanzado
+    );
 
-    var filaErr = document.createElement("tr");
-    filaErr.innerHTML =
-      "<td><strong>Caso 5 (Seguridad): Categoría desconocida</strong></td>" +
-      "<td>Debe lanzar un Error claro, nunca devolver 0 en silencio.</td>" +
-      "<td>Lanza Error</td>" +
-      "<td>" + (errorLanzado ? "Error lanzado: " + msgError : "No lanzó error") + "</td>" +
-      "<td>" + (errorLanzado ? '<span class="badge-pass">✔ PASA</span>' : '<span class="badge-fail">✘ FALLA</span>') + "</td>";
-    tbody.appendChild(filaErr);
-    if (errorLanzado) aprobados++;
+    var tbodyMod = document.getElementById("tabla-modulos");
 
-    var totalPruebas = casos.length + 1;
+    var muestraReportes = recalcularTodosLosReportes([
+      { id: "MP-TST-001", origen: "campo", fecha_hora: "2026-11-18T07:30", lat: 11.245, lng: -74.206, cuadra: "CR5-C14-C15", categoria: "doble_fila", actor: "vehiculo_particular" },
+      { id: "MP-TST-002", origen: "campo", fecha_hora: "2026-11-18T12:15", lat: 11.245, lng: -74.206, cuadra: "CR5-C14-C15", categoria: "bloqueo_rampa_cebra_paradero", actor: "motocicleta" },
+      { id: "MP-TST-003", origen: "campo", fecha_hora: "2026-11-18T18:00", lat: 11.245, lng: -74.206, cuadra: "CR5-C14-C15", categoria: "invasion_anden", actor: "vehiculo_particular" },
+      { id: "MP-TST-004", origen: "campo", fecha_hora: "2026-11-18T15:30", lat: 11.244, lng: -74.205, cuadra: "C15-CR4-CR5", categoria: "invasion_anden", actor: "mobiliario_comercial" },
+      { id: "MP-TST-005", origen: "campo", fecha_hora: "2026-11-18T16:00", lat: 11.244, lng: -74.205, cuadra: "C15-CR4-CR5", categoria: "invasion_anden", actor: "mobiliario_comercial" }
+    ], criteriosPrueba, viasPrueba);
+
+    var filtradosPicoCr5 = filtrarReportes(muestraReportes, { cuadra: "CR5-C14-C15", franja: "pico", categoria: "todas", actor: "todas" }, criteriosPrueba);
+    agregarFila(
+      tbodyMod,
+      "Caso 6 (filtros.js): Filtro combinado cuadra + franja",
+      "Filtrar CR5-C14-C15 en franja pico sobre 5 reportes de muestra.",
+      "3 reportes",
+      filtradosPicoCr5.length + " reportes",
+      filtradosPicoCr5.length === 3
+    );
+
+    var statsCat = calcularEstadisticasFiltradas(filtradosPicoCr5);
+    var pctDobleFila = statsCat.categorias[0].porcentaje;
+    agregarFila(
+      tbodyMod,
+      "Caso 7 (filtros.js): Porcentajes por categoría",
+      "1 de 3 reportes en doble_fila debe equivaler a 33.3%.",
+      "33.3%",
+      pctDobleFila + "%",
+      pctDobleFila === 33.3
+    );
+
+    var top5 = generarResumenOperativo(muestraReportes, viasPrueba, criteriosPrueba);
+    var top1 = top5[0];
+    var pasaR1 = top1 && top1.cuadraId === "CR5-C14-C15" && top1.puntajeAcumulado === 26 && top1.reglaAplicada.indexOf("Regla R1") !== -1;
+    agregarFila(
+      tbodyMod,
+      "Caso 8 (resumen.js): Ranking Top 5 y Regla R1",
+      "CR5-C14-C15 acumula 9+9+8 = 26 pts y 3 reportes Alto en pico → dispara Regla R1.",
+      "CR5-C14-C15 · 26 pts · Regla R1",
+      top1 ? (top1.cuadraId + " · " + top1.puntajeAcumulado + " pts · " + top1.recomendacion) : "Sin resultado",
+      Boolean(pasaR1)
+    );
+
+    var top2 = top5[1];
+    var pasaR2 = top2 && top2.cuadraId === "C15-CR4-CR5" && top2.reglaAplicada.indexOf("Regla R2") !== -1;
+    agregarFila(
+      tbodyMod,
+      "Caso 9 (resumen.js): Regla R2 (Predominio invasión de andén)",
+      "C15-CR4-CR5 tiene 2 de 2 reportes en invasion_anden (100%) → dispara Regla R2.",
+      "Regla R2 · Operativo de espacio público",
+      top2 ? (top2.recomendacion + " (" + top2.reglaAplicada.slice(0, 18) + "...)") : "Sin resultado",
+      Boolean(pasaR2)
+    );
+
+    var valFechaMala = validarReporteImportado(
+      {
+        id: "MP-TST-099",
+        origen: "campo",
+        fecha_hora: "2026-02-30T10:00",
+        lat: 11.245,
+        lng: -74.206,
+        cuadra: "CR5-C14-C15",
+        categoria: "doble_fila",
+        actor: "motocicleta"
+      },
+      criteriosPrueba,
+      viasPrueba
+    );
+    agregarFila(
+      tbodyMod,
+      "Caso 10 (almacenamiento.js): Rechazo de fecha calendario inválida",
+      "Un reporte con fecha 2026-02-30 debe rechazarse al importar.",
+      "valido: false",
+      "valido: " + valFechaMala.valido + " (" + (valFechaMala.motivo || "") + ")",
+      valFechaMala.valido === false
+    );
+
     var banner = document.getElementById("banner-resumen");
     if (aprobados === totalPruebas) {
       banner.className = "resumen ok-global";

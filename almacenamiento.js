@@ -1,9 +1,10 @@
 /* ============================================================================
  * ARCHIVO: almacenamiento.js
+ * DEPENDENCIAS: criticidad.js (calcularCriticidad, horaAMinutos)
  * RESPONSABILIDAD: Gestión segura de localStorage ("mp_reportes" y "mp_config"),
  * manejo de QuotaExceededError, generación de IDs consecutivos, exportación
- * (JSON con/sin fotos y ZIP opcional) e importación con validación y control
- * de duplicados/conflictos.
+ * (JSON con/sin fotos y ZIP opcional) e importación con validación estricta y
+ * control de duplicados/conflictos.
  * ============================================================================ */
 
 var CLAVE_REPORTES = "mp_reportes";
@@ -22,10 +23,6 @@ var ACTORES_PERMITIDOS = [
   "mobiliario_comercial"
 ];
 
-/**
- * Formatea una fecha local Date a "AAAAMMDD-HHMM" para nombres de archivo.
- * NUNCA usa toISOString() para evitar el desfase horario UTC de +5 horas en Colombia.
- */
 function formatearFechaArchivoLocal(fecha) {
   var d = fecha || new Date();
   var anio = String(d.getFullYear());
@@ -36,10 +33,6 @@ function formatearFechaArchivoLocal(fecha) {
   return anio + mes + dia + "-" + hora + min;
 }
 
-/**
- * Carga la configuración del integrante desde localStorage ("mp_config").
- * Salida: { iniciales: string, origen: "campo" | "ciudadano" }
- */
 function cargarConfiguracion() {
   var defecto = { iniciales: "", origen: "campo" };
   try {
@@ -56,9 +49,6 @@ function cargarConfiguracion() {
   }
 }
 
-/**
- * Guarda las iniciales (2 a 3 letras) y el origen en localStorage ("mp_config").
- */
 function guardarConfiguracion(config) {
   var ini = (config.iniciales || "").trim().toUpperCase().replace(/[^A-ZÑ]/g, "");
   if (ini.length < 2 || ini.length > 3) {
@@ -75,10 +65,6 @@ function guardarConfiguracion(config) {
   }
 }
 
-/**
- * Lee los reportes almacenados localmente en el navegador ("mp_reportes").
- * Salida: Arreglo de reportes locales (o [] si no hay datos o hay error).
- */
 function cargarReportesLocales() {
   try {
     var crudo = localStorage.getItem(CLAVE_REPORTES);
@@ -91,10 +77,6 @@ function cargarReportesLocales() {
   }
 }
 
-/**
- * Guarda un arreglo completo de reportes en localStorage dentro de try/catch.
- * Detecta QuotaExceededError sin perder los datos en memoria.
- */
 function guardarListaReportesLocales(listaReportes) {
   try {
     localStorage.setItem(CLAVE_REPORTES, JSON.stringify(listaReportes));
@@ -122,10 +104,6 @@ function guardarListaReportesLocales(listaReportes) {
   }
 }
 
-/**
- * Agrega un reporte nuevo a localStorage. Si se llena la cuota, devuelve el
- * reporte sin perderlo para permitir exportarlo de inmediato.
- */
 function agregarReporteLocal(nuevoReporte) {
   var actuales = cargarReportesLocales();
   var nuevaLista = actuales.concat([nuevoReporte]);
@@ -136,9 +114,6 @@ function agregarReporteLocal(nuevoReporte) {
   return res;
 }
 
-/**
- * Elimina un reporte local por su ID.
- */
 function eliminarReporteLocal(idReporte) {
   var actuales = cargarReportesLocales();
   var filtrados = [];
@@ -150,9 +125,6 @@ function eliminarReporteLocal(idReporte) {
   return guardarListaReportesLocales(filtrados);
 }
 
-/**
- * Borra todos los reportes locales (tras haberlos exportado).
- */
 function limpiarReportesLocales() {
   try {
     localStorage.removeItem(CLAVE_REPORTES);
@@ -162,10 +134,6 @@ function limpiarReportesLocales() {
   }
 }
 
-/**
- * Calcula el uso aproximado del localStorage en MB (deseable).
- * Salida: { megasUsados: number, texto: string }
- */
 function calcularUsoAlmacenamiento() {
   try {
     var totalCaracteres = 0;
@@ -174,7 +142,6 @@ function calcularUsoAlmacenamiento() {
       var valor = localStorage.getItem(clave) || "";
       totalCaracteres += clave.length + valor.length;
     }
-    // Cada carácter UTF-16 ocupa ~2 bytes en localStorage
     var bytes = totalCaracteres * 2;
     var megas = bytes / (1024 * 1024);
     var textoMegas = megas.toFixed(2).replace(".", ",") + " de 5 MB";
@@ -184,11 +151,6 @@ function calcularUsoAlmacenamiento() {
   }
 }
 
-/**
- * Genera el siguiente ID único con el formato "MP-" + INICIALES + "-" + 3 dígitos.
- * Busca el mayor consecutivo existente con esas iniciales entre todos los reportes
- * (precargados + locales) para evitar colisiones incluso si se borró uno anterior.
- */
 function generarSiguienteId(iniciales, todosLosReportes) {
   var ini = (iniciales || "XX").toUpperCase();
   var prefijo = "MP-" + ini + "-";
@@ -209,9 +171,6 @@ function generarSiguienteId(iniciales, todosLosReportes) {
   return prefijo + String(siguiente).padStart(3, "0");
 }
 
-/**
- * Dispara la descarga de un Blob como archivo en el navegador.
- */
 function descargarBlob(blob, nombreArchivo) {
   var url = URL.createObjectURL(blob);
   var enlace = document.createElement("a");
@@ -225,13 +184,6 @@ function descargarBlob(blob, nombreArchivo) {
   }, 1000);
 }
 
-/**
- * Exporta los reportes locales en formato reportes.json.
- * Entradas:
- *   - reportesLocales: arreglo de reportes guardados en este navegador
- *   - iniciales: iniciales del integrante (2-3 letras)
- *   - incluirFotos: boolean (true = conserva foto; false = foto: null liviano)
- */
 function exportarReportesJSON(reportesLocales, iniciales, incluirFotos) {
   var ini = (iniciales || "equipo").toLowerCase();
   var sello = formatearFechaArchivoLocal(new Date());
@@ -241,7 +193,6 @@ function exportarReportesJSON(reportesLocales, iniciales, incluirFotos) {
   var salida = [];
   for (var i = 0; i < reportesLocales.length; i++) {
     var r = reportesLocales[i];
-    // Limpiar propiedades internas temporales (_franja, _desglose) al exportar
     salida.push({
       id: r.id,
       origen: r.origen,
@@ -263,10 +214,6 @@ function exportarReportesJSON(reportesLocales, iniciales, incluirFotos) {
   return nombreArchivo;
 }
 
-/**
- * Exporta un paquete .zip listo para copiar a datos/ (deseable, usando JSZip).
- * Incluye reportes.json con rutas "fotos/<id>.jpg" y la carpeta fotos/ con las imágenes.
- */
 function exportarPaqueteZIP(reportesLocales, iniciales) {
   if (typeof JSZip === "undefined") {
     return Promise.reject(new Error("La librería JSZip no está disponible (requiere conexión a internet)."));
@@ -316,15 +263,12 @@ function exportarPaqueteZIP(reportesLocales, iniciales) {
   });
 }
 
-/**
- * Valida la estructura y valores de un objeto de reporte antes de importarlo.
- */
 function validarReporteImportado(item, criterios, vias) {
   if (!item || typeof item !== "object") {
     return { valido: false, motivo: "El elemento no es un objeto JSON válido." };
   }
-  if (!item.id || typeof item.id !== "string") {
-    return { valido: false, motivo: "Falta el campo obligatorio 'id'." };
+  if (!item.id || typeof item.id !== "string" || item.id.trim().length === 0 || item.id.length > 32) {
+    return { valido: false, motivo: "Campo 'id' ausente o inválido (máx. 32 caracteres)." };
   }
   if (item.origen !== "campo" && item.origen !== "ciudadano") {
     return { valido: false, motivo: "Origen inválido ('" + item.origen + "')." };
@@ -332,11 +276,41 @@ function validarReporteImportado(item, criterios, vias) {
   if (typeof item.fecha_hora !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(item.fecha_hora)) {
     return { valido: false, motivo: "Fecha/hora inválida ('" + item.fecha_hora + "')." };
   }
-  if (typeof item.lat !== "number" || typeof item.lng !== "number" || isNaN(item.lat) || isNaN(item.lng)) {
-    return { valido: false, motivo: "Coordenadas lat/lng no numéricas." };
+
+  var partesFH = item.fecha_hora.split("T");
+  var partesFecha = partesFH[0].split("-");
+  var anio = parseInt(partesFecha[0], 10);
+  var mes = parseInt(partesFecha[1], 10);
+  var dia = parseInt(partesFecha[2], 10);
+  var fechaObj = new Date(anio, mes - 1, dia);
+  if (
+    fechaObj.getFullYear() !== anio ||
+    fechaObj.getMonth() !== mes - 1 ||
+    fechaObj.getDate() !== dia
+  ) {
+    return { valido: false, motivo: "Fecha inexistente en calendario ('" + partesFH[0] + "')." };
+  }
+  try {
+    if (typeof horaAMinutos === "function") {
+      horaAMinutos(partesFH[1]);
+    }
+  } catch (eHora) {
+    return { valido: false, motivo: eHora.message };
   }
 
-  // Verificar límites geográficos de Santa Marta según vias.json
+  if (
+    typeof item.lat !== "number" ||
+    typeof item.lng !== "number" ||
+    !isFinite(item.lat) ||
+    !isFinite(item.lng) ||
+    item.lat < -90 ||
+    item.lat > 90 ||
+    item.lng < -180 ||
+    item.lng > 180
+  ) {
+    return { valido: false, motivo: "Coordenadas lat/lng fuera de rango válido." };
+  }
+
   var lim = vias && vias.zona && vias.zona.limites;
   if (lim) {
     if (item.lat < lim.lat_min || item.lat > lim.lat_max || item.lng < lim.lng_min || item.lng > lim.lng_max) {
@@ -347,7 +321,6 @@ function validarReporteImportado(item, criterios, vias) {
     }
   }
 
-  // Verificar que la cuadra exista en vias.json
   var cuadraExiste = false;
   if (vias && Array.isArray(vias.cuadras)) {
     for (var i = 0; i < vias.cuadras.length; i++) {
@@ -361,7 +334,6 @@ function validarReporteImportado(item, criterios, vias) {
     return { valido: false, motivo: "Cuadra inexistente en vias.json ('" + item.cuadra + "')." };
   }
 
-  // Verificar categoría y actor permitidos
   if (CATEGORIAS_PERMITIDAS.indexOf(item.categoria) === -1 || !(item.categoria in criterios.categoria)) {
     return { valido: false, motivo: "Categoría no permitida ('" + item.categoria + "')." };
   }
@@ -369,30 +341,54 @@ function validarReporteImportado(item, criterios, vias) {
     return { valido: false, motivo: "Actor no permitido ('" + item.actor + "')." };
   }
 
+  if (item.observaciones !== undefined && item.observaciones !== null) {
+    if (typeof item.observaciones !== "string") {
+      return { valido: false, motivo: "El campo 'observaciones' debe ser texto." };
+    }
+    if (item.observaciones.length > 140) {
+      return { valido: false, motivo: "Observaciones supera los 140 caracteres (" + item.observaciones.length + ")." };
+    }
+  }
+
+  if (item.criticidad !== undefined && item.criticidad !== null) {
+    if (
+      typeof item.criticidad !== "object" ||
+      typeof item.criticidad.puntaje !== "number" ||
+      !isFinite(item.criticidad.puntaje) ||
+      typeof item.criticidad.nivel !== "string"
+    ) {
+      return { valido: false, motivo: "Estructura de 'criticidad' inválida en el JSON." };
+    }
+  }
+
   return { valido: true };
 }
 
-/**
- * Compara si dos reportes con el mismo ID tienen exactamente los mismos datos esenciales.
- */
 function sonReportesIdenticos(a, b) {
+  var fotoA = typeof a.foto === "string" ? a.foto : "";
+  var fotoB = typeof b.foto === "string" ? b.foto : "";
+
   return (
     a.origen === b.origen &&
     a.fecha_hora === b.fecha_hora &&
-    Number(a.lat) === Number(b.lat) &&
-    Number(a.lng) === Number(b.lng) &&
+    Number(Number(a.lat).toFixed(6)) === Number(Number(b.lat).toFixed(6)) &&
+    Number(Number(a.lng).toFixed(6)) === Number(Number(b.lng).toFixed(6)) &&
     a.cuadra === b.cuadra &&
     a.categoria === b.categoria &&
     a.actor === b.actor &&
-    (a.observaciones || "") === (b.observaciones || "")
+    (a.observaciones || "").trim() === (b.observaciones || "").trim() &&
+    fotoA === fotoB
   );
 }
 
-/**
- * Importa un archivo JSON de reportes externos sin duplicar ni sobrescribir conflictos.
- * Salida: { ok, nuevos, repetidos, invalidos, detallesInvalidos, conflictos, detallesConflictos }
- */
 function importarReportesDesdeTexto(textoJson, reportesPrecargados, criterios, vias) {
+  if (typeof calcularCriticidad !== "function") {
+    return {
+      ok: false,
+      mensaje: "Error interno: el módulo criticidad.js no está cargado."
+    };
+  }
+
   var listaImportada;
   try {
     listaImportada = JSON.parse(textoJson);
@@ -413,7 +409,6 @@ function importarReportesDesdeTexto(textoJson, reportesPrecargados, criterios, v
   var locales = cargarReportesLocales();
   var mapaExistentes = {};
 
-  // Indexar tanto precargados como locales por ID
   for (var i = 0; i < reportesPrecargados.length; i++) {
     mapaExistentes[reportesPrecargados[i].id] = reportesPrecargados[i];
   }
@@ -435,31 +430,31 @@ function importarReportesDesdeTexto(textoJson, reportesPrecargados, criterios, v
     if (!validacion.valido) {
       invalidos++;
       detallesInvalidos.push({
-        id: (item && item.id) ? item.id : "Fila #" + (k + 1),
+        id: (item && typeof item.id === "string" && item.id) ? item.id : "Fila #" + (k + 1),
         motivo: validacion.motivo
       });
       continue;
     }
 
-    // Si el ID ya existe en precargados o en locales
-    if (mapaExistentes[item.id]) {
-      var existente = mapaExistentes[item.id];
+    var idNormalizado = item.id.trim();
+
+    if (mapaExistentes[idNormalizado]) {
+      var existente = mapaExistentes[idNormalizado];
       if (sonReportesIdenticos(existente, item)) {
         repetidos++;
       } else {
         conflictos++;
         detallesConflictos.push({
-          id: item.id,
-          motivo: "El ID ya existe con datos diferentes; no se sobrescribió."
+          id: idNormalizado,
+          motivo: "El ID ya existe con datos diferentes (ubicación, categoría, foto u observaciones); no se sobrescribió."
         });
       }
       continue;
     }
 
-    // Recalcular criticidad con las reglas vigentes antes de guardar
     var crit = calcularCriticidad(item, criterios, vias);
     var reporteNormalizado = {
-      id: item.id,
+      id: idNormalizado,
       origen: item.origen,
       fecha_hora: item.fecha_hora,
       lat: Number(Number(item.lat).toFixed(6)),
@@ -467,8 +462,8 @@ function importarReportesDesdeTexto(textoJson, reportesPrecargados, criterios, v
       cuadra: item.cuadra,
       categoria: item.categoria,
       actor: item.actor,
-      foto: typeof item.foto === "string" ? item.foto : null,
-      observaciones: typeof item.observaciones === "string" ? item.observaciones.slice(0, 140) : "",
+      foto: typeof item.foto === "string" && item.foto.length > 0 ? item.foto : null,
+      observaciones: typeof item.observaciones === "string" ? item.observaciones.trim().slice(0, 140) : "",
       criticidad: {
         puntaje: crit.puntaje,
         nivel: crit.nivel
