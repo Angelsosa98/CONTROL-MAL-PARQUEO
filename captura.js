@@ -983,7 +983,7 @@ function configurarEventos() {
 
 function inicializarApp() {
   AppEstado.reportesLocales = cargarReportesLocales().filter(function (r) {
-    return !/^MP-ASO-\\d{3}$/.test(String(r && r.id || ""));
+    return !/^MP-ASO-\d{3}$/.test(String(r && r.id || ""));
   });
   guardarListaReportesLocales(AppEstado.reportesLocales);
   porId("btn-guardar").disabled = true; // hasta que carguen los datos
