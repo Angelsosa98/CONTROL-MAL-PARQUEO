@@ -1,7 +1,7 @@
 # Anexo de Campo — Evidencias Fotográficas (Santa Marta)
 
 **Proyecto:** Control Vial Santa Marta — Detección y Criticidad de Mal Parqueo  
-**Repositorio:** `angelospinososa-del/CONTROL-MAL-PARQUEO`
+**Repositorio:** `Angelsosa98/CONTROL-MAL-PARQUEO`
 
 ---
 
