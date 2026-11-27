@@ -19,6 +19,7 @@ var ultimosReportesRegistros = [];
 var ultimoViasRegistros = null;
 var panePuntosEvidencias = null;
 var paneCalorEvidencias = null;
+var capaRecorridoCampo = null;
 
 /**
  * Devuelve true si la librería Leaflet (L) está cargada en el navegador.
@@ -218,6 +219,7 @@ function iniciarMapaRegistros(idContenedor, vias) {
   }).addTo(mapaRegistros);
 
   capaMarcadoresRegistros = L.layerGroup().addTo(mapaRegistros);
+  dibujarRecorridoCampo(vias);
 
   var avisoCalor = document.getElementById("aviso-sin-calor");
   if (avisoCalor && !heatDisponible()) {
@@ -243,6 +245,29 @@ function iniciarMapaRegistros(idContenedor, vias) {
  * Aplica la visibilidad de las capas del mapa de registros según el modo elegido:
  * "ambos" (mapa de calor + puntos), "calor" (solo mapa de calor) o "puntos" (solo marcadores).
  */
+
+/**
+ * Circuito aproximado de trabajo de campo, separado de los reportes.
+ * Los hitos son referencias del sector, no GPS exacto de cada evidencia.
+ */
+function dibujarRecorridoCampo(vias) {
+  if (!leafletDisponible() || !mapaRegistros) return;
+  if (capaRecorridoCampo) mapaRegistros.removeLayer(capaRecorridoCampo);
+  capaRecorridoCampo = L.layerGroup();
+  var recorrido = vias && vias.recorrido_campo;
+  var hitos = recorrido && Array.isArray(recorrido.hitos) ? recorrido.hitos : [];
+  if (hitos.length < 2) return;
+  var puntos = hitos.map(function (h) { return h.coordenadas; });
+  L.polyline(puntos, { color: "#2563eb", weight: 4, opacity: 0.85, dashArray: "8 7" })
+    .bindPopup("<strong>Recorrido de campo aproximado</strong><br>Circuito descrito por el equipo; no representa posiciones GPS individuales.")
+    .addTo(capaRecorridoCampo);
+  hitos.forEach(function (h, i) {
+    L.circleMarker(h.coordenadas, { radius: 6, color: "#ffffff", weight: 2, fillColor: "#2563eb", fillOpacity: 1 })
+      .bindTooltip((i + 1) + ". " + h.nombre).addTo(capaRecorridoCampo);
+  });
+  capaRecorridoCampo.addTo(mapaRegistros);
+}
+
 function aplicarModoCapasRegistros() {
   if (!leafletDisponible() || !mapaRegistros) return;
   var mostrarCalor = modoVisualizacionRegistros === "ambos" || modoVisualizacionRegistros === "calor";
