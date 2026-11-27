@@ -236,17 +236,31 @@ function iniciarMapaRegistros(idContenedor, vias) {
  */
 function aplicarModoCapasRegistros() {
   if (!leafletDisponible() || !mapaRegistros) return;
+
   var mostrarCalor = modoVisualizacionRegistros === "ambos" || modoVisualizacionRegistros === "calor";
   var mostrarPuntos = modoVisualizacionRegistros === "ambos" || modoVisualizacionRegistros === "puntos";
-  [capaCalorRegistros, capaCalorEvidencias].forEach(function (capa) {
+
+  // Cambiar la visibilidad de cada capa de forma explícita.
+  // Esto evita que una capa de calor recién creada quede visible al seleccionar
+  // "Puntos", o que sobrevivan capas anteriores después de actualizar los datos.
+  var capasCalor = [capaCalorRegistros, capaCalorEvidencias];
+  capasCalor.forEach(function (capa) {
     if (!capa) return;
-    if (mostrarCalor && !mapaRegistros.hasLayer(capa)) capa.addTo(mapaRegistros);
-    else if (!mostrarCalor && mapaRegistros.hasLayer(capa)) mapaRegistros.removeLayer(capa);
+    if (mostrarCalor) {
+      if (!mapaRegistros.hasLayer(capa)) mapaRegistros.addLayer(capa);
+    } else {
+      mapaRegistros.removeLayer(capa);
+    }
   });
-  [capaMarcadoresRegistros, capaEvidenciasAproximadas].forEach(function (capa) {
+
+  var capasPuntos = [capaMarcadoresRegistros, capaEvidenciasAproximadas];
+  capasPuntos.forEach(function (capa) {
     if (!capa) return;
-    if (mostrarPuntos && !mapaRegistros.hasLayer(capa)) capa.addTo(mapaRegistros);
-    else if (!mostrarPuntos && mapaRegistros.hasLayer(capa)) mapaRegistros.removeLayer(capa);
+    if (mostrarPuntos) {
+      if (!mapaRegistros.hasLayer(capa)) mapaRegistros.addLayer(capa);
+    } else {
+      mapaRegistros.removeLayer(capa);
+    }
   });
 }
 
