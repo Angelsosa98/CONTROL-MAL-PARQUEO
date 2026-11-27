@@ -22,8 +22,8 @@
 Durante la construcción del prototipo se identificaron cuatro fallos técnicos en el código o datos generados inicialmente por la IA, los cuales fueron diagnosticados y corregidos por el equipo:
 
 ### Ajuste 1: Delimitación del conjunto de análisis
-* **Fallo detectado:** Al generar inicialmente el archivo `reportes.json` a partir de las descripciones de las fotos, la IA ubicó los 30 registros únicamente en el polígono de Unimagdalena – Villa Marbella, asignando coordenadas de la Calle 29/Cañaveral a las evidencias `MP-ASO-024` a `MP-ASO-029`, que en realidad fueron tomadas en el **Mercado Público de Santa Marta** (sector CAI Mercado, Carrera 9 frente a Mundo Fiesta, Galería Alameda y Calle 11 # 12-42).
-* **Corrección aplicada:** Se auditó visualmente cada fotografía, se incorporaron 5 cuadras reales del Mercado Público en `datos/vias.json` (`CR9-C11-C12`, `C11-CR8-CR9`, `C11-CR9-CR10`, `C11-CR12-CR13`, `C12-CR9-CR10`) y se reasignaron las coordenadas exactas en `datos/reportes.json`.
+* **Hallazgo:** El repositorio contenía dos zonas de levantamiento: 24 reportes del entorno Unimagdalena–Villa Marbella–Cañaveral y 6 del Mercado Público.
+* **Decisión de alcance:** Esta versión del estudio mantiene activos únicamente los 24 reportes de Unimagdalena–Villa Marbella–Cañaveral y sus 10 cuadras. Los seis registros del Mercado Público se excluyeron del conjunto analítico vigente; sus archivos fotográficos se conservan en el repositorio como material histórico.
 
 ### Ajuste 2: Desfase horario de +5 horas (UTC vs. hora local de Colombia)
 * **Fallo detectado:** El código inicial utilizaba `new Date().toISOString()` para generar marcas de tiempo y nombres de archivo de exportación, lo que desplazaba los registros tomados después de las 19:00 hora local hacia el día siguiente en horario UTC y alteraba la detección de franja pico/valle.
