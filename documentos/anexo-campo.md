@@ -24,7 +24,7 @@ Antes de utilizar cada fotografía como evidencia de un reporte, el equipo debe 
 
 ## 3. Limitaciones geográficas
 
-La distancia máxima de 90 m implementada en la aplicación se calcula respecto a segmentos aproximados configurados en `datos/vias.json`. Esa regla no demuestra que el punto esté sobre la calzada ni excluye por sí sola predios, andenes, edificios o campus. La validación espacial definitiva requiere geometrías viales verificadas y revisión de campo.
+La distancia máxima de 30 m implementada en la aplicación se calcula respecto a segmentos aproximados configurados en `datos/vias.json`. Esa regla no demuestra que el punto esté sobre la calzada ni excluye por sí sola predios, andenes, edificios o campus. La validación espacial definitiva requiere geometrías viales verificadas y revisión de campo.
 
 ## 4. Tabla de inventario fotográfico
 
