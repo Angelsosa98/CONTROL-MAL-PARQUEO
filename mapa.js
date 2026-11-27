@@ -12,13 +12,9 @@ var capaReportesCaptura = null;
 var mapaRegistros = null;
 var capaMarcadoresRegistros = null;
 var capaCalorRegistros = null;
-var capaEvidenciasAproximadas = null;
-var capaCalorEvidencias = null;
 var modoVisualizacionRegistros = "ambos"; // "ambos" | "calor" | "puntos"
 var ultimosReportesRegistros = [];
 var ultimoViasRegistros = null;
-var panePuntosEvidencias = null;
-var paneCalorEvidencias = null;
 var capaRecorridoCampo = null;
 
 /**
@@ -174,8 +170,16 @@ function reporteDentroZonaMapa(reporte, vias) {
   var metrosLat = 111320;
   var metrosLng = 111320 * Math.cos(latRad);
 
-  for (var i = 0; i < cuadras.length; i++) {
-    var extremos = cuadras[i].extremos || [];
+  // Exigir que la coordenada esté cerca de la cuadra declarada por el reporte.
+  // Evita dibujar un reporte asignado a otra calle solo porque hay una vía cercana.
+  var cuadraObjetivo = null;
+  for (var k = 0; k < cuadras.length; k++) {
+    if (cuadras[k].id === reporte.cuadra) { cuadraObjetivo = cuadras[k]; break; }
+  }
+  if (!cuadraObjetivo) return false;
+
+  for (var i = 0; i < 1; i++) {
+    var extremos = cuadraObjetivo.extremos || [];
     for (var j = 0; j < extremos.length - 1; j++) {
       var p1 = extremos[j], p2 = extremos[j + 1];
       var px = (reporte.lng - p1[1]) * metrosLng;
@@ -206,13 +210,6 @@ function iniciarMapaRegistros(idContenedor, vias) {
     zoomControl: true
   }).setView(centro, zoom);
 
-  // Paneles independientes: permiten ocultar visualmente el calor sin que
-  // queden píxeles/canvas residuales al cambiar entre los tres modos.
-  paneCalorEvidencias = mapaRegistros.createPane("evidenciasHeatPane");
-  paneCalorEvidencias.style.zIndex = 410;
-  panePuntosEvidencias = mapaRegistros.createPane("evidenciasPointsPane");
-  panePuntosEvidencias.style.zIndex = 620;
-
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -230,10 +227,11 @@ function iniciarMapaRegistros(idContenedor, vias) {
   leyenda.onAdd = function () {
     var div = L.DomUtil.create("div", "leyenda-mapa");
     div.innerHTML =
-      "<strong>Criticidad / Calor</strong>" +
-      '<div><span class="punto-leyenda" style="background:#dc2626"></span> Alta (7–9)</div>' +
-      '<div><span class="punto-leyenda" style="background:#d97706"></span> Media (4–6)</div>' +
-      '<div><span class="punto-leyenda" style="background:#16a34a"></span> Baja (1–3)</div>';
+      "<strong>Leyenda del mapa</strong>" +
+      '<div><span class="linea-leyenda-recorrido"></span> Recorrido aproximado</div>' +
+      '<div><span class="punto-leyenda" style="background:#dc2626"></span> Criticidad alta</div>' +
+      '<div><span class="punto-leyenda" style="background:#d97706"></span> Criticidad media</div>' +
+      '<div><span class="punto-leyenda" style="background:#16a34a"></span> Criticidad baja</div>';
     return div;
   };
   leyenda.addTo(mapaRegistros);
@@ -273,12 +271,8 @@ function aplicarModoCapasRegistros() {
   var mostrarCalor = modoVisualizacionRegistros === "ambos" || modoVisualizacionRegistros === "calor";
   var mostrarPuntos = modoVisualizacionRegistros === "ambos" || modoVisualizacionRegistros === "puntos";
 
-  // Las evidencias tienen paneles Leaflet exclusivos: ocultarlos elimina
-  // por completo el calor o los puntos, incluso si Leaflet conserva sus capas.
-  if (paneCalorEvidencias) paneCalorEvidencias.style.display = mostrarCalor ? "" : "none";
-  if (panePuntosEvidencias) panePuntosEvidencias.style.display = mostrarPuntos ? "" : "none";
-
-  // Los reportes georreferenciados mantienen su propio comportamiento.
+  // El circuito de campo permanece visible en los tres modos.
+  // Los botones controlan únicamente las capas de análisis de reportes.
   if (capaCalorRegistros) {
     if (mostrarCalor && !mapaRegistros.hasLayer(capaCalorRegistros)) mapaRegistros.addLayer(capaCalorRegistros);
     if (!mostrarCalor && mapaRegistros.hasLayer(capaCalorRegistros)) mapaRegistros.removeLayer(capaCalorRegistros);
@@ -301,35 +295,6 @@ function cambiarModoMapaRegistros(nuevoModo) {
  * Actualiza tanto la capa de calor (Leaflet.heat ponderada por criticidad.puntaje)
  * como los marcadores individuales en el mapa de Registros.
  */
-/**
- * Dibuja evidencias fotográficas con puntos de referencia aproximados.
- * No son coordenadas GPS verificadas y no se usan para cálculos de criticidad.
- */
-/**
- * Muestra los cinco puntos de referencia compartidos por la usuaria.
- * Las 30 evidencias se agrupan por referencia; no se inventa una coordenada
- * distinta para cada fotografía.
- */
-/**
- * Visualización académica de 30 evidencias con coordenadas sintéticas
- * distribuidas sobre los ejes de las cuadras configuradas. No son GPS reales.
- * La intensidad del mapa de calor también es simulada.
- */
-/**
- * Las fotografías sin coordenadas verificadas no se dibujan en el mapa.
- * La capa espacial se alimenta exclusivamente de reportes georreferenciados.
- * Se conserva esta función por compatibilidad con llamadas antiguas.
- */
-function actualizarMarcadoresEvidencias(evidencias, vias) {
-  if (!leafletDisponible() || !mapaRegistros) return;
-  if (capaEvidenciasAproximadas) capaEvidenciasAproximadas.clearLayers();
-  if (capaCalorEvidencias && mapaRegistros.hasLayer(capaCalorEvidencias)) {
-    mapaRegistros.removeLayer(capaCalorEvidencias);
-  }
-  capaCalorEvidencias = null;
-  aplicarModoCapasRegistros();
-}
-
 function actualizarMarcadoresRegistros(listaReportes, vias) {
   ultimosReportesRegistros = Array.isArray(listaReportes) ? listaReportes : [];
   if (vias) ultimoViasRegistros = vias;
@@ -411,8 +376,11 @@ function redimensionarMapaRegistros() {
   if (leafletDisponible() && mapaRegistros) {
     setTimeout(function () {
       mapaRegistros.invalidateSize();
+      // Leaflet se inicializa mientras la vista Registros está oculta.
+      // Volver a dibujar asegura que la línea y sus puntos aparezcan al abrir la pestaña.
+      dibujarRecorridoCampo(ultimoViasRegistros);
       actualizarMarcadoresRegistros(ultimosReportesRegistros, ultimoViasRegistros);
-    }, 80);
+    }, 120);
   }
 }
 
