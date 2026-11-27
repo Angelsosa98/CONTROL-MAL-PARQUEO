@@ -1,136 +1,153 @@
 /* ============================================================================
  * ARCHIVO: captura.js
- * RESPONSABILIDAD: Controlador principal de la Fase 1. Carga los JSON con fetch,
- * gestiona GPS, asignación geométrica de cuadra más cercana, validación del
- * formulario, procesamiento/pixelado irreversible de foto en canvas, armado
- * del reporte, guardado en localStorage y renderizado de la vista Registros.
+ * RESPONSABILIDAD: Controlador principal de la aplicación web Control Vial
+ * Santa Marta. Orquesta las 3 vistas (Captura, Registros, Resumen), GPS,
+ * selección de ubicación en mapa/buscador, asignación de cuadra, pixelado en
+ * canvas, guardado/edición/eliminación y sincronización de filtros y resumen.
  * ============================================================================ */
 
-// Estado único compartido en memoria (listo para Fases 2 y 3)
 var AppEstado = {
   vias: null,
   criterios: null,
   reportesPrecargados: [],
   reportesLocales: [],
-  reportesActivos: [], // Lista única con criticidad ya recalculada
-  reportesFiltrados: [], // Subconjunto tras aplicar filtros de análisis
-  filtrosActivos: { cuadra: "todas", franja: "todas", categoria: "todas", actor: "todas" },
-  config: { iniciales: "", origen: "campo" },
-
-  // Estado del formulario de captura actual
-  lat: null,
-  lng: null,
-  precisionGps: null,
-  cuadraAsignada: "",
+  reportesUnificados: [],
+  ubicacionActual: null, // { lat, lng, cuadraId, distanciaM, fueraDeZona }
   seleccionManualCuadra: false,
-  fueraDeZona: false,
   categoriaSeleccionada: "",
   actorSeleccionado: "",
-  tieneFoto: false,
-  fechaHoraManual: false,
-  guardando: false,
-  inicioCronometroMs: Date.now()
-};
-
-// Variables para el canvas y el pixelado táctil
-var historialCanvas = [];
-var dibujandoPixelado = false;
-var puntoInicioPixel = null;
-
-// Diccionarios de etiquetas legibles para la interfaz
-var ETIQUETAS_CATEGORIA = {
-  doble_fila: "Doble fila / vía prohibida",
-  bloqueo_rampa_cebra_paradero: "Bloqueo rampa, cebra o paradero",
-  invasion_anden: "Invasión de andén"
-};
-
-var ETIQUETAS_ACTOR = {
-  vehiculo_particular: "Vehículo particular",
-  motocicleta: "Motocicleta",
-  vehiculo_carga: "Vehículo de carga",
-  mobiliario_comercial: "Mobiliario comercial"
+  editandoId: null,
+  imagenOriginalDataUrl: null,
+  imagenProcesadaDataUrl: null,
+  regionAnonimizacion: null, // { x, y, w, h } en coordenadas del canvas
+  arrastrandoAnonimizacion: false,
+  inicioArrastre: null,
+  filtros: {
+    texto: "",
+    cuadra: "",
+    categoria: "",
+    actor: "",
+    nivel: "",
+    franja: ""
+  }
 };
 
 /**
- * Formatea la hora LOCAL actual del dispositivo como "AAAA-MM-DDTHH:MM".
- * Nunca usa toISOString() para no adelantar 5 horas (UTC) en Colombia.
+ * Carga un archivo JSON relativo mediante fetch.
  */
-function obtenerFechaHoraLocal() {
-  var d = new Date();
-  var anio = String(d.getFullYear());
-  var mes = String(d.getMonth() + 1).padStart(2, "0");
-  var dia = String(d.getDate()).padStart(2, "0");
-  var hora = String(d.getHours()).padStart(2, "0");
-  var min = String(d.getMinutes()).padStart(2, "0");
-  return anio + "-" + mes + "-" + dia + "T" + hora + ":" + min;
+function cargarJSON(ruta) {
+  return fetch(ruta).then(function (resp) {
+    if (!resp.ok) {
+      throw new Error("No se pudo cargar " + ruta + " (HTTP " + resp.status + ")");
+    }
+    return resp.json();
+  });
 }
 
 /**
- * Calcula la distancia en metros de un punto P(lat, lng) a un segmento AB
- * usando aproximación plana local (válida para distancias urbanas cortas).
+ * Calcula la distancia en metros entre un punto (lat, lng) y un segmento
+ * definido por dos puntos [lat1, lng1] y [lat2, lng2] usando proyección
+ * equirectangular local (precisa a escala urbana).
  */
-function distanciaPuntoASegmentoMetros(latP, lngP, extremoA, extremoB) {
-  var lat1 = extremoA[0];
-  var lng1 = extremoA[1];
-  var lat2 = extremoB[0];
-  var lng2 = extremoB[1];
-
-  var latRef = (lat1 + lat2 + latP) / 3;
+function distanciaPuntoASegmentoMetros(lat, lng, p1, p2) {
+  var latRad = (lat * Math.PI) / 180;
   var metrosPorLat = 111320;
-  var metrosPorLng = 111320 * Math.cos((latRef * Math.PI) / 180);
+  var metrosPorLng = 111320 * Math.cos(latRad);
 
-  var xB = (lng2 - lng1) * metrosPorLng;
-  var yB = (lat2 - lat1) * metrosPorLat;
-  var xP = (lngP - lng1) * metrosPorLng;
-  var yP = (latP - lat1) * metrosPorLat;
+  var px = (lng - p1[1]) * metrosPorLng;
+  var py = (lat - p1[0]) * metrosPorLat;
+  var ax = 0;
+  var ay = 0;
+  var bx = (p2[1] - p1[1]) * metrosPorLng;
+  var by = (p2[0] - p1[0]) * metrosPorLat;
 
-  var largoCuadrado = xB * xB + yB * yB;
-  if (largoCuadrado === 0) {
-    return Math.sqrt(xP * xP + yP * yP);
+  var abx = bx - ax;
+  var aby = by - ay;
+  var apx = px - ax;
+  var apy = py - ay;
+  var abLenSq = abx * abx + aby * aby;
+
+  var t = 0;
+  if (abLenSq > 0) {
+    t = (apx * abx + apy * aby) / abLenSq;
+    if (t < 0) t = 0;
+    if (t > 1) t = 1;
   }
 
-  var t = (xP * xB + yP * yB) / largoCuadrado;
-  t = Math.max(0, Math.min(1, t));
-
-  var proyX = t * xB;
-  var proyY = t * yB;
-  var dx = xP - proyX;
-  var dy = yP - proyY;
+  var closestX = ax + abx * t;
+  var closestY = ay + aby * t;
+  var dx = px - closestX;
+  var dy = py - closestY;
 
   return Math.sqrt(dx * dx + dy * dy);
 }
 
 /**
- * Busca la cuadra más cercana a (lat, lng) dentro de vias.json.
- * Salida: { cuadra: Object|null, distanciaMetros: number }
+ * Calcula la distancia mínima en metros desde (lat, lng) a la polilínea de una cuadra.
  */
-function buscarCuadraMasCercana(lat, lng, vias) {
-  if (!vias || !Array.isArray(vias.cuadras) || vias.cuadras.length === 0) {
-    return { cuadra: null, distanciaMetros: Infinity };
+function distanciaACuadraMetros(lat, lng, cuadra) {
+  if (!cuadra || !Array.isArray(cuadra.extremos) || cuadra.extremos.length < 2) {
+    return Infinity;
   }
-
-  var mejorCuadra = null;
-  var menorDistancia = Infinity;
-
-  for (var i = 0; i < vias.cuadras.length; i++) {
-    var c = vias.cuadras[i];
-    if (!Array.isArray(c.extremos) || c.extremos.length < 2) continue;
-
-    // Soporta segmentos simples de 2 extremos o polilíneas de varios tramos
-    for (var j = 0; j < c.extremos.length - 1; j++) {
-      var dist = distanciaPuntoASegmentoMetros(lat, lng, c.extremos[j], c.extremos[j + 1]);
-      if (dist < menorDistancia) {
-        menorDistancia = dist;
-        mejorCuadra = c;
-      }
+  var minDist = Infinity;
+  for (var i = 0; i < cuadra.extremos.length - 1; i++) {
+    var d = distanciaPuntoASegmentoMetros(lat, lng, cuadra.extremos[i], cuadra.extremos[i + 1]);
+    if (d < minDist) {
+      minDist = d;
     }
   }
-
-  return { cuadra: mejorCuadra, distanciaMetros: menorDistancia };
+  return minDist;
 }
 
 /**
- * Busca el objeto completo de una cuadra por su ID.
+ * Busca la cuadra más cercana a (lat, lng) dentro de vias.cuadras.
+ * Siempre permite asignar en cualquier punto de Santa Marta sin bloquear.
+ */
+function encontrarCuadraMasCercana(lat, lng, vias) {
+  if (!vias || !Array.isArray(vias.cuadras) || vias.cuadras.length === 0) {
+    return { cuadra: null, distanciaM: null, fueraDeZona: false };
+  }
+
+  var mejorCuadra = null;
+  var mejorDistancia = Infinity;
+
+  for (var i = 0; i < vias.cuadras.length; i++) {
+    var c = vias.cuadras[i];
+    var dist = distanciaACuadraMetros(lat, lng, c);
+    if (dist < mejorDistancia) {
+      mejorDistancia = dist;
+      mejorCuadra = c;
+    }
+  }
+
+  return {
+    cuadra: mejorCuadra,
+    distanciaM: Math.round(mejorDistancia),
+    fueraDeZona: false
+  };
+}
+
+/**
+ * Verifica si (lat, lng) está dentro de los límites generales definidos en vias.json.
+ */
+function estaDentroDeLimitesZona(lat, lng, vias) {
+  if (typeof lat !== "number" || typeof lng !== "number" || isNaN(lat) || isNaN(lng)) {
+    return false;
+  }
+  if (!vias || !vias.zona || !vias.zona.limites) {
+    return true;
+  }
+  var lim = vias.zona.limites;
+  return (
+    lat >= lim.lat_min &&
+    lat <= lim.lat_max &&
+    lng >= lim.lng_min &&
+    lng <= lim.lng_max
+  );
+}
+
+/**
+ * Busca un objeto cuadra por su id.
  */
 function obtenerCuadraPorId(cuadraId) {
   if (!AppEstado.vias || !Array.isArray(AppEstado.vias.cuadras)) return null;
@@ -143,1476 +160,1251 @@ function obtenerCuadraPorId(cuadraId) {
 }
 
 /**
- * Reconstruye la lista única de reportes (precargados + locales) recalculando
- * la criticidad de todos con las reglas vigentes de criterios.json y vias.json.
+ * Recalcula criticidad de todos los reportes usando los criterios vigentes.
+ */
+function recalcularTodosLosReportes(lista, criterios, vias) {
+  var resultado = [];
+  for (var i = 0; i < lista.length; i++) {
+    var item = Object.assign({}, lista[i]);
+    var cuadraObj = obtenerCuadraPorId(item.cuadra);
+    var tipoVia = cuadraObj ? cuadraObj.tipo_via : "secundaria";
+    item.criticidad = calcularCriticidad(item, criterios, tipoVia);
+    resultado.push(item);
+  }
+  return resultado;
+}
+
+/**
+ * Sincroniza la lista unificada de reportes (locales + precargados), evitando
+ * duplicar ids si un reporte local edita o sobrescribe uno precargado.
  */
 function sincronizarListaUnicaReportes() {
-  AppEstado.reportesLocales = cargarReportesLocales();
+  var mapaPorId = {};
 
-  // Evitar duplicados si un reporte local ya fue integrado a reportes.json
-  var idsPrecargados = {};
   for (var i = 0; i < AppEstado.reportesPrecargados.length; i++) {
-    var repPre = Object.assign({}, AppEstado.reportesPrecargados[i], { _origenArchivo: "precargado" });
-    idsPrecargados[repPre.id] = repPre;
-  }
-
-  var combinados = [];
-  for (var j = 0; j < AppEstado.reportesPrecargados.length; j++) {
-    if (obtenerCuadraPorId(AppEstado.reportesPrecargados[j].cuadra)) {
-      combinados.push(
-        Object.assign({}, AppEstado.reportesPrecargados[j], { _esLocal: false })
-      );
+    var pre = AppEstado.reportesPrecargados[i];
+    if (pre && pre.id) {
+      mapaPorId[pre.id] = Object.assign({ origen: pre.origen || "precargado" }, pre);
     }
   }
 
-  for (var k = 0; k < AppEstado.reportesLocales.length; k++) {
-    var repLoc = AppEstado.reportesLocales[k];
-    if (!idsPrecargados[repLoc.id] && obtenerCuadraPorId(repLoc.cuadra)) {
-      combinados.push(Object.assign({}, repLoc, { _esLocal: true }));
+  for (var j = 0; j < AppEstado.reportesLocales.length; j++) {
+    var loc = AppEstado.reportesLocales[j];
+    if (loc && loc.id) {
+      mapaPorId[loc.id] = Object.assign({ origen: loc.origen || "campo" }, loc);
     }
   }
 
-  // Recalcular criticidad de TODOS los reportes con las reglas actuales
-  AppEstado.reportesActivos = recalcularTodosLosReportes(
-    combinados,
-    AppEstado.criterios,
-    AppEstado.vias
-  );
-
-  // Actualizar mapa de captura con todos los reportes activos y aplicar filtros en Registros
-  actualizarPuntosEnMapaCaptura(AppEstado.reportesActivos);
-  aplicarFiltrosYActualizarRegistros();
-}
-
-/**
- * Aplica los filtros activos (RF-04), actualiza porcentajes por categoría (CU-02),
- * actualiza el mapa de calor/puntos, el Resumen Operativo Top 5 (RF-05) y la lista.
- */
-function aplicarFiltrosYActualizarRegistros() {
-  var filtrados = typeof filtrarReportes === "function"
-    ? filtrarReportes(AppEstado.reportesActivos, AppEstado.filtrosActivos, AppEstado.criterios)
-    : AppEstado.reportesActivos.slice();
-
-  AppEstado.reportesFiltrados = filtrados;
-
-  renderizarEstadisticasFiltros(filtrados, AppEstado.reportesActivos.length);
-  actualizarMarcadoresRegistros(filtrados, AppEstado.vias);
-  renderizarResumenOperativoTop5(filtrados);
-  renderizarVistaRegistros();
-}
-
-/**
- * Muestra el conteo filtrado y los porcentajes por categoría (CU-02).
- */
-function renderizarEstadisticasFiltros(listaFiltrada, totalGeneral) {
-  var conteoEl = document.getElementById("conteo-filtrado-texto");
-  if (conteoEl) {
-    conteoEl.textContent =
-      "Mostrando " + listaFiltrada.length + " de " + totalGeneral + " reportes";
-  }
-
-  var contenedorPct = document.getElementById("desglose-porcentajes-categoria");
-  if (!contenedorPct || typeof calcularEstadisticasFiltradas !== "function") return;
-
-  var stats = calcularEstadisticasFiltradas(listaFiltrada);
-  contenedorPct.innerHTML = "";
-
-  for (var i = 0; i < stats.categorias.length; i++) {
-    var cat = stats.categorias[i];
-    var pctTexto = cat.porcentaje.toFixed(1).replace(".", ",") + "%";
-    var fila = document.createElement("div");
-    fila.className = "item-porcentaje";
-    fila.innerHTML =
-      '<div class="fila-texto-porcentaje">' +
-        '<span><strong>' + cat.etiqueta + '</strong></span>' +
-        '<span class="texto-mono">' + cat.conteo + ' (' + pctTexto + ')</span>' +
-      '</div>' +
-      '<div class="barra-progreso-fondo">' +
-        '<div class="barra-progreso-relleno" style="width:' + Math.min(100, cat.porcentaje) + '%"></div>' +
-      '</div>';
-    contenedorPct.appendChild(fila);
-  }
-}
-
-/**
- * Renderiza las tarjetas del Top 5 de cuadras críticas con recomendación y regla (RF-05).
- */
-function renderizarResumenOperativoTop5(listaBase) {
-  var contenedor = document.getElementById("lista-top-5-cuadras");
-  if (!contenedor || typeof generarResumenOperativo !== "function") return;
-
-  var subtitulo = document.getElementById("subtitulo-resumen-operativo");
-  if (subtitulo) {
-    var hayFiltro =
-      AppEstado.filtrosActivos.cuadra !== "todas" ||
-      AppEstado.filtrosActivos.franja !== "todas" ||
-      AppEstado.filtrosActivos.categoria !== "todas" ||
-      AppEstado.filtrosActivos.actor !== "todas";
-
-    subtitulo.textContent = hayFiltro
-      ? "Calculado sobre los " + listaBase.length + " reporte(s) que cumplen los filtros activos."
-      : "Calculado sobre los " + listaBase.length + " reporte(s) activos, ordenados por puntaje acumulado.";
-  }
-
-  var top5 = generarResumenOperativo(listaBase, AppEstado.vias, AppEstado.criterios);
-  contenedor.innerHTML = "";
-
-  if (top5.length === 0) {
-    contenedor.innerHTML =
-      '<p class="texto-suave">No hay reportes en la selección actual para generar el Top 5 operativo.</p>';
-    return;
-  }
-
-  for (var i = 0; i < top5.length; i++) {
-    var item = top5[i];
-    var claseSeveridad = "";
-    if (item.conteoNivel.Alto >= 3 || item.puntajeAcumulado >= 15) {
-      claseSeveridad = " top5-critico";
-    } else if (item.puntajeAcumulado >= 7) {
-      claseSeveridad = " top5-medio";
+  var lista = [];
+  for (var clave in mapaPorId) {
+    if (Object.prototype.hasOwnProperty.call(mapaPorId, clave)) {
+      lista.push(mapaPorId[clave]);
     }
+  }
 
-    var tipoViaTexto = item.tipoVia === "arterial" ? "Vía arterial" : "Vía secundaria";
+  AppEstado.reportesUnificados = recalcularTodosLosReportes(lista, AppEstado.criterios, AppEstado.vias);
+}
 
-    var card = document.createElement("article");
-    card.className = "tarjeta-top5" + claseSeveridad;
-    card.innerHTML =
-      '<div class="top5-cabecera">' +
-        '<div>' +
-          '<span class="top5-puesto">#' + (i + 1) + '</span>' +
-          '<strong>' + item.nombreCuadra + '</strong> ' +
-          '<span class="texto-mono">(' + item.cuadraId + ')</span>' +
-        '</div>' +
-        '<span class="top5-puntaje">' + item.puntajeAcumulado + ' pts</span>' +
-      '</div>' +
-      '<div class="top5-metricas">' +
-        tipoViaTexto + ' · ' + item.totalReportes + ' reporte(s) ' +
-        '(Alto: ' + item.conteoNivel.Alto + ', Medio: ' + item.conteoNivel.Medio + ', Bajo: ' + item.conteoNivel.Bajo + ') · ' +
-        'Pico: ' + item.porFranja.pico + ' / Valle: ' + item.porFranja.valle +
-      '</div>' +
-      '<div class="caja-recomendacion-top5">' +
-        '<div class="titulo-recomendacion">Recomendación: ' + item.recomendacion + '</div>' +
-        '<div class="texto-regla-aplicada">' + item.reglaAplicada + '</div>' +
-      '</div>';
+/**
+ * Formatea fecha y hora local actual como "AAAA-MM-DDTHH:MM" para <input type="datetime-local">.
+ */
+function obtenerFechaHoraLocalActual() {
+  var ahora = new Date();
+  var anio = ahora.getFullYear();
+  var mes = String(ahora.getMonth() + 1).padStart(2, "0");
+  var dia = String(ahora.getDate()).padStart(2, "0");
+  var horas = String(ahora.getHours()).padStart(2, "0");
+  var mins = String(ahora.getMinutes()).padStart(2, "0");
+  return anio + "-" + mes + "-" + dia + "T" + horas + ":" + mins;
+}
 
-    contenedor.appendChild(card);
+/**
+ * Escapa caracteres HTML básicos para evitar inyección en plantillas.
+ */
+function escaparHTML(texto) {
+  return String(texto || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+/**
+ * Actualiza el texto de coordenadas bajo el mapa de captura.
+ */
+function mostrarCoordenadasTexto(lat, lng) {
+  var el = document.getElementById("texto-coordenadas");
+  if (!el) return;
+  if (typeof lat === "number" && typeof lng === "number" && !isNaN(lat) && !isNaN(lng)) {
+    el.textContent = "Lat: " + lat.toFixed(6) + ", Lng: " + lng.toFixed(6);
+  } else {
+    el.textContent = "Lat: —, Lng: —";
   }
 }
 
 /**
- * Carga los archivos JSON iniciales mediante fetch.
- * Si falla (p. ej. al abrir index.html con doble clic), muestra el aviso requerido.
+ * Actualiza la tarjeta de cuadra asignada y oculta cualquier mensaje de fuera de zona.
  */
-function cargarDatosIniciales() {
-  return Promise.all([
-    fetch("datos/vias.json").then(function (r) {
-      if (!r.ok) throw new Error("No se pudo cargar datos/vias.json");
-      return r.json();
-    }),
-    fetch("datos/criterios.json").then(function (r) {
-      if (!r.ok) throw new Error("No se pudo cargar datos/criterios.json");
-      return r.json();
-    }),
-    fetch("datos/reportes.json").then(function (r) {
-      if (!r.ok) throw new Error("No se pudo cargar datos/reportes.json");
-      return r.json();
-    })
-  ]);
-}
+function actualizarUIAsignacionCuadra(cuadraId, distanciaM, fueraDeZona) {
+  var nombreEl = document.getElementById("nombre-cuadra-asignada");
+  var tipoEl = document.getElementById("badge-tipo-via");
+  var avisoEl = document.getElementById("aviso-fuera-zona");
+  var selectCuadra = document.getElementById("select-cuadra-manual");
 
-/**
- * Actualiza las coordenadas seleccionadas (redondeadas a 6 decimales),
- * mueve el marcador en el mapa y asigna automáticamente la cuadra más cercana.
- */
-function fijarUbicacion(lat, lng, precisionMetros) {
-  var latRedondeada = Number(Number(lat).toFixed(6));
-  var lngRedondeada = Number(Number(lng).toFixed(6));
+  if (avisoEl) {
+    avisoEl.hidden = true;
+    avisoEl.textContent = "";
+  }
 
-  AppEstado.lat = latRedondeada;
-  AppEstado.lng = lngRedondeada;
-  AppEstado.precisionGps = typeof precisionMetros === "number" ? Math.round(precisionMetros) : null;
+  var cuadra = obtenerCuadraPorId(cuadraId);
 
-  var textoCoords = document.getElementById("texto-coordenadas");
-  textoCoords.textContent = "Lat: " + latRedondeada.toFixed(6) + ", Lng: " + lngRedondeada.toFixed(6);
-
-  var avisoPrec = document.getElementById("aviso-precision");
-  if (AppEstado.precisionGps !== null) {
-    if (AppEstado.precisionGps > 50) {
-      avisoPrec.textContent =
-        "Precisión GPS baja (±" + AppEstado.precisionGps + " m). Ajusta el marcador en el mapa si es necesario.";
-      avisoPrec.className = "aviso-alerta";
-      avisoPrec.hidden = false;
-    } else {
-      avisoPrec.textContent = "Precisión GPS: ±" + AppEstado.precisionGps + " m.";
-      avisoPrec.className = "aviso-info";
-      avisoPrec.hidden = false;
+  if (cuadra) {
+    if (nombreEl) nombreEl.textContent = cuadra.nombre;
+    if (tipoEl) {
+      tipoEl.textContent = "Tipo de vía: " + (cuadra.tipo_via === "arterial" ? "Arterial" : "Secundaria");
+    }
+    if (selectCuadra && selectCuadra.value !== cuadra.id) {
+      selectCuadra.value = cuadra.id;
     }
   } else {
-    avisoPrec.hidden = true;
+    if (nombreEl) nombreEl.textContent = "Sin cuadra asignada";
+    if (tipoEl) tipoEl.textContent = "Tipo de vía: —";
+    if (selectCuadra) selectCuadra.value = "";
   }
-
-  actualizarMarcadorCaptura(latRedondeada, lngRedondeada, function (nuevaLat, nuevaLng) {
-    fijarUbicacion(nuevaLat, nuevaLng, null);
-  });
-
-  // Buscar cuadra más cercana y validar radio máximo
-  var resultadoCuadra = buscarCuadraMasCercana(latRedondeada, lngRedondeada, AppEstado.vias);
-  var radioMax = (AppEstado.vias && AppEstado.vias.zona && AppEstado.vias.zona.radio_max_m) || 60;
-  var avisoZona = document.getElementById("aviso-fuera-zona");
-
-  if (resultadoCuadra.cuadra && resultadoCuadra.distanciaMetros <= radioMax) {
-    AppEstado.fueraDeZona = false;
-    avisoZona.hidden = true;
-    asignarCuadraEnFormulario(resultadoCuadra.cuadra.id);
-  } else {
-    AppEstado.fueraDeZona = true;
-    var distTexto = isFinite(resultadoCuadra.distanciaMetros)
-      ? Math.round(resultadoCuadra.distanciaMetros) + " m"
-      : "distancia desconocida";
-    avisoZona.textContent =
-      "Punto fuera de la zona de estudio (a " + distTexto + " de la cuadra más cercana). Elige una cuadra manualmente abajo.";
-    avisoZona.hidden = false;
-    asignarCuadraEnFormulario("");
-  }
-
-  limpiarErrorCampo("error-ubicacion");
 }
 
 /**
- * Actualiza el estado y la tarjeta de solo lectura de la cuadra seleccionada.
+ * Fija una ubicación (lat, lng) en el formulario de captura, actualiza el mapa
+ * y asigna automáticamente la cuadra más cercana sin mostrar advertencias de zona.
  */
-function asignarCuadraEnFormulario(cuadraId) {
-  AppEstado.cuadraAsignada = cuadraId || "";
-  var selectCuadra = document.getElementById("select-cuadra");
-  selectCuadra.value = AppEstado.cuadraAsignada;
+function fijarUbicacion(lat, lng, opciones) {
+  var opts = opciones || {};
+  var latNum = Number(lat);
+  var lngNum = Number(lng);
+  if (isNaN(latNum) || isNaN(lngNum)) return;
 
-  var nombreEl = document.getElementById("cuadra-nombre-lectura");
-  var tipoEl = document.getElementById("cuadra-tipo-lectura");
-
-  var cuadraObj = obtenerCuadraPorId(AppEstado.cuadraAsignada);
-  if (cuadraObj) {
-    nombreEl.textContent = cuadraObj.nombre + " (" + cuadraObj.id + ")";
-    tipoEl.textContent = cuadraObj.tipo_via === "arterial" ? "Vía arterial" : "Vía secundaria";
-    tipoEl.className = "etiqueta-via " + (cuadraObj.tipo_via === "arterial" ? "via-arterial" : "via-secundaria");
-    limpiarErrorCampo("error-cuadra");
-  } else {
-    nombreEl.textContent = "Sin cuadra asignada";
-    tipoEl.textContent = "Tipo de vía: —";
-    tipoEl.className = "etiqueta-via";
-  }
-
-  resaltarCuadraCaptura(AppEstado.cuadraAsignada);
-}
-
-/**
- * Calcula el punto medio [lat, lng] de una cuadra a partir de sus extremos en vias.json.
- */
-function calcularCentroCuadra(cuadraObj) {
-  if (!cuadraObj || !Array.isArray(cuadraObj.extremos) || cuadraObj.extremos.length === 0) {
-    return null;
-  }
-  var sumaLat = 0;
-  var sumaLng = 0;
-  for (var i = 0; i < cuadraObj.extremos.length; i++) {
-    sumaLat += Number(cuadraObj.extremos[i][0]);
-    sumaLng += Number(cuadraObj.extremos[i][1]);
-  }
-  return {
-    lat: Number((sumaLat / cuadraObj.extremos.length).toFixed(6)),
-    lng: Number((sumaLng / cuadraObj.extremos.length).toFixed(6))
-  };
-}
-
-/**
- * Mueve la ubicación del reporte (lat, lng) y el marcador azul del mapa al punto
- * exacto de la dirección seleccionada en el menú desplegable de cuadras.
- */
-function seleccionarCuadraManual(cuadraId) {
-  AppEstado.seleccionManualCuadra = Boolean(cuadraId);
-  asignarCuadraEnFormulario(cuadraId);
-
-  var cuadraObj = obtenerCuadraPorId(cuadraId);
-  var centro = calcularCentroCuadra(cuadraObj);
-  if (!centro) return;
-
-  AppEstado.lat = centro.lat;
-  AppEstado.lng = centro.lng;
-  AppEstado.precisionGps = null;
-  AppEstado.fueraDeZona = false;
-
-  var textoCoords = document.getElementById("texto-coordenadas");
-  if (textoCoords) {
-    textoCoords.textContent = "Lat: " + centro.lat.toFixed(6) + ", Lng: " + centro.lng.toFixed(6);
-  }
-
-  var avisoZona = document.getElementById("aviso-fuera-zona");
-  if (avisoZona) avisoZona.hidden = true;
-
-  var avisoPrec = document.getElementById("aviso-precision");
-  if (avisoPrec) avisoPrec.hidden = true;
-
-  limpiarErrorCampo("error-ubicacion");
-
-  actualizarMarcadorCaptura(centro.lat, centro.lng, function (nuevaLat, nuevaLng) {
+  if (!opts.conservarManual) {
     AppEstado.seleccionManualCuadra = false;
-    fijarUbicacion(nuevaLat, nuevaLng, null);
-  });
-
-  if (leafletDisponible() && mapaCaptura) {
-    mapaCaptura.setView([centro.lat, centro.lng], 18);
   }
+
+  mostrarCoordenadasTexto(latNum, lngNum);
+
+  if (!opts.sinMoverMapa) {
+    actualizarMarcadorCaptura(latNum, lngNum, function (nuevaLat, nuevaLng) {
+      fijarUbicacion(nuevaLat, nuevaLng, { conservarManual: false, sinMoverMapa: true });
+    });
+  }
+
+  var cuadraAsignadaId = AppEstado.ubicacionActual ? AppEstado.ubicacionActual.cuadraId : "";
+  var distancia = null;
+
+  if (!AppEstado.seleccionManualCuadra || !cuadraAsignadaId) {
+    var det = encontrarCuadraMasCercana(latNum, lngNum, AppEstado.vias);
+    cuadraAsignadaId = det.cuadra ? det.cuadra.id : "";
+    distancia = det.distanciaM;
+  } else {
+    var cManual = obtenerCuadraPorId(cuadraAsignadaId);
+    if (cManual) {
+      distancia = Math.round(distanciaACuadraMetros(latNum, lngNum, cManual));
+    }
+  }
+
+  AppEstado.ubicacionActual = {
+    lat: Number(latNum.toFixed(6)),
+    lng: Number(lngNum.toFixed(6)),
+    cuadraId: cuadraAsignadaId,
+    distanciaM: distancia,
+    fueraDeZona: false
+  };
+
+  actualizarUIAsignacionCuadra(cuadraAsignadaId, distancia, false);
+  resaltarCuadraCaptura(cuadraAsignadaId);
 }
 
-
 /**
- * Solicita la ubicación GPS del dispositivo con alta precisión y traduce
- * cualquier error a un mensaje claro en español.
+ * Solicita geolocalización del dispositivo mediante Geolocation API.
  */
-function solicitarGpsDispositivo(esAutomaticoAlInicio) {
+function solicitarGeolocalizacion(esAutomaticaAlInicio) {
   var estadoGps = document.getElementById("estado-gps");
-  estadoGps.hidden = false;
-  estadoGps.className = "aviso-info";
-  estadoGps.textContent = "Buscando señal GPS...";
 
-  if (!window.isSecureContext && location.hostname !== "localhost" && location.hostname !== "127.0.0.1") {
-    estadoGps.className = "aviso-alerta";
-    estadoGps.textContent = "El GPS requiere HTTPS o localhost. Marca el punto tocando el mapa.";
+  if (!navigator.geolocation) {
+    if (estadoGps && !esAutomaticaAlInicio) {
+      estadoGps.textContent = "Tu navegador no soporta GPS. Toca el mapa o elige una cuadra.";
+    }
     return;
   }
 
-  if (!("geolocation" in navigator)) {
-    estadoGps.className = "aviso-alerta";
-    estadoGps.textContent = "Este navegador no soporta geolocalización. Marca el punto en el mapa.";
-    return;
+  if (estadoGps && !esAutomaticaAlInicio) {
+    estadoGps.textContent = "Obteniendo ubicación GPS...";
   }
 
   navigator.geolocation.getCurrentPosition(
-    function (posicion) {
-      estadoGps.hidden = true;
-      if (esAutomaticoAlInicio && AppEstado.seleccionManualCuadra) {
+    function (pos) {
+      var lat = pos.coords.latitude;
+      var lng = pos.coords.longitude;
+
+      if (esAutomaticaAlInicio && AppEstado.seleccionManualCuadra) {
         return;
       }
-      fijarUbicacion(
-        posicion.coords.latitude,
-        posicion.coords.longitude,
-        posicion.coords.accuracy
-      );
+
+      if (estadoGps) {
+        estadoGps.textContent = "Ubicación GPS detectada (±" + Math.round(pos.coords.accuracy || 15) + " m).";
+      }
+
+      fijarUbicacion(lat, lng, { conservarManual: AppEstado.seleccionManualCuadra });
     },
-    function (error) {
-      estadoGps.className = "aviso-alerta";
-      if (error.code === 1) {
-        estadoGps.textContent = "Permiso de ubicación denegado. Marca el punto tocando el mapa.";
-      } else if (error.code === 2) {
-        estadoGps.textContent = "Sin señal GPS disponible en este punto. Marca la ubicación en el mapa.";
-      } else if (error.code === 3) {
-        estadoGps.textContent = "Tiempo de espera agotado al obtener GPS. Intenta de nuevo o marca en el mapa.";
-      } else {
-        estadoGps.textContent = "No se pudo obtener la ubicación (" + error.message + "). Marca en el mapa.";
+    function (err) {
+      if (estadoGps && !esAutomaticaAlInicio) {
+        if (err.code === 1) {
+          estadoGps.textContent = "Permiso de ubicación denegado. Toca el mapa o selecciona la cuadra.";
+        } else {
+          estadoGps.textContent = "No se pudo obtener GPS. Toca el mapa para marcar el punto.";
+        }
       }
     },
     {
       enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: 0
+      timeout: 8000,
+      maximumAge: 30000
     }
   );
 }
 
 /**
- * Carga una imagen seleccionada desde cámara o galería, la redimensiona a máximo
- * 800 px de ancho respetando EXIF y la dibuja en el canvas listo para pixelar.
+ * Pobla el selector manual de cuadras y el filtro de cuadras en Registros.
  */
-function procesarArchivoFoto(archivo) {
-  if (!archivo) return;
+function poblarSelectoresCuadras(vias) {
+  var selectManual = document.getElementById("select-cuadra-manual");
+  var filtroCuadra = document.getElementById("filtro-cuadra");
 
-  var canvas = document.getElementById("canvas-foto");
-  var ctx = canvas.getContext("2d");
-
-  function dibujarEnCanvas(fuenteImagen, anchoOriginal, altoOriginal) {
-    var anchoMax = 800;
-    var escala = anchoOriginal > anchoMax ? anchoMax / anchoOriginal : 1;
-    var nuevoAncho = Math.round(anchoOriginal * escala);
-    var nuevoAlto = Math.round(altoOriginal * escala);
-
-    canvas.width = nuevoAncho;
-    canvas.height = nuevoAlto;
-    ctx.clearRect(0, 0, nuevoAncho, nuevoAlto);
-    ctx.drawImage(fuenteImagen, 0, 0, nuevoAncho, nuevoAlto);
-
-    // Guardar estado inicial en el historial para permitir "Deshacer"
-    historialCanvas = [ctx.getImageData(0, 0, nuevoAncho, nuevoAlto)];
-    AppEstado.tieneFoto = true;
-
-    document.getElementById("zona-edicion-foto").hidden = false;
-    document.getElementById("check-privacidad-foto").checked = false;
-    limpiarErrorCampo("error-foto");
+  if (selectManual) {
+    selectManual.innerHTML = '<option value="">-- Selecciona una cuadra --</option>';
+  }
+  if (filtroCuadra) {
+    filtroCuadra.innerHTML = '<option value="">Todas las cuadras</option>';
   }
 
-  // createImageBitmap respeta automáticamente la orientación EXIF en navegadores modernos
-  if (typeof createImageBitmap === "function") {
-    createImageBitmap(archivo)
-      .then(function (bitmap) {
-        dibujarEnCanvas(bitmap, bitmap.width, bitmap.height);
-        if (typeof bitmap.close === "function") bitmap.close();
-      })
-      .catch(function () {
-        cargarConFileReader(archivo, dibujarEnCanvas);
-      });
-  } else {
-    cargarConFileReader(archivo, dibujarEnCanvas);
-  }
-}
+  if (!vias || !Array.isArray(vias.cuadras)) return;
 
-function cargarConFileReader(archivo, callback) {
-  var lector = new FileReader();
-  lector.onload = function (ev) {
-    var img = new Image();
-    img.onload = function () {
-      callback(img, img.width, img.height);
-    };
-    img.src = ev.target.result;
-  };
-  lector.readAsDataURL(archivo);
-}
+  for (var i = 0; i < vias.cuadras.length; i++) {
+    var c = vias.cuadras[i];
 
-/**
- * Configura los eventos Pointer en el canvas para pixelar áreas rectangulares
- * de forma irreversible (reducción a 1/12 y ampliación sin suavizado).
- */
-function configurarHerramientaPixelado() {
-  var canvas = document.getElementById("canvas-foto");
-  var ctx = canvas.getContext("2d");
+    if (selectManual) {
+      var opt1 = document.createElement("option");
+      opt1.value = c.id;
+      opt1.textContent = c.nombre;
+      selectManual.appendChild(opt1);
+    }
 
-  function obtenerCoordsCanvas(evento) {
-    var rect = canvas.getBoundingClientRect();
-    var escalaX = canvas.width / rect.width;
-    var escalaY = canvas.height / rect.height;
-    return {
-      x: Math.max(0, Math.min(canvas.width, (evento.clientX - rect.left) * escalaX)),
-      y: Math.max(0, Math.min(canvas.height, (evento.clientY - rect.top) * escalaY))
-    };
-  }
-
-  canvas.addEventListener("pointerdown", function (e) {
-    if (!AppEstado.tieneFoto || historialCanvas.length === 0) return;
-    e.preventDefault();
-    canvas.setPointerCapture(e.pointerId);
-    dibujandoPixelado = true;
-    puntoInicioPixel = obtenerCoordsCanvas(e);
-  });
-
-  canvas.addEventListener("pointermove", function (e) {
-    if (!dibujandoPixelado || !puntoInicioPixel) return;
-    e.preventDefault();
-    var actual = obtenerCoordsCanvas(e);
-
-    // Restaurar imagen base actual y dibujar guía punteada de selección
-    var estadoActual = historialCanvas[historialCanvas.length - 1];
-    ctx.putImageData(estadoActual, 0, 0);
-
-    var rx = Math.min(puntoInicioPixel.x, actual.x);
-    var ry = Math.min(puntoInicioPixel.y, actual.y);
-    var rw = Math.abs(actual.x - puntoInicioPixel.x);
-    var rh = Math.abs(actual.y - puntoInicioPixel.y);
-
-    ctx.save();
-    ctx.strokeStyle = "#dc2626";
-    ctx.lineWidth = Math.max(2, Math.round(canvas.width / 250));
-    ctx.setLineDash([6, 4]);
-    ctx.strokeRect(rx, ry, rw, rh);
-    ctx.restore();
-  });
-
-  function finalizarTrazoPixelado(e) {
-    if (!dibujandoPixelado || !puntoInicioPixel) return;
-    dibujandoPixelado = false;
-    var fin = obtenerCoordsCanvas(e);
-
-    var estadoActual = historialCanvas[historialCanvas.length - 1];
-    ctx.putImageData(estadoActual, 0, 0);
-
-    var rx = Math.floor(Math.min(puntoInicioPixel.x, fin.x));
-    var ry = Math.floor(Math.min(puntoInicioPixel.y, fin.y));
-    var rw = Math.floor(Math.abs(fin.x - puntoInicioPixel.x));
-    var rh = Math.floor(Math.abs(fin.y - puntoInicioPixel.y));
-    puntoInicioPixel = null;
-
-    if (rw < 4 || rh < 4) return;
-
-    // Pixelado irreversible: reducir región a 1/12 en canvas auxiliar y ampliar sin suavizado
-    var miniW = Math.max(1, Math.floor(rw / 12));
-    var miniH = Math.max(1, Math.floor(rh / 12));
-
-    var aux = document.createElement("canvas");
-    aux.width = miniW;
-    aux.height = miniH;
-    var auxCtx = aux.getContext("2d");
-    auxCtx.drawImage(canvas, rx, ry, rw, rh, 0, 0, miniW, miniH);
-
-    ctx.save();
-    ctx.imageSmoothingEnabled = false;
-    ctx.mozImageSmoothingEnabled = false;
-    ctx.webkitImageSmoothingEnabled = false;
-    ctx.drawImage(aux, 0, 0, miniW, miniH, rx, ry, rw, rh);
-    ctx.restore();
-
-    // Guardar nuevo estado en historial
-    historialCanvas.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
-  }
-
-  canvas.addEventListener("pointerup", finalizarTrazoPixelado);
-  canvas.addEventListener("pointercancel", finalizarTrazoPixelado);
-}
-
-/**
- * Exporta el contenido del canvas como JPEG calidad 0.6 garantizando máximo 80 KB.
- */
-function exportarCanvasComprimido() {
-  if (!AppEstado.tieneFoto) return null;
-
-  var canvas = document.getElementById("canvas-foto");
-  var calidad = 0.6;
-  var dataUrl = canvas.toDataURL("image/jpeg", calidad);
-
-  function calcularBytesBase64(url) {
-    var base64 = url.split(",")[1] || "";
-    return Math.ceil((base64.length * 3) / 4);
-  }
-
-  var maxBytes = 80 * 1024;
-  while (calcularBytesBase64(dataUrl) > maxBytes && calidad > 0.25) {
-    calidad = Number((calidad - 0.1).toFixed(2));
-    dataUrl = canvas.toDataURL("image/jpeg", calidad);
-  }
-
-  // Si aún supera 80 KB (imagen con mucho detalle), reducir escala al 80%
-  if (calcularBytesBase64(dataUrl) > maxBytes) {
-    var reducido = document.createElement("canvas");
-    reducido.width = Math.round(canvas.width * 0.8);
-    reducido.height = Math.round(canvas.height * 0.8);
-    reducido.getContext("2d").drawImage(canvas, 0, 0, reducido.width, reducido.height);
-    dataUrl = reducido.toDataURL("image/jpeg", 0.55);
-  }
-
-  return dataUrl;
-}
-
-/**
- * Limpia el canvas y reinicia el estado de foto del formulario.
- */
-function quitarFotoFormulario() {
-  var canvas = document.getElementById("canvas-foto");
-  var ctx = canvas.getContext("2d");
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  historialCanvas = [];
-  AppEstado.tieneFoto = false;
-  document.getElementById("input-foto-camara").value = "";
-  document.getElementById("input-foto-galeria").value = "";
-  document.getElementById("check-privacidad-foto").checked = false;
-  document.getElementById("zona-edicion-foto").hidden = true;
-  limpiarErrorCampo("error-foto");
-}
-
-function mostrarErrorCampo(idElemento, mensaje) {
-  var el = document.getElementById(idElemento);
-  if (el) {
-    el.textContent = mensaje;
-    el.hidden = false;
-  }
-}
-
-function limpiarErrorCampo(idElemento) {
-  var el = document.getElementById(idElemento);
-  if (el) {
-    el.textContent = "";
-    el.hidden = true;
+    if (filtroCuadra) {
+      var opt2 = document.createElement("option");
+      opt2.value = c.id;
+      opt2.textContent = c.nombre;
+      filtroCuadra.appendChild(opt2);
+    }
   }
 }
 
 /**
- * Valida todos los campos obligatorios antes de guardar el reporte.
+ * Maneja el cambio manual en el <select> de cuadra.
  */
-function validarFormularioCaptura() {
-  var esValido = true;
+function seleccionarCuadraManual(cuadraId) {
+  AppEstado.seleccionManualCuadra = Boolean(cuadraId);
 
-  // 1. Verificar iniciales del integrante
-  if (!AppEstado.config.iniciales || AppEstado.config.iniciales.length < 2) {
-    abrirModalAjustes();
-    return false;
-  }
-
-  // 2. Verificar coordenadas y límites geográficos de Santa Marta
-  var lim = AppEstado.vias && AppEstado.vias.zona && AppEstado.vias.zona.limites;
-  if (AppEstado.lat === null || AppEstado.lng === null) {
-    mostrarErrorCampo("error-ubicacion", "Marca el punto en el mapa o usa tu ubicación GPS.");
-    esValido = false;
-  } else if (
-    lim &&
-    (AppEstado.lat < lim.lat_min ||
-      AppEstado.lat > lim.lat_max ||
-      AppEstado.lng < lim.lng_min ||
-      AppEstado.lng > lim.lng_max)
-  ) {
-    mostrarErrorCampo("error-ubicacion", "El punto está fuera de los límites permitidos de Santa Marta.");
-    esValido = false;
-  } else {
-    limpiarErrorCampo("error-ubicacion");
-  }
-
-  // 3. Verificar cuadra asignada
-  if (!AppEstado.cuadraAsignada || !obtenerCuadraPorId(AppEstado.cuadraAsignada)) {
-    mostrarErrorCampo("error-cuadra", "Selecciona una cuadra válida de la zona de estudio.");
-    esValido = false;
-  } else {
-    limpiarErrorCampo("error-cuadra");
-  }
-
-  // 4. Verificar categoría
-  if (!AppEstado.categoriaSeleccionada) {
-    mostrarErrorCampo("error-categoria", "Selecciona una categoría de obstrucción.");
-    esValido = false;
-  } else {
-    limpiarErrorCampo("error-categoria");
-  }
-
-  // 5. Verificar actor
-  if (!AppEstado.actorSeleccionado) {
-    mostrarErrorCampo("error-actor", "Selecciona el tipo de actor.");
-    esValido = false;
-  } else {
-    limpiarErrorCampo("error-actor");
-  }
-
-  // 6. Verificar casilla de privacidad si hay foto adjunta
-  if (AppEstado.tieneFoto && !document.getElementById("check-privacidad-foto").checked) {
-    mostrarErrorCampo("error-foto", "Debes confirmar que no se ven placas ni rostros antes de guardar.");
-    esValido = false;
-  } else {
-    limpiarErrorCampo("error-foto");
-  }
-
-  return esValido;
-}
-
-/**
- * Procesa el guardado completo de un nuevo reporte (RF-01 + RF-02 + RF-06).
- */
-function guardarNuevoReporte() {
-  // Evitar doble guardado por doble toque rápido
-  if (AppEstado.guardando) return;
-
-  if (!validarFormularioCaptura()) {
+  var cuadra = obtenerCuadraPorId(cuadraId);
+  if (!cuadra) {
+    if (AppEstado.ubicacionActual) {
+      AppEstado.ubicacionActual.cuadraId = "";
+      AppEstado.ubicacionActual.fueraDeZona = false;
+    }
+    actualizarUIAsignacionCuadra("", null, false);
+    resaltarCuadraCaptura("");
     return;
   }
 
-  AppEstado.guardando = true;
-  var btnGuardar = document.getElementById("btn-guardar");
-  btnGuardar.disabled = true;
-  btnGuardar.textContent = "Guardando...";
+  var lat = AppEstado.ubicacionActual ? AppEstado.ubicacionActual.lat : null;
+  var lng = AppEstado.ubicacionActual ? AppEstado.ubicacionActual.lng : null;
 
-  try {
-    var fechaHoraValor = AppEstado.fechaHoraManual
-      ? document.getElementById("input-fecha-hora").value
-      : obtenerFechaHoraLocal();
-
-    if (!fechaHoraValor || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(fechaHoraValor)) {
-      fechaHoraValor = obtenerFechaHoraLocal();
+  if ((typeof lat !== "number" || typeof lng !== "number" || isNaN(lat) || isNaN(lng)) && Array.isArray(cuadra.extremos) && cuadra.extremos.length > 0) {
+    var sumaLat = 0;
+    var sumaLng = 0;
+    for (var i = 0; i < cuadra.extremos.length; i++) {
+      sumaLat += Number(cuadra.extremos[i][0]);
+      sumaLng += Number(cuadra.extremos[i][1]);
     }
+    lat = Number((sumaLat / cuadra.extremos.length).toFixed(6));
+    lng = Number((sumaLng / cuadra.extremos.length).toFixed(6));
+  }
 
-    var nuevoId = generarSiguienteId(AppEstado.config.iniciales, AppEstado.reportesActivos);
-    var fotoComprimida = exportarCanvasComprimido();
-    var obsTexto = (document.getElementById("input-observaciones").value || "").trim().slice(0, 140);
-
-    var borradorReporte = {
-      id: nuevoId,
-      origen: AppEstado.config.origen || "campo",
-      fecha_hora: fechaHoraValor,
-      lat: AppEstado.lat,
-      lng: AppEstado.lng,
-      cuadra: AppEstado.cuadraAsignada,
-      categoria: AppEstado.categoriaSeleccionada,
-      actor: AppEstado.actorSeleccionado,
-      foto: fotoComprimida,
-      observaciones: obsTexto
+  if (typeof lat === "number" && typeof lng === "number" && !isNaN(lat) && !isNaN(lng)) {
+    AppEstado.ubicacionActual = {
+      lat: Number(lat.toFixed(6)),
+      lng: Number(lng.toFixed(6)),
+      cuadraId: cuadra.id,
+      distanciaM: Math.round(distanciaACuadraMetros(lat, lng, cuadra)),
+      fueraDeZona: false
     };
-
-    // Calcular criticidad usando exclusivamente criticidad.js
-    var calculo = calcularCriticidad(borradorReporte, AppEstado.criterios, AppEstado.vias);
-    borradorReporte.criticidad = {
-      puntaje: calculo.puntaje,
-      nivel: calculo.nivel
+    mostrarCoordenadasTexto(lat, lng);
+    actualizarMarcadorCaptura(lat, lng, function (nuevaLat, nuevaLng) {
+      fijarUbicacion(nuevaLat, nuevaLng, { conservarManual: false, sinMoverMapa: true });
+    });
+  } else {
+    AppEstado.ubicacionActual = {
+      lat: null,
+      lng: null,
+      cuadraId: cuadra.id,
+      distanciaM: null,
+      fueraDeZona: false
     };
+  }
 
-    // Guardar en localStorage
-    var resultadoGuardado = agregarReporteLocal(borradorReporte);
+  actualizarUIAsignacionCuadra(cuadra.id, AppEstado.ubicacionActual.distanciaM, false);
+  resaltarCuadraCaptura(cuadra.id);
+}
 
-    if (!resultadoGuardado.ok) {
-      if (resultadoGuardado.errorQuota) {
-        mostrarAlertaAlmacenamientoLleno(borradorReporte);
-      } else {
-        alert(resultadoGuardado.mensaje);
-      }
+/**
+ * Configura el buscador de direcciones / calles / puntos de interés en Santa Marta.
+ */
+function configurarBuscadorDireccion() {
+  var input = document.getElementById("input-buscar-direccion");
+  var btnLimpiar = document.getElementById("btn-limpiar-direccion");
+  var listaEl = document.getElementById("resultados-direccion");
+  if (!input || !listaEl) return;
+
+  var temporizador = null;
+
+  function ocultarResultados() {
+    listaEl.hidden = true;
+    listaEl.innerHTML = "";
+  }
+
+  function renderizarResultados(items) {
+    listaEl.innerHTML = "";
+    if (!Array.isArray(items) || items.length === 0) {
+      var vacio = document.createElement("div");
+      vacio.className = "resultado-direccion-vacio";
+      vacio.textContent = "Sin coincidencias en Santa Marta. Prueba con otra calle, carrera o lugar.";
+      listaEl.appendChild(vacio);
+      listaEl.hidden = false;
       return;
     }
 
-    // Calcular tiempo transcurrido (deseable, no se guarda en el JSON)
-    var segundosLlenado = Math.max(1, Math.round((Date.now() - AppEstado.inicioCronometroMs) / 1000));
+    for (var i = 0; i < items.length; i++) {
+      (function (item) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "resultado-direccion-item";
+        btn.innerHTML =
+          '<span class="resultado-direccion-titulo">' + escaparHTML(item.titulo) + "</span>" +
+          '<span class="resultado-direccion-sub">' + escaparHTML(item.subtitulo) + "</span>";
 
-    // Actualizar estado global y mapas
-    sincronizarListaUnicaReportes();
+        btn.addEventListener("click", function () {
+          input.value = item.titulo;
+          if (btnLimpiar) btnLimpiar.hidden = false;
+          ocultarResultados();
+          AppEstado.seleccionManualCuadra = false;
+          fijarUbicacion(item.lat, item.lng, { conservarManual: false });
+        });
 
-    // Mostrar confirmación visual con desglose y botón "Registrar otro"
-    mostrarConfirmacionGuardado(borradorReporte, calculo, segundosLlenado);
-  } catch (err) {
-    alert("Error al procesar el reporte: " + err.message);
-  } finally {
-    AppEstado.guardando = false;
-    btnGuardar.disabled = false;
-    btnGuardar.textContent = "Guardar reporte";
+        listaEl.appendChild(btn);
+      })(items[i]);
+    }
+    listaEl.hidden = false;
   }
+
+  input.addEventListener("input", function () {
+    var val = input.value.trim();
+    if (btnLimpiar) btnLimpiar.hidden = val.length === 0;
+
+    if (temporizador) clearTimeout(temporizador);
+    if (val.length < 2) {
+      ocultarResultados();
+      return;
+    }
+
+    temporizador = setTimeout(function () {
+      buscarDireccionesMapa(val, AppEstado.vias).then(function (items) {
+        if (input.value.trim() === val) {
+          renderizarResultados(items);
+        }
+      });
+    }, 280);
+  });
+
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      var val = input.value.trim();
+      if (val.length >= 2) {
+        buscarDireccionesMapa(val, AppEstado.vias).then(function (items) {
+          renderizarResultados(items);
+        });
+      }
+    } else if (e.key === "Escape") {
+      ocultarResultados();
+    }
+  });
+
+  if (btnLimpiar) {
+    btnLimpiar.addEventListener("click", function () {
+      input.value = "";
+      btnLimpiar.hidden = true;
+      ocultarResultados();
+      input.focus();
+    });
+  }
+
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".buscador-direccion-wrapper")) {
+      ocultarResultados();
+    }
+  });
 }
 
 /**
- * Muestra el resumen del reporte recién guardado con desglose de criticidad.
+ * Configura los botones de categoría y actor en la vista Captura.
  */
-function mostrarConfirmacionGuardado(reporte, calculo, segundos) {
-  var tarjeta = document.getElementById("tarjeta-confirmacion");
-  var textoDesglose = document.getElementById("confirmacion-desglose");
-  var badgeNivel = document.getElementById("confirmacion-badge-nivel");
-  var metaTiempo = document.getElementById("confirmacion-tiempo");
-
-  var nivelMayus = String(calculo.nivel).toUpperCase();
-  textoDesglose.textContent =
-    reporte.id + " · Categoría " + calculo.desglose.categoria +
-    " + Vía " + calculo.desglose.via +
-    " + Franja " + calculo.desglose.franja +
-    " = " + calculo.puntaje + " → ";
-
-  badgeNivel.textContent = nivelMayus;
-  badgeNivel.className = "badge-nivel nivel-" + String(calculo.nivel).toLowerCase();
-
-  metaTiempo.textContent = "Tiempo de registro: " + segundos + " s (no se guarda en los datos).";
-  tarjeta.hidden = false;
-  tarjeta.scrollIntoView({ behavior: "smooth", block: "nearest" });
-}
-
-/**
- * Limpia categoría, actor, foto y observaciones para registrar un nuevo incidente
- * conservando la vista del mapa.
- */
-function prepararSiguienteRegistro() {
-  AppEstado.categoriaSeleccionada = "";
-  AppEstado.actorSeleccionado = "";
-
-  var botonesCat = document.querySelectorAll("#grupo-categoria .btn-opcion");
+function configurarBotonesSeleccion() {
+  var botonesCat = document.querySelectorAll(".btn-categoria");
   for (var i = 0; i < botonesCat.length; i++) {
-    botonesCat[i].classList.remove("activo");
-    botonesCat[i].setAttribute("aria-pressed", "false");
+    botonesCat[i].addEventListener("click", function () {
+      var val = this.getAttribute("data-categoria") || "";
+      seleccionarCategoria(val);
+    });
   }
 
-  var botonesAct = document.querySelectorAll("#grupo-actor .btn-opcion");
-  for (var j = 0; j < botonesAct.length; j++) {
-    botonesAct[j].classList.remove("activo");
-    botonesAct[j].setAttribute("aria-pressed", "false");
+  var botonesActor = document.querySelectorAll(".btn-actor");
+  for (var j = 0; j < botonesActor.length; j++) {
+    botonesActor[j].addEventListener("click", function () {
+      var val = this.getAttribute("data-actor") || "";
+      seleccionarActor(val);
+    });
   }
+}
 
-  quitarFotoFormulario();
+function seleccionarCategoria(valor) {
+  AppEstado.categoriaSeleccionada = valor;
+  var inputHidden = document.getElementById("categoria-seleccionada");
+  if (inputHidden) inputHidden.value = valor;
 
-  document.getElementById("input-observaciones").value = "";
-  document.getElementById("contador-obs").textContent = "0 / 140";
+  var botones = document.querySelectorAll(".btn-categoria");
+  for (var i = 0; i < botones.length; i++) {
+    var activo = botones[i].getAttribute("data-categoria") === valor;
+    botones[i].classList.toggle("activo", activo);
+    botones[i].setAttribute("aria-pressed", activo ? "true" : "false");
+  }
+}
 
-  AppEstado.fechaHoraManual = false;
-  var ahora = obtenerFechaHoraLocal();
-  document.getElementById("input-fecha-hora").value = ahora;
-  document.getElementById("texto-fecha-actual").textContent = ahora.replace("T", " ");
-  document.getElementById("detalle-fecha-hora").open = false;
+function seleccionarActor(valor) {
+  AppEstado.actorSeleccionado = valor;
+  var inputHidden = document.getElementById("actor-seleccionada");
+  if (inputHidden) inputHidden.value = valor;
 
-  document.getElementById("tarjeta-confirmacion").hidden = true;
-  AppEstado.inicioCronometroMs = Date.now();
+  var botones = document.querySelectorAll(".btn-actor");
+  for (var i = 0; i < botones.length; i++) {
+    var activo = botones[i].getAttribute("data-actor") === valor;
+    botones[i].classList.toggle("activo", activo);
+    botones[i].setAttribute("aria-pressed", activo ? "true" : "false");
+  }
 }
 
 /**
- * Maneja el error QuotaExceededError sin perder el reporte recién armado.
+ * Dibuja en el <canvas> la imagen base y, si existe, la región pixelada.
  */
-function mostrarAlertaAlmacenamientoLleno(reportePendiente) {
-  var aviso = document.getElementById("aviso-quota");
-  aviso.hidden = false;
-  var btnExportarEmergencia = document.getElementById("btn-exportar-emergencia");
-  btnExportarEmergencia.onclick = function () {
-    var listaConPendiente = AppEstado.reportesLocales.concat([reportePendiente]);
-    exportarReportesJSON(listaConPendiente, AppEstado.config.iniciales, true);
+function renderizarCanvasAnonimizacion() {
+  var canvas = document.getElementById("canvas-foto");
+  if (!canvas || !AppEstado.imagenOriginalDataUrl) return;
+
+  var img = new Image();
+  img.onload = function () {
+    var maxAncho = 900;
+    var ancho = img.width;
+    var alto = img.height;
+
+    if (ancho > maxAncho) {
+      var escala = maxAncho / ancho;
+      ancho = maxAncho;
+      alto = Math.round(img.height * escala);
+    }
+
+    canvas.width = ancho;
+    canvas.height = alto;
+
+    var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, ancho, alto);
+    ctx.drawImage(img, 0, 0, ancho, alto);
+
+    var reg = AppEstado.regionAnonimizacion;
+    if (reg && reg.w > 2 && reg.h > 2) {
+      aplicarPixeladoEnRegion(ctx, canvas, reg.x, reg.y, reg.w, reg.h, 12);
+
+      ctx.save();
+      ctx.strokeStyle = "#0284c7";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 4]);
+      ctx.strokeRect(reg.x, reg.y, reg.w, reg.h);
+      ctx.restore();
+    }
+
+    var tempCanvas = document.createElement("canvas");
+    tempCanvas.width = ancho;
+    tempCanvas.height = alto;
+    var tempCtx = tempCanvas.getContext("2d");
+    tempCtx.drawImage(img, 0, 0, ancho, alto);
+    if (reg && reg.w > 2 && reg.h > 2) {
+      aplicarPixeladoEnRegion(tempCtx, tempCanvas, reg.x, reg.y, reg.w, reg.h, 12);
+    }
+    AppEstado.imagenProcesadaDataUrl = tempCanvas.toDataURL("image/jpeg", 0.78);
+  };
+  img.src = AppEstado.imagenOriginalDataUrl;
+}
+
+/**
+ * Aplica pixelado irreversible (mosaico de bloques) sobre un rectángulo del canvas.
+ */
+function aplicarPixeladoEnRegion(ctx, canvas, rx, ry, rw, rh, tamBloque) {
+  var x0 = Math.max(0, Math.floor(rx));
+  var y0 = Math.max(0, Math.floor(ry));
+  var x1 = Math.min(canvas.width, Math.ceil(rx + rw));
+  var y1 = Math.min(canvas.height, Math.ceil(ry + rh));
+  var w = x1 - x0;
+  var h = y1 - y0;
+  if (w <= 0 || h <= 0) return;
+
+  var bloque = tamBloque || 12;
+  for (var y = y0; y < y1; y += bloque) {
+    for (var x = x0; x < x1; x += bloque) {
+      var bw = Math.min(bloque, x1 - x);
+      var bh = Math.min(bloque, y1 - y);
+      var pixel = ctx.getImageData(x, y, 1, 1).data;
+      ctx.fillStyle = "rgb(" + pixel[0] + "," + pixel[1] + "," + pixel[2] + ")";
+      ctx.fillRect(x, y, bw, bh);
+    }
+  }
+}
+
+function obtenerCoordenadasCanvas(evento, canvas) {
+  var rect = canvas.getBoundingClientRect();
+  var clientX = evento.touches && evento.touches.length > 0 ? evento.touches[0].clientX : evento.clientX;
+  var clientY = evento.touches && evento.touches.length > 0 ? evento.touches[0].clientY : evento.clientY;
+
+  var escalaX = canvas.width / (rect.width || 1);
+  var escalaY = canvas.height / (rect.height || 1);
+
+  return {
+    x: (clientX - rect.left) * escalaX,
+    y: (clientY - rect.top) * escalaY
   };
 }
 
-/**
- * Renderiza toda la vista "Registros": meta N de 30, desglose pico/valle y por
- * cuadra, uso de almacenamiento y lista de tarjetas ordenadas por fecha reciente.
- */
-function renderizarVistaRegistros() {
-  var todos = AppEstado.reportesActivos;
+function configurarAnonimizacionCanvas() {
+  var inputFoto = document.getElementById("input-foto");
+  var canvas = document.getElementById("canvas-foto");
+  var editorEl = document.getElementById("editor-anonimizacion");
+  var btnLimpiar = document.getElementById("btn-limpiar-anonimizacion");
+  var chkConfirmacion = document.getElementById("chk-confirmar-anonimizacion");
 
-  // Contar solo registros con origen === "campo" para la meta de 30
-  var totalCampo = 0;
-  var conteoFranja = { pico: 0, valle: 0 };
-  var conteoPorCuadra = {};
+  if (inputFoto) {
+    inputFoto.addEventListener("change", function () {
+      var archivo = inputFoto.files && inputFoto.files[0];
+      if (!archivo) return;
 
-  for (var i = 0; i < todos.length; i++) {
-    var r = todos[i];
-    if (r.origen === "campo") {
-      totalCampo++;
-      var fr = r._franja || deducirFranja(r.fecha_hora, AppEstado.criterios);
-      if (fr === "pico") conteoFranja.pico++;
-      else conteoFranja.valle++;
-
-      conteoPorCuadra[r.cuadra] = (conteoPorCuadra[r.cuadra] || 0) + 1;
-    }
+      var lector = new FileReader();
+      lector.onload = function (e) {
+        AppEstado.imagenOriginalDataUrl = e.target.result;
+        AppEstado.regionAnonimizacion = null;
+        if (chkConfirmacion) chkConfirmacion.checked = false;
+        if (editorEl) editorEl.hidden = false;
+        renderizarCanvasAnonimizacion();
+      };
+      lector.readAsDataURL(archivo);
+    });
   }
 
-  document.getElementById("contador-meta-30").textContent = totalCampo + " de 30";
-  document.getElementById("desglose-franjas").textContent =
-    "Hora pico: " + conteoFranja.pico + " · Hora valle: " + conteoFranja.valle;
+  if (!canvas) return;
 
-  // Desglose por cuadra
-  var listaCuadrasEl = document.getElementById("desglose-cuadras");
-  listaCuadrasEl.innerHTML = "";
-  var cuadrasKeys = Object.keys(conteoPorCuadra);
-  if (cuadrasKeys.length === 0) {
-    listaCuadrasEl.innerHTML = "<span class='texto-suave'>Aún no hay registros de campo.</span>";
+  function iniciarTrazo(e) {
+    if (!AppEstado.imagenOriginalDataUrl) return;
+    e.preventDefault();
+    var pt = obtenerCoordenadasCanvas(e, canvas);
+    AppEstado.arrastrandoAnonimizacion = true;
+    AppEstado.inicioArrastre = pt;
+    AppEstado.regionAnonimizacion = { x: pt.x, y: pt.y, w: 1, h: 1 };
+  }
+
+  function moverTrazo(e) {
+    if (!AppEstado.arrastrandoAnonimizacion || !AppEstado.inicioArrastre) return;
+    e.preventDefault();
+    var pt = obtenerCoordenadasCanvas(e, canvas);
+    var x = Math.min(AppEstado.inicioArrastre.x, pt.x);
+    var y = Math.min(AppEstado.inicioArrastre.y, pt.y);
+    var w = Math.abs(pt.x - AppEstado.inicioArrastre.x);
+    var h = Math.abs(pt.y - AppEstado.inicioArrastre.y);
+    AppEstado.regionAnonimizacion = { x: x, y: y, w: w, h: h };
+    renderizarCanvasAnonimizacion();
+  }
+
+  function finalizarTrazo() {
+    if (!AppEstado.arrastrandoAnonimizacion) return;
+    AppEstado.arrastrandoAnonimizacion = false;
+    AppEstado.inicioArrastre = null;
+    renderizarCanvasAnonimizacion();
+  }
+
+  canvas.addEventListener("mousedown", iniciarTrazo);
+  canvas.addEventListener("mousemove", moverTrazo);
+  window.addEventListener("mouseup", finalizarTrazo);
+
+  canvas.addEventListener("touchstart", iniciarTrazo, { passive: false });
+  canvas.addEventListener("touchmove", moverTrazo, { passive: false });
+  window.addEventListener("touchend", finalizarTrazo);
+
+  if (btnLimpiar) {
+    btnLimpiar.addEventListener("click", function () {
+      AppEstado.regionAnonimizacion = null;
+      renderizarCanvasAnonimizacion();
+    });
+  }
+}
+
+function mostrarMensajeFormulario(texto, tipo) {
+  var el = document.getElementById("mensaje-formulario");
+  if (!el) return;
+  el.textContent = texto;
+  el.className = "mensaje-estado " + (tipo || "info");
+  el.hidden = !texto;
+}
+
+function limpiarFormularioCaptura() {
+  AppEstado.editandoId = null;
+  AppEstado.seleccionManualCuadra = false;
+  AppEstado.categoriaSeleccionada = "";
+  AppEstado.actorSeleccionado = "";
+  AppEstado.imagenOriginalDataUrl = null;
+  AppEstado.imagenProcesadaDataUrl = null;
+  AppEstado.regionAnonimizacion = null;
+
+  var fechaInput = document.getElementById("input-fecha-hora");
+  if (fechaInput) fechaInput.value = obtenerFechaHoraLocalActual();
+
+  var obsInput = document.getElementById("input-observaciones");
+  if (obsInput) obsInput.value = "";
+
+  var inputFoto = document.getElementById("input-foto");
+  if (inputFoto) inputFoto.value = "";
+
+  var editorEl = document.getElementById("editor-anonimizacion");
+  if (editorEl) editorEl.hidden = true;
+
+  var chkConf = document.getElementById("chk-confirmar-anonimizacion");
+  if (chkConf) chkConf.checked = false;
+
+  var btnCancelarEdicion = document.getElementById("btn-cancelar-edicion");
+  if (btnCancelarEdicion) btnCancelarEdicion.hidden = true;
+
+  var tituloForm = document.getElementById("titulo-form-captura");
+  if (tituloForm) tituloForm.textContent = "Nuevo reporte de mal parqueo";
+
+  seleccionarCategoria("");
+  seleccionarActor("");
+
+  var centro = (AppEstado.vias && AppEstado.vias.zona && AppEstado.vias.zona.centro)
+    ? AppEstado.vias.zona.centro
+    : [11.2335, -74.1972];
+  fijarUbicacion(centro[0], centro[1], { conservarManual: false });
+}
+
+function cargarReporteEnFormulario(reporte) {
+  if (!reporte) return;
+
+  AppEstado.editandoId = reporte.id;
+  AppEstado.seleccionManualCuadra = true;
+
+  var fechaInput = document.getElementById("input-fecha-hora");
+  if (fechaInput) fechaInput.value = reporte.fecha_hora || obtenerFechaHoraLocalActual();
+
+  fijarUbicacion(reporte.lat, reporte.lng, { conservarManual: true });
+  seleccionarCuadraManual(reporte.cuadra || "");
+  seleccionarCategoria(reporte.categoria || "");
+  seleccionarActor(reporte.actor || "");
+
+  var obsInput = document.getElementById("input-observaciones");
+  if (obsInput) obsInput.value = reporte.observaciones || "";
+
+  var editorEl = document.getElementById("editor-anonimizacion");
+  var chkConf = document.getElementById("chk-confirmar-anonimizacion");
+  if (reporte.foto && String(reporte.foto).indexOf("data:image/") === 0) {
+    AppEstado.imagenOriginalDataUrl = reporte.foto;
+    AppEstado.imagenProcesadaDataUrl = reporte.foto;
+    AppEstado.regionAnonimizacion = null;
+    if (editorEl) editorEl.hidden = false;
+    if (chkConf) chkConf.checked = true;
+    renderizarCanvasAnonimizacion();
   } else {
-    for (var cIdx = 0; cIdx < cuadrasKeys.length; cIdx++) {
-      var cid = cuadrasKeys[cIdx];
-      var chip = document.createElement("span");
-      chip.className = "chip-conteo";
-      chip.textContent = cid + ": " + conteoPorCuadra[cid];
-      listaCuadrasEl.appendChild(chip);
+    AppEstado.imagenOriginalDataUrl = null;
+    AppEstado.imagenProcesadaDataUrl = null;
+    AppEstado.regionAnonimizacion = null;
+    if (editorEl) editorEl.hidden = true;
+    if (chkConf) chkConf.checked = false;
+  }
+
+  var btnCancelarEdicion = document.getElementById("btn-cancelar-edicion");
+  if (btnCancelarEdicion) btnCancelarEdicion.hidden = false;
+
+  var tituloForm = document.getElementById("titulo-form-captura");
+  if (tituloForm) tituloForm.textContent = "Editando reporte " + reporte.id;
+
+  cambiarVista("vista-captura");
+  mostrarMensajeFormulario("Editando " + reporte.id + ". Modifica los campos y pulsa Guardar reporte.", "info");
+}
+
+function guardarReporteDesdeFormulario(evento) {
+  evento.preventDefault();
+
+  var fechaHora = (document.getElementById("input-fecha-hora") || {}).value || obtenerFechaHoraLocalActual();
+  var observaciones = ((document.getElementById("input-observaciones") || {}).value || "").trim();
+  var chkAnon = document.getElementById("chk-confirmar-anonimizacion");
+
+  var lat = AppEstado.ubicacionActual ? AppEstado.ubicacionActual.lat : null;
+  var lng = AppEstado.ubicacionActual ? AppEstado.ubicacionActual.lng : null;
+  var cuadraId = AppEstado.ubicacionActual ? AppEstado.ubicacionActual.cuadraId : "";
+
+  if (!cuadraId) {
+    var selectC = document.getElementById("select-cuadra-manual");
+    if (selectC && selectC.value) cuadraId = selectC.value;
+  }
+
+  if (typeof lat !== "number" || typeof lng !== "number" || isNaN(lat) || isNaN(lng)) {
+    mostrarMensajeFormulario("Selecciona primero un punto en el mapa o usa tu ubicación.", "error");
+    return;
+  }
+
+  if (!cuadraId) {
+    mostrarMensajeFormulario("Selecciona una cuadra en el desplegable.", "error");
+    return;
+  }
+
+  if (!AppEstado.categoriaSeleccionada) {
+    mostrarMensajeFormulario("Selecciona una categoría de obstrucción.", "error");
+    return;
+  }
+
+  if (!AppEstado.actorSeleccionado) {
+    mostrarMensajeFormulario("Selecciona el tipo de vehículo o actor.", "error");
+    return;
+  }
+
+  var tieneFotoNueva = Boolean(AppEstado.imagenOriginalDataUrl);
+  if (tieneFotoNueva && (!chkAnon || !chkAnon.checked)) {
+    mostrarMensajeFormulario("Confirma que revisaste la foto y pixelaste placas o rostros visibles antes de guardar.", "error");
+    return;
+  }
+
+  var cuadraObj = obtenerCuadraPorId(cuadraId);
+  var tipoVia = cuadraObj ? cuadraObj.tipo_via : "secundaria";
+
+  var fotoFinal = "fotos/captura-local.jpg";
+  if (tieneFotoNueva) {
+    fotoFinal = AppEstado.imagenProcesadaDataUrl || AppEstado.imagenOriginalDataUrl;
+  } else if (AppEstado.editandoId) {
+    var anterior = null;
+    for (var i = 0; i < AppEstado.reportesUnificados.length; i++) {
+      if (AppEstado.reportesUnificados[i].id === AppEstado.editandoId) {
+        anterior = AppEstado.reportesUnificados[i];
+        break;
+      }
+    }
+    if (anterior && anterior.foto) {
+      fotoFinal = anterior.foto;
     }
   }
 
-  // Uso aproximado de localStorage
-  var uso = calcularUsoAlmacenamiento();
-  document.getElementById("uso-almacenamiento").textContent = "Almacenamiento: " + uso.texto;
+  var idReporte = AppEstado.editandoId || generarIdReporteLocal(AppEstado.reportesUnificados);
 
-  // Actualizar badge en navegación inferior
-  document.getElementById("badge-total-registros").textContent = String(todos.length);
+  var reporteObjeto = {
+    id: idReporte,
+    origen: "campo",
+    fecha_hora: fechaHora,
+    lat: Number(lat.toFixed(6)),
+    lng: Number(lng.toFixed(6)),
+    cuadra: cuadraId,
+    categoria: AppEstado.categoriaSeleccionada,
+    actor: AppEstado.actorSeleccionado,
+    foto: fotoFinal,
+    observaciones: observaciones
+  };
 
-  // Lista visible según filtros activos (más recientes primero)
-  var listaParaTarjetas = Array.isArray(AppEstado.reportesFiltrados)
-    ? AppEstado.reportesFiltrados
-    : todos;
-  var ordenados = listaParaTarjetas.slice().sort(function (a, b) {
+  reporteObjeto.criticidad = calcularCriticidad(reporteObjeto, AppEstado.criterios, tipoVia);
+
+  var nuevaListaLocal = [];
+  var reemplazado = false;
+  for (var j = 0; j < AppEstado.reportesLocales.length; j++) {
+    if (AppEstado.reportesLocales[j].id === idReporte) {
+      nuevaListaLocal.push(reporteObjeto);
+      reemplazado = true;
+    } else {
+      nuevaListaLocal.push(AppEstado.reportesLocales[j]);
+    }
+  }
+  if (!reemplazado) {
+    nuevaListaLocal.unshift(reporteObjeto);
+  }
+
+  var resGuardado = guardarReportesLocales(nuevaListaLocal);
+
+  if (!resGuardado.ok && resGuardado.motivo === "cuota_excedida" && tieneFotoNueva) {
+    reporteObjeto.foto = "fotos/sin-foto-por-cuota.jpg";
+    nuevaListaLocal = [];
+    var rep2 = false;
+    for (var k = 0; k < AppEstado.reportesLocales.length; k++) {
+      if (AppEstado.reportesLocales[k].id === idReporte) {
+        nuevaListaLocal.push(reporteObjeto);
+        rep2 = true;
+      } else {
+        nuevaListaLocal.push(AppEstado.reportesLocales[k]);
+      }
+    }
+    if (!rep2) nuevaListaLocal.unshift(reporteObjeto);
+    resGuardado = guardarReportesLocales(nuevaListaLocal);
+
+    if (resGuardado.ok) {
+      AppEstado.reportesLocales = nuevaListaLocal;
+      refrescarTodoElEstado();
+      limpiarFormularioCaptura();
+      mostrarMensajeFormulario(
+        "Reporte " + idReporte + " guardado sin foto porque el almacenamiento local alcanzó su límite. Exporta JSON o borra reportes antiguos.",
+        "warn"
+      );
+      return;
+    }
+  }
+
+  if (!resGuardado.ok) {
+    mostrarMensajeFormulario(
+      "No se pudo guardar en el almacenamiento local. Exporta tus datos a JSON o libera espacio.",
+      "error"
+    );
+    return;
+  }
+
+  AppEstado.reportesLocales = nuevaListaLocal;
+  refrescarTodoElEstado();
+  limpiarFormularioCaptura();
+  mostrarMensajeFormulario(
+    "Reporte " + idReporte + " guardado (" + reporteObjeto.criticidad.nivel + ", " + reporteObjeto.criticidad.puntaje + " pts).",
+    "ok"
+  );
+}
+
+function eliminarReportePorId(idReporte) {
+  if (!idReporte) return;
+
+  var filtrados = [];
+  for (var i = 0; i < AppEstado.reportesLocales.length; i++) {
+    if (AppEstado.reportesLocales[i].id !== idReporte) {
+      filtrados.push(AppEstado.reportesLocales[i]);
+    }
+  }
+
+  var res = guardarReportesLocales(filtrados);
+  if (res.ok) {
+    AppEstado.reportesLocales = filtrados;
+    if (AppEstado.editandoId === idReporte) {
+      limpiarFormularioCaptura();
+    }
+    refrescarTodoElEstado();
+    mostrarMensajeFormulario("Reporte " + idReporte + " eliminado de los registros locales.", "info");
+  }
+}
+
+function etiquetaCategoria(cat) {
+  if (cat === "doble_fila") return "Doble fila / vía prohibida";
+  if (cat === "bloqueo_rampa_cebra_paradero") return "Bloqueo rampa, cebra o paradero";
+  if (cat === "invasion_anden") return "Invasión de andén";
+  return cat || "—";
+}
+
+function etiquetaActor(actor) {
+  if (actor === "vehiculo_particular") return "Vehículo particular";
+  if (actor === "motocicleta") return "Motocicleta";
+  if (actor === "vehiculo_carga") return "Vehículo de carga";
+  if (actor === "transporte_publico") return "Transporte público";
+  return actor || "—";
+}
+
+function renderizarListaRegistros(listaFiltrada) {
+  var contenedor = document.getElementById("lista-registros");
+  var contadorEl = document.getElementById("contador-registros");
+  if (!contenedor) return;
+
+  if (contadorEl) {
+    contadorEl.textContent = listaFiltrada.length + " reporte" + (listaFiltrada.length === 1 ? "" : "s");
+  }
+
+  contenedor.innerHTML = "";
+
+  if (listaFiltrada.length === 0) {
+    contenedor.innerHTML = '<p class="texto-vacio">No hay reportes que coincidan con los filtros seleccionados.</p>';
+    return;
+  }
+
+  var ordenados = listaFiltrada.slice().sort(function (a, b) {
     if (a.fecha_hora < b.fecha_hora) return 1;
     if (a.fecha_hora > b.fecha_hora) return -1;
     return 0;
   });
 
-  var contenedorLista = document.getElementById("lista-registros");
-  contenedorLista.innerHTML = "";
+  var idsLocales = {};
+  for (var i = 0; i < AppEstado.reportesLocales.length; i++) {
+    idsLocales[AppEstado.reportesLocales[i].id] = true;
+  }
 
-  if (ordenados.length === 0) {
-    contenedorLista.innerHTML =
-      '<p class="texto-suave tarjeta-vacia">No hay reportes registrados todavía.</p>';
+  for (var j = 0; j < ordenados.length; j++) {
+    var r = ordenados[j];
+    var cuadraObj = obtenerCuadraPorId(r.cuadra);
+    var nombreCuadra = cuadraObj ? cuadraObj.nombre : r.cuadra;
+    var nivel = r.criticidad ? r.criticidad.nivel : "Bajo";
+    var puntaje = r.criticidad ? r.criticidad.puntaje : 0;
+    var franja = r.criticidad ? r.criticidad.franja : deducirFranjaHoraria(r.fecha_hora, AppEstado.criterios);
+    var claseNivel = "nivel-" + nivel.toLowerCase();
+    var esLocal = Boolean(idsLocales[r.id]);
+
+    var tieneMiniatura = r.foto && String(r.foto).indexOf("data:image/") === 0;
+    var bloqueFoto = tieneMiniatura
+      ? '<img class="miniatura-reporte" src="' + r.foto + '" alt="Evidencia ' + escaparHTML(r.id) + '">'
+      : '<span class="etiqueta-foto-ref">' + escaparHTML(r.foto || "Sin foto") + "</span>";
+
+    var botonesAccion = esLocal
+      ? '<div class="acciones-tarjeta">' +
+        '<button type="button" class="btn-secundario btn-sm btn-editar-rep" data-id="' + escaparHTML(r.id) + '">Editar</button>' +
+        '<button type="button" class="btn-peligro btn-sm btn-eliminar-rep" data-id="' + escaparHTML(r.id) + '">Eliminar</button>' +
+        "</div>"
+      : '<span class="etiqueta-precargado">Precargado</span>';
+
+    var tarjeta = document.createElement("article");
+    tarjeta.className = "tarjeta-reporte";
+    tarjeta.innerHTML =
+      '<div class="tarjeta-cabecera">' +
+        '<div>' +
+          '<strong class="id-reporte">' + escaparHTML(r.id) + "</strong> " +
+          '<span class="fecha-reporte">' + escaparHTML((r.fecha_hora || "").replace("T", " ")) + "</span>" +
+        "</div>" +
+        '<span class="badge-criticidad ' + claseNivel + '">' + escaparHTML(nivel) + " (" + puntaje + ")</span>" +
+      "</div>" +
+      '<p class="cuadra-reporte">' + escaparHTML(nombreCuadra) + "</p>" +
+      '<div class="meta-reporte">' +
+        "<span><strong>Categoría:</strong> " + escaparHTML(etiquetaCategoria(r.categoria)) + "</span>" +
+        "<span><strong>Actor:</strong> " + escaparHTML(etiquetaActor(r.actor)) + "</span>" +
+        "<span><strong>Franja:</strong> " + escaparHTML(franja === "pico" ? "Hora pico" : "Hora valle") + "</span>" +
+      "</div>" +
+      (r.observaciones ? '<p class="obs-reporte">' + escaparHTML(r.observaciones) + "</p>" : "") +
+      '<div class="pie-tarjeta">' +
+        bloqueFoto +
+        botonesAccion +
+      "</div>";
+
+    contenedor.appendChild(tarjeta);
+  }
+
+  var btnsEditar = contenedor.querySelectorAll(".btn-editar-rep");
+  for (var eIdx = 0; eIdx < btnsEditar.length; eIdx++) {
+    btnsEditar[eIdx].addEventListener("click", function () {
+      var idBuscado = this.getAttribute("data-id");
+      for (var x = 0; x < AppEstado.reportesUnificados.length; x++) {
+        if (AppEstado.reportesUnificados[x].id === idBuscado) {
+          cargarReporteEnFormulario(AppEstado.reportesUnificados[x]);
+          break;
+        }
+      }
+    });
+  }
+
+  var btnsEliminar = contenedor.querySelectorAll(".btn-eliminar-rep");
+  for (var dIdx = 0; dIdx < btnsEliminar.length; dIdx++) {
+    btnsEliminar[dIdx].addEventListener("click", function () {
+      var idElim = this.getAttribute("data-id");
+      eliminarReportePorId(idElim);
+    });
+  }
+}
+
+function renderizarResumenOperativo(listaFiltrada) {
+  var contenedorTop = document.getElementById("top5-cuadras");
+  var contenedorStats = document.getElementById("estadisticas-resumen");
+  if (!contenedorTop || !contenedorStats) return;
+
+  var resumen = generarResumenOperativo(listaFiltrada, AppEstado.vias, AppEstado.criterios);
+
+  contenedorStats.innerHTML =
+    '<div class="kpi-grid">' +
+      '<div class="kpi-card"><span class="kpi-valor">' + resumen.totalReportes + '</span><span class="kpi-label">Reportes en vista</span></div>' +
+      '<div class="kpi-card kpi-alto"><span class="kpi-valor">' + resumen.conteoNiveles.Alto + '</span><span class="kpi-label">Criticidad Alta</span></div>' +
+      '<div class="kpi-card kpi-medio"><span class="kpi-valor">' + resumen.conteoNiveles.Medio + '</span><span class="kpi-label">Criticidad Media</span></div>' +
+      '<div class="kpi-card kpi-bajo"><span class="kpi-valor">' + resumen.conteoNiveles.Bajo + '</span><span class="kpi-label">Criticidad Baja</span></div>' +
+    "</div>";
+
+  if (!resumen.top5 || resumen.top5.length === 0) {
+    contenedorTop.innerHTML = '<p class="texto-vacio">No hay datos suficientes para calcular el ranking de cuadras.</p>';
     return;
   }
 
-  for (var idx = 0; idx < ordenados.length; idx++) {
-    var item = ordenados[idx];
-    var nivel = item.criticidad ? item.criticidad.nivel : "Bajo";
-    var puntaje = item.criticidad ? item.criticidad.puntaje : 0;
-
-    // Buscar dirección completa y tipo de vía en vias.json
-    var infoCuadra = obtenerCuadraPorId(item.cuadra);
-    var direccionCompleta = infoCuadra
-      ? infoCuadra.nombre + " (" + item.cuadra + ")"
-      : item.cuadra;
-    var etiquetaTipoVia = infoCuadra
-      ? (infoCuadra.tipo_via === "arterial" ? "Vía arterial" : "Vía secundaria")
-      : "";
-
-    // Franja horaria y desglose de puntos
-    var franjaItem = item._franja || (AppEstado.criterios ? deducirFranja(item.fecha_hora, AppEstado.criterios) : "");
-    var textoFranja = franjaItem === "pico" ? "Hora pico" : (franjaItem === "valle" ? "Hora valle" : "");
-    var textoDesglose = item._desglose
-      ? " [Cat " + item._desglose.categoria + " + Vía " + item._desglose.via + " + Franja " + item._desglose.franja + "]"
-      : "";
-
-    var card = document.createElement("article");
-    card.className = "tarjeta-registro";
-
-    // Resolver ruta de foto (data URL local o ruta relativa dentro de datos/)
-    var htmlMiniatura = "";
-    var srcFoto = "";
-    if (item.foto) {
-      if (item.foto.indexOf("data:") === 0 || item.foto.indexOf("http") === 0 || item.foto.indexOf("datos/") === 0) {
-        srcFoto = item.foto;
-      } else {
-        srcFoto = "datos/" + item.foto;
-      }
-      htmlMiniatura =
-        '<div class="contenedor-foto-registro">' +
-          '<img class="miniatura-registro" src="' + srcFoto + '" alt="Evidencia ' + item.id + '" loading="lazy" />' +
-          '<span class="pie-ampliar-foto">🔍 Ver foto</span>' +
-        '</div>';
-    } else {
-      htmlMiniatura = '<div class="miniatura-vacia">Sin foto</div>';
-    }
-
-    var botonEliminarHtml = "";
-    if (item._esLocal) {
-      botonEliminarHtml =
-        '<button type="button" class="btn-eliminar-registro" data-id="' + item.id + '">Eliminar</button>';
-    } else {
-      botonEliminarHtml = '<span class="etiqueta-precargado">Precargado</span>';
-    }
-
-    var coordsTexto = (typeof item.lat === "number" && typeof item.lng === "number")
-      ? item.lat.toFixed(6) + ", " + item.lng.toFixed(6)
-      : "Sin coordenadas";
-
-    card.innerHTML =
-      '<div class="registro-cabecera">' +
-        '<div>' +
-          '<strong>' + item.id + '</strong> · <span class="texto-mono">' + item.fecha_hora.replace("T", " ") + '</span>' +
-          (textoFranja ? ' <span class="chip-franja">' + textoFranja + '</span>' : '') +
-        '</div>' +
-        '<span class="badge-nivel nivel-' + String(nivel).toLowerCase() + '">' +
-          nivel + ' (' + puntaje + ' pts)' +
-        '</span>' +
-      '</div>' +
-      '<div class="registro-cuerpo">' +
-        htmlMiniatura +
-        '<div class="registro-detalles">' +
-          '<div class="linea-detalle-reg"><strong>Dirección:</strong> ' + direccionCompleta +
-            (etiquetaTipoVia ? ' · <em>' + etiquetaTipoVia + '</em>' : '') + '</div>' +
-          '<div class="linea-detalle-reg"><strong>Categoría:</strong> ' + (ETIQUETAS_CATEGORIA[item.categoria] || item.categoria) + '</div>' +
-          '<div class="linea-detalle-reg"><strong>Vehículo / Actor:</strong> ' + (ETIQUETAS_ACTOR[item.actor] || item.actor) + '</div>' +
-          '<div class="linea-detalle-reg"><strong>Fecha y hora:</strong> ' + item.fecha_hora.replace("T", " ") +
-            (textoFranja ? ' (' + textoFranja + ')' : '') + '</div>' +
-          '<div class="linea-detalle-reg"><strong>Ubicación GPS:</strong> <span class="texto-mono">' + coordsTexto + '</span></div>' +
-          '<div class="linea-detalle-reg texto-suave"><strong>Criticidad:</strong> ' + nivel + ' · ' + puntaje + ' puntos' + textoDesglose + '</div>' +
-          (item.observaciones ? '<div class="obs-texto"><strong>Observaciones:</strong> "' + item.observaciones + '"</div>' : '') +
-        '</div>' +
-      '</div>' +
-      '<div class="registro-pie">' +
-        '<span class="texto-suave">Origen: ' + item.origen + '</span>' +
-        botonEliminarHtml +
-      '</div>';
-
-    // Permitir tocar la foto para abrirla ampliada en modal
-    if (srcFoto) {
-      (function (urlImagen, rep, dirTexto) {
-        var boxFoto = card.querySelector(".contenedor-foto-registro");
-        if (boxFoto) {
-          boxFoto.addEventListener("click", function () {
-            abrirModalFoto(
-              urlImagen,
-              rep.id + " · " + rep.fecha_hora.replace("T", " "),
-              dirTexto + " | " + (ETIQUETAS_CATEGORIA[rep.categoria] || rep.categoria) + " | " + (ETIQUETAS_ACTOR[rep.actor] || rep.actor)
-            );
-          });
-        }
-      })(srcFoto, item, direccionCompleta);
-    }
-
-    contenedorLista.appendChild(card);
+  var html = "";
+  for (var i = 0; i < resumen.top5.length; i++) {
+    var item = resumen.top5[i];
+    html +=
+      '<article class="tarjeta-top">' +
+        '<div class="top-cabecera">' +
+          '<span class="puesto-top">#' + (i + 1) + "</span>" +
+          '<div class="top-titulo-wrap">' +
+            "<strong>" + escaparHTML(item.nombre) + "</strong>" +
+            '<span class="top-sub">' + item.totalReportes + " reportes · Puntaje acumulado: " + item.puntajeAcumulado + " · Promedio: " + item.promedioCriticidad + "</span>" +
+          "</div>" +
+        "</div>" +
+        '<p class="recomendacion-top"><strong>Acción sugerida (' + escaparHTML(item.reglaAplicada) + "):</strong> " + escaparHTML(item.recomendacion) + "</p>" +
+      "</article>";
   }
+  contenedorTop.innerHTML = html;
+}
 
-  // Vincular botones "Eliminar" de los reportes locales
-  var botonesEliminar = contenedorLista.querySelectorAll(".btn-eliminar-registro");
-  for (var b = 0; b < botonesEliminar.length; b++) {
-    botonesEliminar[b].addEventListener("click", function () {
-      var idBorrar = this.getAttribute("data-id");
-      if (confirm("¿Seguro que deseas eliminar el reporte local " + idBorrar + "?")) {
-        eliminarReporteLocal(idBorrar);
-        sincronizarListaUnicaReportes();
+function configurarControlesModoMapa() {
+  var botonesModo = document.querySelectorAll(".btn-modo-mapa");
+  for (var i = 0; i < botonesModo.length; i++) {
+    botonesModo[i].addEventListener("click", function () {
+      var modo = this.getAttribute("data-modo") || "ambos";
+      cambiarModoMapaRegistros(modo);
+
+      for (var j = 0; j < botonesModo.length; j++) {
+        var activo = botonesModo[j].getAttribute("data-modo") === modo;
+        botonesModo[j].classList.toggle("activo", activo);
+        botonesModo[j].setAttribute("aria-pressed", activo ? "true" : "false");
       }
     });
   }
 }
 
-/**
- * Abre y cierra el modal de Ajustes (iniciales del integrante y origen por defecto).
- */
+function configurarFiltros() {
+  var inputTexto = document.getElementById("filtro-texto");
+  var selCuadra = document.getElementById("filtro-cuadra");
+  var selCat = document.getElementById("filtro-categoria");
+  var selActor = document.getElementById("filtro-actor");
+  var selNivel = document.getElementById("filtro-nivel");
+  var selFranja = document.getElementById("filtro-franja");
+  var btnLimpiar = document.getElementById("btn-limpiar-filtros");
 
-function abrirModalFoto(srcImagen, titulo, descripcion) {
-  var modal = document.getElementById("modal-foto");
-  if (!modal) return;
-  document.getElementById("titulo-modal-foto").textContent = titulo || "Evidencia fotográfica";
-  document.getElementById("img-modal-foto").src = srcImagen;
-  document.getElementById("detalle-modal-foto").textContent = descripcion || "";
-  modal.hidden = false;
-}
-
-function cerrarModalFoto() {
-  var modal = document.getElementById("modal-foto");
-  if (!modal) return;
-  modal.hidden = true;
-  document.getElementById("img-modal-foto").src = "";
-}
-
-function abrirModalAjustes() {
-  var modal = document.getElementById("modal-ajustes");
-  document.getElementById("input-iniciales").value = AppEstado.config.iniciales || "";
-  document.getElementById("select-origen").value = AppEstado.config.origen || "campo";
-  document.getElementById("error-ajustes").hidden = true;
-  modal.hidden = false;
-}
-
-function cerrarModalAjustes() {
-  document.getElementById("modal-ajustes").hidden = true;
-}
-
-/**
- * Cambia entre las vistas "captura" y "registros" sin recargar la página.
- */
-function cambiarVista(nombreVista) {
-  var vistaCaptura = document.getElementById("vista-captura");
-  var vistaRegistros = document.getElementById("vista-registros");
-  var tabCaptura = document.getElementById("tab-captura");
-  var tabRegistros = document.getElementById("tab-registros");
-
-  if (nombreVista === "registros") {
-    vistaCaptura.hidden = true;
-    vistaRegistros.hidden = false;
-    tabCaptura.classList.remove("activo");
-    tabRegistros.classList.add("activo");
-    redimensionarMapaRegistros();
-  } else {
-    vistaRegistros.hidden = true;
-    vistaCaptura.hidden = false;
-    tabRegistros.classList.remove("activo");
-    tabCaptura.classList.add("activo");
-    redimensionarMapaCaptura();
-  }
-}
-
-/**
- * Punto de entrada al cargar el DOM.
- */
-document.addEventListener("DOMContentLoaded", function () {
-  // 1. Cargar configuración local (iniciales y origen)
-  AppEstado.config = cargarConfiguracion();
-  actualizarIndicadorUsuario();
-
-  // 2. Inicializar fecha y hora local del dispositivo
-  var ahora = obtenerFechaHoraLocal();
-  var inputFecha = document.getElementById("input-fecha-hora");
-  inputFecha.value = ahora;
-  document.getElementById("texto-fecha-actual").textContent = ahora.replace("T", " ");
-
-  inputFecha.addEventListener("change", function () {
-    AppEstado.fechaHoraManual = true;
-    document.getElementById("texto-fecha-actual").textContent = inputFecha.value.replace("T", " ");
-  });
-
-  // 3. Configurar botones de selección única de Categoría y Actor
-  var botonesCategoria = document.querySelectorAll("#grupo-categoria .btn-opcion");
-  for (var i = 0; i < botonesCategoria.length; i++) {
-    botonesCategoria[i].addEventListener("click", function () {
-      for (var k = 0; k < botonesCategoria.length; k++) {
-        botonesCategoria[k].classList.remove("activo");
-        botonesCategoria[k].setAttribute("aria-pressed", "false");
-      }
-      this.classList.add("activo");
-      this.setAttribute("aria-pressed", "true");
-      AppEstado.categoriaSeleccionada = this.getAttribute("data-valor");
-      limpiarErrorCampo("error-categoria");
-    });
-  }
-
-  var botonesActor = document.querySelectorAll("#grupo-actor .btn-opcion");
-  for (var j = 0; j < botonesActor.length; j++) {
-    botonesActor[j].addEventListener("click", function () {
-      for (var k = 0; k < botonesActor.length; k++) {
-        botonesActor[k].classList.remove("activo");
-        botonesActor[k].setAttribute("aria-pressed", "false");
-      }
-      this.classList.add("activo");
-      this.setAttribute("aria-pressed", "true");
-      AppEstado.actorSeleccionado = this.getAttribute("data-valor");
-      limpiarErrorCampo("error-actor");
-    });
-  }
-
-  // 4. Configurar eventos de Foto y Pixelado
-  document.getElementById("btn-tomar-foto").addEventListener("click", function () {
-    document.getElementById("input-foto-camara").click();
-  });
-  document.getElementById("btn-galeria-foto").addEventListener("click", function () {
-    document.getElementById("input-foto-galeria").click();
-  });
-  document.getElementById("input-foto-camara").addEventListener("change", function (e) {
-    if (e.target.files && e.target.files[0]) procesarArchivoFoto(e.target.files[0]);
-  });
-  document.getElementById("input-foto-galeria").addEventListener("change", function (e) {
-    if (e.target.files && e.target.files[0]) procesarArchivoFoto(e.target.files[0]);
-  });
-
-  configurarHerramientaPixelado();
-
-  document.getElementById("btn-deshacer-pixel").addEventListener("click", function () {
-    if (historialCanvas.length > 1) {
-      historialCanvas.pop();
-      var canvas = document.getElementById("canvas-foto");
-      var anterior = historialCanvas[historialCanvas.length - 1];
-      canvas.getContext("2d").putImageData(anterior, 0, 0);
-    }
-  });
-
-  document.getElementById("btn-quitar-foto").addEventListener("click", quitarFotoFormulario);
-
-  // 5. Contador de caracteres en Observaciones
-  var inputObs = document.getElementById("input-observaciones");
-  inputObs.addEventListener("input", function () {
-    document.getElementById("contador-obs").textContent = inputObs.value.length + " / 140";
-  });
-
-  // 6. Selector de cuadra: actualiza tanto la vía como la ubicación en el mapa
-  document.getElementById("select-cuadra").addEventListener("change", function () {
-    seleccionarCuadraManual(this.value);
-  });
-
-  configurarBuscadorDireccion();
-
-  // 7. Botones principales del formulario y navegación
-  document.getElementById("btn-usar-gps").addEventListener("click", function () {
-    AppEstado.seleccionManualCuadra = false;
-    solicitarGpsDispositivo(false);
-  });
-  document.getElementById("btn-guardar").addEventListener("click", guardarNuevoReporte);
-  document.getElementById("btn-registrar-otro").addEventListener("click", prepararSiguienteRegistro);
-
-  document.getElementById("tab-captura").addEventListener("click", function () {
-    cambiarVista("captura");
-  });
-  document.getElementById("tab-registros").addEventListener("click", function () {
-    cambiarVista("registros");
-  });
-
-  // Selector de capas del mapa de registros (Mapa de calor / Puntos / Ambos)
-  var botonesCapaMapa = document.querySelectorAll("#grupo-capas-mapa .btn-capa-mapa");
-  for (var cm = 0; cm < botonesCapaMapa.length; cm++) {
-    botonesCapaMapa[cm].addEventListener("click", function () {
-      for (var k = 0; k < botonesCapaMapa.length; k++) {
-        botonesCapaMapa[k].classList.remove("activo");
-        botonesCapaMapa[k].setAttribute("aria-pressed", "false");
-      }
-      this.classList.add("activo");
-      this.setAttribute("aria-pressed", "true");
-      cambiarModoMapaRegistros(this.getAttribute("data-modo"));
-    });
-  }
-
-  // Filtros dinámicos (RF-04) e impresión de resumen operativo (RF-05)
-  var idsFiltros = [
-    { id: "filtro-cuadra", clave: "cuadra" },
-    { id: "filtro-franja", clave: "franja" },
-    { id: "filtro-categoria", clave: "categoria" },
-    { id: "filtro-actor", clave: "actor" }
-  ];
-  for (var fIdx = 0; fIdx < idsFiltros.length; fIdx++) {
-    (function (cfg) {
-      var el = document.getElementById(cfg.id);
-      if (el) {
-        el.addEventListener("change", function () {
-          AppEstado.filtrosActivos[cfg.clave] = this.value;
-          aplicarFiltrosYActualizarRegistros();
-        });
-      }
-    })(idsFiltros[fIdx]);
-  }
-
-  var btnLimpiarFiltros = document.getElementById("btn-limpiar-filtros");
-  if (btnLimpiarFiltros) {
-    btnLimpiarFiltros.addEventListener("click", function () {
-      AppEstado.filtrosActivos = {
-        cuadra: "todas",
-        franja: "todas",
-        categoria: "todas",
-        actor: "todas"
-      };
-      for (var k = 0; k < idsFiltros.length; k++) {
-        var sel = document.getElementById(idsFiltros[k].id);
-        if (sel) sel.value = "todas";
-      }
-      aplicarFiltrosYActualizarRegistros();
-    });
-  }
-
-  var btnImprimirResumen = document.getElementById("btn-imprimir-resumen");
-  if (btnImprimirResumen) {
-    btnImprimirResumen.addEventListener("click", function () {
-      window.print();
-    });
-  }
-
-  // Modal de foto ampliada
-  var btnCerrarModalFoto = document.getElementById("btn-cerrar-modal-foto");
-  if (btnCerrarModalFoto) {
-    btnCerrarModalFoto.addEventListener("click", cerrarModalFoto);
-  }
-  var modalFotoEl = document.getElementById("modal-foto");
-  if (modalFotoEl) {
-    modalFotoEl.addEventListener("click", function (ev) {
-      if (ev.target === modalFotoEl) cerrarModalFoto();
-    });
-  }
-
-  // 8. Ajustes (⚙️)
-  document.getElementById("btn-abrir-ajustes").addEventListener("click", abrirModalAjustes);
-  document.getElementById("btn-cerrar-ajustes").addEventListener("click", cerrarModalAjustes);
-  document.getElementById("btn-guardar-ajustes").addEventListener("click", function () {
-    var res = guardarConfiguracion({
-      iniciales: document.getElementById("input-iniciales").value,
-      origen: document.getElementById("select-origen").value
-    });
-    if (!res.ok) {
-      var errEl = document.getElementById("error-ajustes");
-      errEl.textContent = res.mensaje;
-      errEl.hidden = false;
-      return;
-    }
-    AppEstado.config = res.config;
-    actualizarIndicadorUsuario();
-    cerrarModalAjustes();
-  });
-
-  // 9. Exportar e Importar en Vista Registros
-  document.getElementById("btn-exportar-con-fotos").addEventListener("click", function () {
-    exportarReportesJSON(AppEstado.reportesLocales, AppEstado.config.iniciales, true);
-  });
-  document.getElementById("btn-exportar-sin-fotos").addEventListener("click", function () {
-    exportarReportesJSON(AppEstado.reportesLocales, AppEstado.config.iniciales, false);
-  });
-  document.getElementById("btn-exportar-zip").addEventListener("click", function () {
-    exportarPaqueteZIP(AppEstado.reportesLocales, AppEstado.config.iniciales).catch(function (err) {
-      alert(err.message);
-    });
-  });
-
-  document.getElementById("btn-importar-json").addEventListener("click", function () {
-    document.getElementById("input-importar-json").click();
-  });
-
-  document.getElementById("input-importar-json").addEventListener("change", function (e) {
-    var archivo = e.target.files && e.target.files[0];
-    if (!archivo) return;
-
-    var lector = new FileReader();
-    lector.onload = function (ev) {
-      var res = importarReportesDesdeTexto(
-        ev.target.result,
-        AppEstado.reportesPrecargados,
-        AppEstado.criterios,
-        AppEstado.vias
-      );
-
-      var cajaResultado = document.getElementById("resultado-importacion");
-      cajaResultado.hidden = false;
-
-      if (!res.ok) {
-        cajaResultado.className = "aviso-alerta";
-        cajaResultado.textContent = res.mensaje;
-        return;
-      }
-
-      cajaResultado.className = "aviso-info";
-      var html =
-        "<strong>" + res.nuevos + " nuevos · " + res.repetidos + " repetidos · " + res.invalidos + " inválidos</strong>";
-
-      if (res.conflictos > 0) {
-        html += "<br><strong>Conflictos (" + res.conflictos + "):</strong><ul>";
-        for (var c = 0; c < res.detallesConflictos.length; c++) {
-          html += "<li>" + res.detallesConflictos[c].id + ": " + res.detallesConflictos[c].motivo + "</li>";
-        }
-        html += "</ul>";
-      }
-
-      if (res.detallesInvalidos.length > 0) {
-        html += "<br><strong>Motivos de inválidos:</strong><ul>";
-        for (var inv = 0; inv < res.detallesInvalidos.length; inv++) {
-          html += "<li>" + res.detallesInvalidos[inv].id + ": " + res.detallesInvalidos[inv].motivo + "</li>";
-        }
-        html += "</ul>";
-      }
-
-      cajaResultado.innerHTML = html;
-      sincronizarListaUnicaReportes();
-      e.target.value = "";
+  function alCambiarFiltro() {
+    AppEstado.filtros = {
+      texto: inputTexto ? inputTexto.value : "",
+      cuadra: selCuadra ? selCuadra.value : "",
+      categoria: selCat ? selCat.value : "",
+      actor: selActor ? selActor.value : "",
+      nivel: selNivel ? selNivel.value : "",
+      franja: selFranja ? selFranja.value : ""
     };
-    lector.readAsText(archivo, "utf-8");
-  });
-
-  // 10. Cargar datos JSON con fetch y arrancar mapas
-  cargarDatosIniciales()
-    .then(function (datos) {
-      AppEstado.vias = datos[0];
-      AppEstado.criterios = datos[1];
-      AppEstado.reportesPrecargados = Array.isArray(datos[2]) ? datos[2] : [];
-
-      document.getElementById("nombre-zona-header").textContent = AppEstado.vias.zona.nombre;
-
-      // Poblar selector manual de cuadras y selector de filtro de cuadra
-      var selectCuadra = document.getElementById("select-cuadra");
-      var filtroCuadra = document.getElementById("filtro-cuadra");
-      selectCuadra.innerHTML = '<option value="">-- Selecciona una cuadra --</option>';
-      if (filtroCuadra) {
-        filtroCuadra.innerHTML = '<option value="todas">Todas las cuadras</option>';
-      }
-      for (var i = 0; i < AppEstado.vias.cuadras.length; i++) {
-        var c = AppEstado.vias.cuadras[i];
-        var opt = document.createElement("option");
-        opt.value = c.id;
-        opt.textContent = c.nombre + " (" + c.tipo_via + ")";
-        selectCuadra.appendChild(opt);
-
-        if (filtroCuadra) {
-          var optF = document.createElement("option");
-          optF.value = c.id;
-          optF.textContent = c.nombre + " (" + c.id + ")";
-          filtroCuadra.appendChild(optF);
-        }
-      }
-
-      // Iniciar mapas con tolerancia a fallas (sin internet)
-      var mapaCapOk = iniciarMapaCaptura("mapa-captura", AppEstado.vias, function (lat, lng) {
-        fijarUbicacion(lat, lng, null);
-      });
-      var mapaRegOk = iniciarMapaRegistros("mapa-registros", AppEstado.vias);
-
-      if (!mapaCapOk || !mapaRegOk) {
-        document.getElementById("aviso-sin-mapa").hidden = false;
-      }
-
-      // Recalcular criticidad de todos los reportes y pintar UI
-      sincronizarListaUnicaReportes();
-
-      // Si es la primera vez y no tiene iniciales, abrir modal de Ajustes
-      if (!AppEstado.config.iniciales) {
-        abrirModalAjustes();
-      }
-
-      // Intentar ubicar por GPS una vez al abrir la vista
-      solicitarGpsDispositivo(true);
-    })
-    .catch(function (err) {
-      console.error("Error cargando JSON:", err);
-      var avisoFetch = document.getElementById("aviso-fetch");
-      avisoFetch.hidden = false;
-    });
-});
-
-function actualizarIndicadorUsuario() {
-  var badge = document.getElementById("indicador-iniciales");
-  if (AppEstado.config.iniciales) {
-    badge.textContent = AppEstado.config.iniciales + " · " + AppEstado.config.origen;
-  } else {
-    badge.textContent = "Configurar iniciales";
-  }
-}
-
-/**
- * Configura el buscador de direcciones estilo mapa sobre la vista de Captura.
- */
-function configurarBuscadorDireccion() {
-  var inputBuscar = document.getElementById("input-buscar-direccion");
-  var btnLimpiar = document.getElementById("btn-limpiar-busqueda");
-  var listaSug = document.getElementById("lista-sugerencias-direccion");
-  var estadoEl = document.getElementById("estado-busqueda-direccion");
-
-  if (!inputBuscar || !listaSug) return;
-
-  var temporizador = null;
-  var tokenBusqueda = 0;
-
-  function ocultarSugerencias() {
-    listaSug.innerHTML = "";
-    listaSug.hidden = true;
+    aplicarFiltrosYActualizarVistas();
   }
 
-  function mostrarEstado(texto, esError) {
-    if (!estadoEl) return;
-    if (!texto) {
-      estadoEl.textContent = "";
-      estadoEl.hidden = true;
-      return;
-    }
-    estadoEl.textContent = texto;
-    estadoEl.className = esError ? "aviso-alerta" : "texto-suave";
-    estadoEl.hidden = false;
-  }
-
-  function elegirSugerencia(sug) {
-    AppEstado.seleccionManualCuadra = false;
-    inputBuscar.value = sug.titulo;
-    if (btnLimpiar) btnLimpiar.hidden = false;
-    ocultarSugerencias();
-    mostrarEstado("", false);
-
-    fijarUbicacion(sug.lat, sug.lng, null);
-
-    if (leafletDisponible() && mapaCaptura) {
-      mapaCaptura.setView([sug.lat, sug.lng], 18);
-    }
-  }
-
-  inputBuscar.addEventListener("input", function () {
-    var valor = inputBuscar.value.trim();
-    if (btnLimpiar) btnLimpiar.hidden = valor.length === 0;
-
-    if (temporizador) clearTimeout(temporizador);
-
-    if (valor.length < 2) {
-      ocultarSugerencias();
-      mostrarEstado("", false);
-      return;
-    }
-
-    var tokenActual = ++tokenBusqueda;
-    temporizador = setTimeout(function () {
-      mostrarEstado("Buscando ubicación...", false);
-      buscarDireccionesMapa(valor, AppEstado.vias).then(function (sugerencias) {
-        if (tokenActual !== tokenBusqueda) return;
-
-        listaSug.innerHTML = "";
-        if (!sugerencias || sugerencias.length === 0) {
-          listaSug.hidden = true;
-          mostrarEstado("No se encontraron coincidencias. Toca el mapa para marcar el punto.", true);
-          return;
-        }
-
-        mostrarEstado("", false);
-        for (var i = 0; i < sugerencias.length; i++) {
-          (function (sug) {
-            var li = document.createElement("li");
-            li.className = "item-sugerencia";
-            li.setAttribute("role", "option");
-            li.innerHTML =
-              '<span class="sugerencia-titulo">' + sug.titulo + '</span>' +
-              '<span class="sugerencia-sub">' + sug.subtitulo + '</span>';
-            li.addEventListener("click", function () {
-              elegirSugerencia(sug);
-            });
-            listaSug.appendChild(li);
-          })(sugerencias[i]);
-        }
-        listaSug.hidden = false;
-      });
-    }, 300);
-  });
+  if (inputTexto) inputTexto.addEventListener("input", alCambiarFiltro);
+  if (selCuadra) selCuadra.addEventListener("change", alCambiarFiltro);
+  if (selCat) selCat.addEventListener("change", alCambiarFiltro);
+  if (selActor) selActor.addEventListener("change", alCambiarFiltro);
+  if (selNivel) selNivel.addEventListener("change", alCambiarFiltro);
+  if (selFranja) selFranja.addEventListener("change", alCambiarFiltro);
 
   if (btnLimpiar) {
     btnLimpiar.addEventListener("click", function () {
-      inputBuscar.value = "";
-      btnLimpiar.hidden = true;
-      ocultarSugerencias();
-      mostrarEstado("", false);
-      inputBuscar.focus();
+      if (inputTexto) inputTexto.value = "";
+      if (selCuadra) selCuadra.value = "";
+      if (selCat) selCat.value = "";
+      if (selActor) selActor.value = "";
+      if (selNivel) selNivel.value = "";
+      if (selFranja) selFranja.value = "";
+      AppEstado.filtros = {
+        texto: "",
+        cuadra: "",
+        categoria: "",
+        actor: "",
+        nivel: "",
+        franja: ""
+      };
+      aplicarFiltrosYActualizarVistas();
+    });
+  }
+}
+
+function aplicarFiltrosYActualizarVistas() {
+  var filtrados = filtrarReportes(AppEstado.reportesUnificados, AppEstado.filtros, AppEstado.criterios);
+  renderizarListaRegistros(filtrados);
+  actualizarMarcadoresRegistros(filtrados, AppEstado.vias);
+  renderizarResumenOperativo(filtrados);
+}
+
+function refrescarTodoElEstado() {
+  sincronizarListaUnicaReportes();
+  actualizarPuntosEnMapaCaptura(AppEstado.reportesUnificados);
+  aplicarFiltrosYActualizarVistas();
+}
+
+function configurarExportarImportar() {
+  var btnExportar = document.getElementById("btn-exportar-json");
+  var inputImportar = document.getElementById("input-importar-json");
+  var msgEl = document.getElementById("mensaje-transferencia");
+
+  if (btnExportar) {
+    btnExportar.addEventListener("click", function () {
+      exportarReportesAJSON(AppEstado.reportesLocales);
+      if (msgEl) {
+        msgEl.textContent = "Archivo JSON exportado con " + AppEstado.reportesLocales.length + " reporte(s) local(es).";
+        msgEl.hidden = false;
+      }
     });
   }
 
-  document.addEventListener("click", function (ev) {
-    if (!listaSug.contains(ev.target) && ev.target !== inputBuscar) {
-      ocultarSugerencias();
-    }
-  });
+  if (inputImportar) {
+    inputImportar.addEventListener("change", function () {
+      var archivo = inputImportar.files && inputImportar.files[0];
+      if (!archivo) return;
+
+      importarReportesDesdeArchivo(archivo, AppEstado.reportesLocales, AppEstado.vias, function (res) {
+        inputImportar.value = "";
+        if (!msgEl) return;
+
+        if (!res.ok) {
+          msgEl.textContent = res.mensaje || "No se pudo importar el archivo.";
+          msgEl.hidden = false;
+          return;
+        }
+
+        AppEstado.reportesLocales = res.reportes;
+        refrescarTodoElEstado();
+        msgEl.textContent =
+          "Importados " + res.importados + " reporte(s)" +
+          (res.omitidos > 0 ? " (" + res.omitidos + " omitidos por duplicado o formato)" : "") + ".";
+        msgEl.hidden = false;
+      });
+    });
+  }
 }
+
+function cambiarVista(idVistaActiva) {
+  var vistas = document.querySelectorAll(".vista-app");
+  for (var i = 0; i < vistas.length; i++) {
+    var esActiva = vistas[i].id === idVistaActiva;
+    vistas[i].hidden = !esActiva;
+    vistas[i].classList.toggle("activa", esActiva);
+  }
+
+  var pestanas = document.querySelectorAll(".btn-pestana");
+  for (var j = 0; j < pestanas.length; j++) {
+    var target = pestanas[j].getAttribute("data-vista");
+    var activa = target === idVistaActiva;
+    pestanas[j].classList.toggle("activa", activa);
+    pestanas[j].setAttribute("aria-selected", activa ? "true" : "false");
+  }
+
+  if (idVistaActiva === "vista-captura") {
+    redimensionarMapaCaptura();
+  } else if (idVistaActiva === "vista-registros") {
+    redimensionarMapaRegistros();
+  } else if (idVistaActiva === "vista-resumen") {
+    var filtrados = filtrarReportes(AppEstado.reportesUnificados, AppEstado.filtros, AppEstado.criterios);
+    renderizarResumenOperativo(filtrados);
+  }
+}
+
+function configurarPestanas() {
+  var pestanas = document.querySelectorAll(".btn-pestana");
+  for (var i = 0; i < pestanas.length; i++) {
+    pestanas[i].addEventListener("click", function () {
+      var vistaId = this.getAttribute("data-vista");
+      if (vistaId) {
+        cambiarVista(vistaId);
+      }
+    });
+  }
+}
+
+function inicializarApp() {
+  var fechaInput = document.getElementById("input-fecha-hora");
+  if (fechaInput && !fechaInput.value) {
+    fechaInput.value = obtenerFechaHoraLocalActual();
+  }
+
+  configurarPestanas();
+  configurarBotonesSeleccion();
+  configurarAnonimizacionCanvas();
+  configurarControlesModoMapa();
+  configurarFiltros();
+  configurarExportarImportar();
+  configurarBuscadorDireccion();
+
+  var btnUbicacion = document.getElementById("btn-ubicacion");
+  if (btnUbicacion) {
+    btnUbicacion.addEventListener("click", function () {
+      AppEstado.seleccionManualCuadra = false;
+      solicitarGeolocalizacion(false);
+    });
+  }
+
+  var selectManual = document.getElementById("select-cuadra-manual");
+  if (selectManual) {
+    selectManual.addEventListener("change", function () {
+      seleccionarCuadraManual(this.value);
+    });
+  }
+
+  var formCaptura = document.getElementById("form-captura");
+  if (formCaptura) {
+    formCaptura.addEventListener("submit", guardarReporteDesdeFormulario);
+  }
+
+  var btnLimpiarForm = document.getElementById("btn-limpiar-formulario");
+  if (btnLimpiarForm) {
+    btnLimpiarForm.addEventListener("click", function () {
+      limpiarFormularioCaptura();
+      mostrarMensajeFormulario("Formulario limpio.", "info");
+    });
+  }
+
+  var btnCancelarEdicion = document.getElementById("btn-cancelar-edicion");
+  if (btnCancelarEdicion) {
+    btnCancelarEdicion.addEventListener("click", function () {
+      limpiarFormularioCaptura();
+      mostrarMensajeFormulario("Edición cancelada.", "info");
+    });
+  }
+
+  AppEstado.reportesLocales = cargarReportesLocales();
+
+  Promise.all([
+    cargarJSON("datos/vias.json"),
+    cargarJSON("datos/criterios.json"),
+    cargarJSON("datos/reportes.json").catch(function () { return []; })
+  ])
+    .then(function (resultados) {
+      AppEstado.vias = resultados[0];
+      AppEstado.criterios = resultados[1];
+      AppEstado.reportesPrecargados = Array.isArray(resultados[2]) ? resultados[2] : [];
+
+      poblarSelectoresCuadras(AppEstado.vias);
+
+      iniciarMapaCaptura("mapa-captura", AppEstado.vias, function (lat, lng) {
+        AppEstado.seleccionManualCuadra = false;
+        fijarUbicacion(lat, lng, { conservarManual: false });
+      });
+
+      iniciarMapaRegistros("mapa-registros", AppEstado.vias);
+
+      var centro = (AppEstado.vias && AppEstado.vias.zona && AppEstado.vias.zona.centro)
+        ? AppEstado.vias.zona.centro
+        : [11.2335, -74.1972];
+      fijarUbicacion(centro[0], centro[1], { conservarManual: false });
+
+      refrescarTodoElEstado();
+      solicitarGeolocalizacion(true);
+    })
+    .catch(function (err) {
+      mostrarMensajeFormulario("Error cargando datos iniciales: " + err.message, "error");
+    });
+}
+
+document.addEventListener("DOMContentLoaded", inicializarApp);
