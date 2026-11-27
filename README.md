@@ -8,9 +8,9 @@ Aplicación web estática desarrollada con HTML, CSS, JavaScript y Leaflet para 
 
 - `datos/reportes.json` contiene actualmente **0 reportes precargados**.
 - `datos/evidencias_nuevas.json` contiene **30 fotografías** conservadas para revisión.
-- Las 30 fotografías están pendientes de georreferenciación y clasificación verificadas.
+- Las 30 fotografías se muestran con ubicación sectorial aproximada: 5 sobre Calle 29H y 25 en Carrera 21C, Calle 29J y Carrera 21D alrededor de Villa Marbella. No son coordenadas GPS individuales.
 - Las coordenadas y puntajes sintéticos anteriores fueron retirados del archivo de evidencias.
-- Las fotografías se consultan en Evidencias. No se dibujan como puntos ni se utilizan para calcular calor, porcentajes, criticidad o ranking.
+- Las fotografías se consultan en Evidencias y sus ubicaciones sectoriales aproximadas se muestran como 30 puntos y como mapa de calor. El calor resume la distribución aproximada de campo; no representa GPS exacto por vehículo ni puntajes de criticidad.
 - Los seis registros históricos del Mercado Público no forman parte del conjunto activo.
 
 **Importante:** la configuración de 10 cuadras en `datos/vias.json` utiliza segmentos de referencia aproximados. El límite de 30 m comprueba distancia a esos segmentos, no demuestra que el punto esté sobre la calzada. Antes de usar los registros como evidencia espacial del estudio, deben verificarse las geometrías viales y los puntos con cartografía y trabajo de campo.

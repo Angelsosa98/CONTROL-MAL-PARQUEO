@@ -235,7 +235,7 @@ function iniciarMapaRegistros(idContenedor, vias) {
     div.innerHTML =
       "<strong>Leyenda del mapa</strong>" +
       '<div><span class="linea-leyenda-recorrido"></span> Recorrido de campo</div>' +
-      '<div><span class="punto-leyenda" style="background:#dc2626"></span> 30 evidencias (aprox.)</div>' +
+      '<div><span class="punto-leyenda" style="background:#7c3aed"></span> 30 evidencias (aprox.)</div>' +
       '<div><span class="punto-leyenda" style="background:#dc2626"></span> Reportes altos</div>' +
       '<div><span class="punto-leyenda" style="background:#d97706"></span> Reportes medios</div>' +
       '<div><span class="punto-leyenda" style="background:#16a34a"></span> Reportes bajos</div>';
@@ -267,9 +267,9 @@ function dibujarRecorridoCampo(vias) {
 
   // Línea verde: referencia del recorrido. Los puntos rojos son las 30 evidencias.
   L.polyline(puntos, {
-    color: "#16a34a",
-    weight: 5,
-    opacity: 0.95,
+    color: "#15803d",
+    weight: 3,
+    opacity: 0.7,
     lineCap: "round",
     lineJoin: "round"
   }).bindPopup(
@@ -341,7 +341,7 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
 
     var marcador = L.circleMarker([lat, lng], {
       radius: 6,
-      fillColor: "#dc2626",
+      fillColor: "#7c3aed",
       color: "#ffffff",
       weight: 1.5,
       opacity: 1,
@@ -362,7 +362,7 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
       maxZoom: 19,
       max: 1,
       minOpacity: 0.4,
-      gradient: { 0.25: "#16a34a", 0.55: "#f59e0b", 0.85: "#ef4444", 1: "#991b1b" }
+      gradient: { 0.25: "#a78bfa", 0.55: "#f59e0b", 0.85: "#ef4444", 1: "#991b1b" }
     });
   }
   aplicarModoCapasRegistros();

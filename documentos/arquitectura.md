@@ -21,7 +21,7 @@ Aplicación cliente estática modular, sin backend, desplegable en GitHub Pages.
 ## 3. Estado de los datos al actualizar esta documentación
 
 - `datos/reportes.json`: 0 reportes precargados.
-- `datos/evidencias_nuevas.json`: 30 fotografías pendientes de georreferenciación y clasificación verificadas.
+- `datos/evidencias_nuevas.json`: 30 evidencias con ubicaciones sectoriales aproximadas (5 Calle 29H y 25 en Carrera 21C, Calle 29J y Carrera 21D).
 - `datos/vias.json`: 10 cuadras configuradas mediante segmentos de referencia aproximados.
 - `datos/criterios.json`: pesos y franjas horarias del motor de criticidad.
 

@@ -670,7 +670,7 @@ function renderizarAvance() {
   var totalEvidencias = AppEstado.evidenciasFotograficas.length;
   porId("contador-meta-30").textContent = totalEvidencias + " de 30";
   porId("desglose-franjas").textContent = totalEvidencias + " evidencias de vehículos mal parqueados.";
-  porId("desglose-cuadras").textContent = "Distribución indicada en campo: 5 puntos en la calle de la Universidad y 25 en el Parque Villa Marbella y sus alrededores. Los puntos del mapa son aproximados.";
+  porId("desglose-cuadras").textContent = "Distribución aproximada: 5 puntos sobre Calle 29H y 25 en Carrera 21C, Calle 29J y Carrera 21D, alrededor del Parque Villa Marbella.";
   porId("uso-almacenamiento").textContent = "Reportes: " + AppEstado.reportesUnificados.length;
   porId("badge-total-registros").textContent = totalEvidencias;
   var hayReportes = AppEstado.reportesUnificados.length > 0;
@@ -1059,7 +1059,7 @@ function inicializarApp() {
   }).catch(function (err) {
     console.error("Error al iniciar la aplicación:", err);
     porId("aviso-fetch").hidden = false;
-    porId("aviso-fetch").textContent = "No se pudo iniciar la aplicación. Comprueba la conexión y recarga la página.";
+    porId("aviso-fetch").textContent = "No se pudo iniciar la aplicación: " + (err && err.message ? err.message : "error desconocido") + ". Comprueba la conexión y recarga la página.";
     porId("nombre-zona-header").textContent = "Error de carga de datos";
   });
 }

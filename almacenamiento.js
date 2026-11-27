@@ -362,7 +362,7 @@ function validarReporteImportado(item, criterios, vias) {
   var cuadraEncontrada = null;
   if (vias && Array.isArray(vias.cuadras)) {
     for (var i = 0; i < vias.cuadras.length; i++) {
-      if (vias.cuadras[i].id === item.cuadra) {
+      if (vias.cuadras[i].id === item.cuadra && vias.cuadras[i].activa !== false) {
         cuadraEncontrada = vias.cuadras[i];
         break;
       }

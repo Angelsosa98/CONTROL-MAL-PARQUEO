@@ -7,12 +7,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.225439,
-      "lng": -74.189088,
+      "lat": 11.226214,
+      "lng": -74.189303,
       "sector": "Corredor Calle 29H — Universidad del Magdalena",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Calle 29H — corredor de la Universidad del Magdalena",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -23,12 +24,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.225152,
-      "lng": -74.189521,
+      "lat": 11.225936,
+      "lng": -74.189765,
       "sector": "Corredor Calle 29H — Universidad del Magdalena",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Calle 29H — corredor de la Universidad del Magdalena",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -39,12 +41,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.224836,
-      "lng": -74.189932,
+      "lat": 11.225622,
+      "lng": -74.190201,
       "sector": "Corredor Calle 29H — Universidad del Magdalena",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Calle 29H — corredor de la Universidad del Magdalena",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -55,12 +58,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.2245,
-      "lng": -74.190327,
+      "lat": 11.225294,
+      "lng": -74.190628,
       "sector": "Corredor Calle 29H — Universidad del Magdalena",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Calle 29H — corredor de la Universidad del Magdalena",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -71,12 +75,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.224204,
-      "lng": -74.190754,
+      "lat": 11.224947,
+      "lng": -74.191038,
       "sector": "Corredor Calle 29H — Universidad del Magdalena",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Calle 29H — corredor de la Universidad del Magdalena",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -87,12 +92,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.224588,
-      "lng": -74.190125,
+      "lat": 11.224712,
+      "lng": -74.191216,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21C — acceso occidental al Parque Villa Marbella",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -103,12 +109,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.224485,
-      "lng": -74.190076,
+      "lat": 11.224605,
+      "lng": -74.191171,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21C — acceso occidental al Parque Villa Marbella",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -119,12 +126,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.224377,
-      "lng": -74.190046,
+      "lat": 11.2245,
+      "lng": -74.191122,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21C — acceso occidental al Parque Villa Marbella",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -135,12 +143,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.224263,
-      "lng": -74.190036,
+      "lat": 11.224399,
+      "lng": -74.191067,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21C — acceso occidental al Parque Villa Marbella",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -151,12 +160,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.22415,
-      "lng": -74.190023,
+      "lat": 11.224301,
+      "lng": -74.191005,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21C — acceso occidental al Parque Villa Marbella",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -167,12 +177,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.224037,
-      "lng": -74.190002,
+      "lat": 11.224204,
+      "lng": -74.190942,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21C — acceso occidental al Parque Villa Marbella",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -183,12 +194,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.223925,
-      "lng": -74.189981,
+      "lat": 11.224114,
+      "lng": -74.190868,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21C — acceso occidental al Parque Villa Marbella",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -199,12 +211,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.223814,
-      "lng": -74.189956,
+      "lat": 11.224025,
+      "lng": -74.190794,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21C — acceso occidental al Parque Villa Marbella",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -215,12 +228,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.223702,
-      "lng": -74.189932,
+      "lat": 11.223944,
+      "lng": -74.19071,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21C — acceso occidental al Parque Villa Marbella",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -231,12 +245,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.223589,
-      "lng": -74.189916,
+      "lat": 11.223866,
+      "lng": -74.190624,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21C — acceso occidental al Parque Villa Marbella",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -247,12 +262,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.223478,
-      "lng": -74.189919,
+      "lat": 11.223793,
+      "lng": -74.190533,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21C — acceso occidental al Parque Villa Marbella",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -263,12 +279,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.223386,
-      "lng": -74.189987,
+      "lat": 11.223788,
+      "lng": -74.190412,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Calle 29J — tramo sur del circuito de Villa Marbella",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -279,12 +296,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.223295,
-      "lng": -74.190057,
+      "lat": 11.223863,
+      "lng": -74.19027,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Calle 29J — tramo sur del circuito de Villa Marbella",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -295,12 +313,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.223227,
-      "lng": -74.19015,
+      "lat": 11.22395,
+      "lng": -74.190136,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Calle 29J — tramo sur del circuito de Villa Marbella",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -311,12 +330,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.223159,
-      "lng": -74.190244,
+      "lat": 11.224054,
+      "lng": -74.190016,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Calle 29J — tramo sur del circuito de Villa Marbella",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -327,12 +347,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.223196,
-      "lng": -74.190331,
+      "lat": 11.224177,
+      "lng": -74.189968,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21D — retorno oriental hacia Calle 29H",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -343,12 +364,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.223274,
-      "lng": -74.190416,
+      "lat": 11.224311,
+      "lng": -74.18999,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21D — retorno oriental hacia Calle 29H",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -359,12 +381,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.223352,
-      "lng": -74.190501,
+      "lat": 11.224438,
+      "lng": -74.190037,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21D — retorno oriental hacia Calle 29H",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -375,12 +398,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.22343,
-      "lng": -74.190586,
+      "lat": 11.224567,
+      "lng": -74.190082,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21D — retorno oriental hacia Calle 29H",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -391,12 +415,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.223515,
-      "lng": -74.190663,
+      "lat": 11.224695,
+      "lng": -74.190125,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21D — retorno oriental hacia Calle 29H",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -407,12 +432,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.223608,
-      "lng": -74.19073,
+      "lat": 11.224827,
+      "lng": -74.190157,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21D — retorno oriental hacia Calle 29H",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -423,12 +449,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.223701,
-      "lng": -74.190798,
+      "lat": 11.224958,
+      "lng": -74.190193,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21D — retorno oriental hacia Calle 29H",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -439,12 +466,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.223794,
-      "lng": -74.190866,
+      "lat": 11.225088,
+      "lng": -74.190233,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21D — retorno oriental hacia Calle 29H",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -455,12 +483,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.2239,
-      "lng": -74.190908,
+      "lat": 11.225217,
+      "lng": -74.190275,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21D — retorno oriental hacia Calle 29H",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   },
   {
@@ -471,12 +500,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Posición aproximada para visualización agregada; la ubicación GPS original no está disponible.",
+    "nota_ubicacion": "Posición aproximada sobre el eje de la calle para representación agregada. La ubicación GPS original de esta fotografía no está disponible.",
     "ubicacion_aproximada": {
-      "lat": 11.224007,
-      "lng": -74.190949,
+      "lat": 11.22534,
+      "lng": -74.190331,
       "sector": "Parque Villa Marbella y calles aledañas",
-      "metodo": "Reconstrucción sectorial según recorrido de campo y distribución informada por el equipo; no es GPS individual."
+      "via_aproximada": "Carrera 21D — retorno oriental hacia Calle 29H",
+      "metodo": "Punto sectorial reconstruido sobre la vía indicada en el recorrido del equipo; no es GPS individual."
     }
   }
 ]

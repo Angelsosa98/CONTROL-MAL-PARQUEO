@@ -47,3 +47,11 @@ Las pruebas de esta actualización verifican sintaxis, integridad de IDs del HTM
 - La validación de ubicación ahora mantiene un único mensaje de error y diferencia entre ausencia de punto y distancia fuera de tolerancia.
 - La tolerancia respecto al segmento de vía de referencia se ajustó a 30 m. Sigue siendo una aproximación geométrica y no equivale a verificar el polígono real de la calzada.
 - Los paneles de filtros y ranking se muestran cuando existen reportes válidos; se mantienen ocultos si el conjunto está vacío.
+
+
+## 9. Corrección cartográfica y versión 0.9.1 — 27 de noviembre de 2026
+
+- Se alineó el recorrido con cuatro tramos del croquis: Calle 29H, Carrera 21C, Calle 29J y Carrera 21D.
+- Se afinó y transparentó la línea verde para mantener visibles las calles y etiquetas del mapa.
+- Las 30 evidencias se distribuyen sectorialmente: 5 sobre Calle 29H y 25 en los tres tramos del parque. Se conserva `ubicacion: null`; `ubicacion_aproximada` no se presenta como GPS individual.
+- La geometría se calibró con referencias ATESA de Calle 29H y Parque Villa Marbella y con el croquis satelital del equipo.

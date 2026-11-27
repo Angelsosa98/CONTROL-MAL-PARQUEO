@@ -2,15 +2,15 @@
   "zona": {
     "nombre": "Universidad del Magdalena — Parque Villa Marbella",
     "centro": [
-      11.22425,
-      -74.19005
+      11.22495,
+      -74.19015
     ],
     "zoom": 17,
     "limites": {
-      "lat_min": 11.2228,
-      "lat_max": 11.226,
-      "lng_min": -74.1915,
-      "lng_max": -74.1883
+      "lat_min": 11.22355,
+      "lat_max": 11.22648,
+      "lng_min": -74.19155,
+      "lng_max": -74.18875
     },
     "radio_max_m": 30
   },
@@ -203,281 +203,308 @@
       "activa": true,
       "extremos": [
         [
-          11.225586,
-          -74.188874
+          11.226337,
+          -74.189063
         ],
         [
-          11.22545,
-          -74.18907
+          11.226158,
+          -74.189412
         ],
         [
-          11.22531,
-          -74.1893
+          11.22598,
+          -74.189698
         ],
         [
-          11.22516,
-          -74.18951
+          11.225806,
+          -74.189965
         ],
         [
-          11.225,
-          -74.18972
+          11.225617,
+          -74.190207
         ],
         [
-          11.22483,
-          -74.18994
+          11.225443,
+          -74.190436
         ],
         [
-          11.22464,
-          -74.19015
+          11.225237,
+          -74.190702
         ],
         [
-          11.22445,
-          -74.19039
+          11.225048,
+          -74.190931
         ],
         [
-          11.22424,
-          -74.1907
+          11.22488,
+          -74.191109
         ],
         [
-          11.22406,
-          -74.19097
+          11.224766,
+          -74.191236
         ]
       ]
     },
     {
-      "id": "PARQUE-ACCESO",
-      "nombre": "Acceso hacia Parque Villa Marbella",
+      "id": "CARRERA21C-VILLA-MARBELLA",
+      "nombre": "Carrera 21C — acceso occidental al Parque Villa Marbella",
       "sector": "Parque Villa Marbella",
       "tipo_via": "secundaria",
       "activa": true,
       "extremos": [
         [
-          11.22464,
-          -74.19015
+          11.224766,
+          -74.191236
         ],
         [
-          11.22443,
-          -74.19005
+          11.224663,
+          -74.191198
         ],
         [
-          11.22419,
-          -74.19003
+          11.224446,
+          -74.191097
         ],
         [
-          11.22392,
-          -74.18998
+          11.224213,
+          -74.19095
+        ],
+        [
+          11.224007,
+          -74.190779
+        ],
+        [
+          11.223845,
+          -74.190601
+        ],
+        [
+          11.223758,
+          -74.190486
         ]
       ]
     },
     {
-      "id": "PARQUE-INTERIOR-ESTE",
-      "nombre": "Vía interior — costado oriental del parque",
+      "id": "CALLE29J-VILLA-MARBELLA",
+      "nombre": "Calle 29J — tramo sur del circuito de Villa Marbella",
       "sector": "Parque Villa Marbella",
       "tipo_via": "secundaria",
       "activa": true,
       "extremos": [
         [
-          11.22392,
-          -74.18998
+          11.223758,
+          -74.190486
         ],
         [
-          11.22365,
-          -74.18992
+          11.223807,
+          -74.190366
         ],
         [
-          11.22349,
-          -74.18991
+          11.223888,
+          -74.190226
         ],
         [
-          11.2233,
-          -74.19005
+          11.223985,
+          -74.190086
+        ],
+        [
+          11.22411,
+          -74.189959
         ]
       ]
     },
     {
-      "id": "PARQUE-INTERIOR-SUR",
-      "nombre": "Vía interior — retorno sur del parque",
+      "id": "CARRERA21D-VILLA-MARBELLA",
+      "nombre": "Carrera 21D — retorno oriental hacia Calle 29H",
       "sector": "Parque Villa Marbella",
       "tipo_via": "secundaria",
       "activa": true,
       "extremos": [
         [
-          11.2233,
-          -74.19005
+          11.22411,
+          -74.189959
         ],
         [
-          11.22314,
-          -74.19027
+          11.224294,
+          -74.189984
         ],
         [
-          11.22347,
-          -74.19063
-        ]
-      ]
-    },
-    {
-      "id": "PARQUE-RETORNO-OESTE",
-      "nombre": "Vía de retorno — alrededores del parque",
-      "sector": "Parque Villa Marbella",
-      "tipo_via": "secundaria",
-      "activa": true,
-      "extremos": [
-        [
-          11.22347,
-          -74.19063
+          11.224484,
+          -74.190054
         ],
         [
-          11.2238,
-          -74.19087
+          11.22469,
+          -74.190124
         ],
         [
-          11.22406,
-          -74.19097
+          11.224901,
+          -74.190175
+        ],
+        [
+          11.225107,
+          -74.190239
+        ],
+        [
+          11.225302,
+          -74.190302
+        ],
+        [
+          11.225394,
+          -74.190372
         ]
       ]
     }
   ],
   "recorrido_campo": {
-    "tipo": "reconstruccion_visual_aproximada",
-    "descripcion": "Recorrido dibujado siguiendo la línea verde de la imagen aportada por el equipo: ingreso desde Calle 29H por el sector de la Universidad del Magdalena, avance hacia Villa Marbella, circuito por las calles interiores junto al parque y retorno al corredor universitario.",
-    "nota": "La geometría sigue el trazado dibujado por el equipo y las referencias cartográficas del sector. Es una reconstrucción aproximada, no una traza GPS.",
+    "tipo": "reconstruccion_cartografica_aproximada",
+    "descripcion": "Recorrido reconstruido sobre las calles visibles en el croquis: avance por Calle 29H desde la Universidad del Magdalena, giro hacia Carrera 21C, recorrido por Calle 29J y retorno por Carrera 21D hasta Calle 29H.",
+    "nota": "Los ejes viales se aproximaron a partir del trazado manual en la imagen satelital y se calibraron con referencias públicas de ATESA para Calle 29H y Parque Villa Marbella. No son un levantamiento GPS.",
     "trazado": [
       [
-        11.225586,
-        -74.188874
+        11.226337,
+        -74.189063
       ],
       [
-        11.22545,
-        -74.18907
+        11.226158,
+        -74.189412
       ],
       [
-        11.22531,
-        -74.1893
+        11.22598,
+        -74.189698
       ],
       [
-        11.22516,
-        -74.18951
+        11.225806,
+        -74.189965
       ],
       [
-        11.225,
-        -74.18972
+        11.225617,
+        -74.190207
       ],
       [
-        11.22483,
-        -74.18994
+        11.225443,
+        -74.190436
       ],
       [
-        11.22464,
-        -74.19015
+        11.225237,
+        -74.190702
       ],
       [
-        11.22445,
-        -74.19039
+        11.225048,
+        -74.190931
       ],
       [
-        11.22424,
-        -74.1907
+        11.22488,
+        -74.191109
       ],
       [
-        11.22406,
-        -74.19097
+        11.224766,
+        -74.191236
       ],
       [
-        11.22443,
-        -74.19005
+        11.224663,
+        -74.191198
       ],
       [
-        11.22419,
-        -74.19003
+        11.224446,
+        -74.191097
       ],
       [
-        11.22392,
-        -74.18998
+        11.224213,
+        -74.19095
       ],
       [
-        11.22365,
-        -74.18992
+        11.224007,
+        -74.190779
       ],
       [
-        11.22349,
-        -74.18991
+        11.223845,
+        -74.190601
       ],
       [
-        11.2233,
-        -74.19005
+        11.223758,
+        -74.190486
       ],
       [
-        11.22314,
-        -74.19027
+        11.223807,
+        -74.190366
       ],
       [
-        11.22347,
-        -74.19063
+        11.223888,
+        -74.190226
       ],
       [
-        11.2238,
-        -74.19087
+        11.223985,
+        -74.190086
       ],
       [
-        11.22406,
-        -74.19097
+        11.22411,
+        -74.189959
+      ],
+      [
+        11.224294,
+        -74.189984
+      ],
+      [
+        11.224484,
+        -74.190054
+      ],
+      [
+        11.22469,
+        -74.190124
+      ],
+      [
+        11.224901,
+        -74.190175
+      ],
+      [
+        11.225107,
+        -74.190239
+      ],
+      [
+        11.225302,
+        -74.190302
+      ],
+      [
+        11.225394,
+        -74.190372
       ]
     ],
     "hitos": [
       {
         "id": "R1",
-        "nombre": "Corredor de Calle 29H — sector Universidad",
+        "nombre": "Inicio — Calle 29H, sector Universidad",
         "coordenadas": [
-          11.225586,
-          -74.188874
+          11.226337,
+          -74.189063
         ]
       },
       {
         "id": "R2",
-        "nombre": "Avance por Calle 29H hacia Villa Marbella",
+        "nombre": "Giro hacia Villa Marbella por Carrera 21C",
         "coordenadas": [
-          11.225,
-          -74.18972
+          11.224766,
+          -74.191236
         ]
       },
       {
         "id": "R3",
-        "nombre": "Llegada al sector del parque",
+        "nombre": "Giro por Calle 29J",
         "coordenadas": [
-          11.22406,
-          -74.19097
+          11.223758,
+          -74.190486
         ]
       },
       {
         "id": "R4",
-        "nombre": "Giro hacia calles interiores",
+        "nombre": "Retorno por Carrera 21D",
         "coordenadas": [
-          11.22419,
-          -74.19003
+          11.22411,
+          -74.189959
         ]
       },
       {
         "id": "R5",
-        "nombre": "Vuelta por costado oriental",
+        "nombre": "Regreso a Calle 29H",
         "coordenadas": [
-          11.22349,
-          -74.18991
-        ]
-      },
-      {
-        "id": "R6",
-        "nombre": "Retorno por calles interiores",
-        "coordenadas": [
-          11.22347,
-          -74.19063
-        ]
-      },
-      {
-        "id": "R7",
-        "nombre": "Salida al corredor universitario",
-        "coordenadas": [
-          11.22406,
-          -74.19097
+          11.225394,
+          -74.190372
         ]
       }
     ],
@@ -485,7 +512,33 @@
       "corredor_universidad": 5,
       "parque_villa_marbella_y_alrededores": 25,
       "total": 30,
-      "fuente": "Conteo aproximado comunicado por el equipo; coordenadas sectoriales reconstruidas para visualización."
-    }
+      "criterio": "5 puntos en Calle 29H y 25 puntos en Carrera 21C, Calle 29J y Carrera 21D alrededor del Parque Villa Marbella."
+    },
+    "referencias": [
+      {
+        "id": "ATESA-R12",
+        "lat": 11.226321,
+        "lng": -74.189069,
+        "uso": "Calle 29H, sector La U"
+      },
+      {
+        "id": "ATESA-R2",
+        "lat": 11.224755,
+        "lng": -74.191224,
+        "uso": "Calle 29H hacia Villa Marbella"
+      },
+      {
+        "id": "ATESA-R3",
+        "lat": 11.224274,
+        "lng": -74.191058,
+        "uso": "Parque Villa Marbella"
+      },
+      {
+        "id": "ATESA-R5",
+        "lat": 11.223982,
+        "lng": -74.191079,
+        "uso": "Parque Villa Marbella"
+      }
+    ]
   }
 }
