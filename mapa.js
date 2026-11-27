@@ -150,6 +150,41 @@ function redimensionarMapaCaptura() {
 }
 
 /**
+ * Valida si un reporte pertenece al ámbito cartográfico activo.
+ * Comprueba límites y proximidad a una de las cuadras configuradas.
+ * No elimina registros: solo evita dibujar puntos ajenos al área en el mapa.
+ */
+function reporteDentroZonaMapa(reporte, vias) {
+  if (!reporte || typeof reporte.lat !== "number" || typeof reporte.lng !== "number") return false;
+  var zona = vias && vias.zona;
+  var limites = zona && zona.limites;
+  if (!limites) return true;
+  if (reporte.lat < limites.lat_min || reporte.lat > limites.lat_max ||
+      reporte.lng < limites.lng_min || reporte.lng > limites.lng_max) return false;
+
+  var cuadras = vias && Array.isArray(vias.cuadras) ? vias.cuadras : [];
+  if (!cuadras.length) return true;
+  var radioMaximo = Number(zona.radio_max_m) || 90;
+  var latRad = reporte.lat * Math.PI / 180;
+  var metrosLat = 111320;
+  var metrosLng = 111320 * Math.cos(latRad);
+
+  for (var i = 0; i < cuadras.length; i++) {
+    var extremos = cuadras[i].extremos || [];
+    for (var j = 0; j < extremos.length - 1; j++) {
+      var p1 = extremos[j], p2 = extremos[j + 1];
+      var px = (reporte.lng - p1[1]) * metrosLng;
+      var py = (reporte.lat - p1[0]) * metrosLat;
+      var bx = (p2[1] - p1[1]) * metrosLng;
+      var by = (p2[0] - p1[0]) * metrosLat;
+      var t = Math.max(0, Math.min(1, (px * bx + py * by) / (bx * bx + by * by || 1)));
+      if (Math.hypot(px - bx * t, py - by * t) <= radioMaximo) return true;
+    }
+  }
+  return false;
+}
+
+/**
  * Inicializa el mapa de la vista Registros con soporte para capa de calor
  * (Leaflet.heat) y capa de puntos individuales coloreados por criticidad.
  */
@@ -257,7 +292,7 @@ function actualizarMarcadoresRegistros(listaReportes, vias) {
 
   for (var i = 0; i < ultimosReportesRegistros.length; i++) {
     var r = ultimosReportesRegistros[i];
-    if (typeof r.lat !== "number" || typeof r.lng !== "number") continue;
+    if (!reporteDentroZonaMapa(r, ultimoViasRegistros)) continue;
 
     var nivel = r.criticidad ? r.criticidad.nivel : "Bajo";
     var puntaje = r.criticidad && typeof r.criticidad.puntaje === "number" ? r.criticidad.puntaje : 1;
