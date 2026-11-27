@@ -659,7 +659,7 @@ function leerFiltros() {
 function renderizarAvance() {
   var campo = AppEstado.reportesUnificados.filter(function (r) { return r.origen === "campo"; });
   var pico = campo.filter(function (r) { return r._franja === "pico"; }).length;
-  porId("contador-meta-30").textContent = campo.length + " de 30";
+  porId("contador-meta-30").textContent = campo.length + " de 24";
   porId("desglose-franjas").textContent = "Hora pico: " + pico + " · Hora valle: " + (campo.length - pico);
 
   var chips = porId("desglose-cuadras");
