@@ -13,6 +13,7 @@ var mapaRegistros = null;
 var capaMarcadoresRegistros = null;
 var capaCalorRegistros = null;
 var capaEvidenciasAproximadas = null;
+var capaCalorEvidencias = null;
 var modoVisualizacionRegistros = "ambos"; // "ambos" | "calor" | "puntos"
 var ultimosReportesRegistros = [];
 var ultimoViasRegistros = null;
@@ -219,9 +220,9 @@ function iniciarMapaRegistros(idContenedor, vias) {
     var div = L.DomUtil.create("div", "leyenda-mapa");
     div.innerHTML =
       "<strong>Criticidad / Calor</strong>" +
-      '<div><span class="punto-leyenda" style="background:#dc2626"></span> Alto (7–9)</div>' +
-      '<div><span class="punto-leyenda" style="background:#d97706"></span> Medio (5–6)</div>' +
-      '<div><span class="punto-leyenda" style="background:#16a34a"></span> Bajo (0–4)</div>';
+      '<div><span class="punto-leyenda" style="background:#dc2626"></span> Alta (7–9)</div>' +
+      '<div><span class="punto-leyenda" style="background:#d97706"></span> Media (4–6)</div>' +
+      '<div><span class="punto-leyenda" style="background:#16a34a"></span> Baja (1–3)</div>';
     return div;
   };
   leyenda.addTo(mapaRegistros);
@@ -284,53 +285,66 @@ function cambiarModoMapaRegistros(nuevoModo) {
  * Las 30 evidencias se agrupan por referencia; no se inventa una coordenada
  * distinta para cada fotografía.
  */
+/**
+ * Visualización académica de 30 evidencias con coordenadas sintéticas
+ * distribuidas sobre los ejes de las cuadras configuradas. No son GPS reales.
+ * La intensidad del mapa de calor también es simulada.
+ */
 function actualizarMarcadoresEvidencias(evidencias, vias) {
   if (!leafletDisponible() || !mapaRegistros) return;
   if (!capaEvidenciasAproximadas) {
     capaEvidenciasAproximadas = L.layerGroup().addTo(mapaRegistros);
   }
   capaEvidenciasAproximadas.clearLayers();
-  var grupos = {};
-  (Array.isArray(evidencias) ? evidencias : []).forEach(function (e) {
+  if (capaCalorEvidencias && mapaRegistros.hasLayer(capaCalorEvidencias)) {
+    mapaRegistros.removeLayer(capaCalorEvidencias);
+  }
+  capaCalorEvidencias = null;
+
+  var lista = Array.isArray(evidencias) ? evidencias : [];
+  var coordenadas = [];
+  var puntosCalor = [];
+  lista.forEach(function (e) {
     var u = e && e.ubicacion;
     if (!u || typeof u.lat !== "number" || typeof u.lng !== "number") return;
-    var clave = u.grupo || (u.lat + "," + u.lng);
-    if (!grupos[clave]) grupos[clave] = { lat: u.lat, lng: u.lng, items: [] };
-    grupos[clave].items.push(e);
-  });
-  var coordenadas = [];
-  Object.keys(grupos).forEach(function (clave) {
-    var grupo = grupos[clave];
-    var contenido = "<strong>" + clave + " · " + grupo.items.length + " evidencias</strong>" +
-      "<p class='popup-nota-evidencia'>Punto de referencia compartido; no indica el lugar exacto de cada foto.</p>";
-    grupo.items.forEach(function (e) {
-      var archivo = String(e.foto || "").replace(/^.*\//, "");
-      var ruta = "datos/fotos/" + archivo;
-      contenido += "<div class='popup-item-evidencia'>" +
-        "<img src='" + ruta + "' alt='" + e.id + "'>" +
-        "<span><strong>" + e.id + "</strong><br><small>" + archivo + "</small></span>" +
-        "</div>";
-    });
-    var marcador = L.circleMarker([grupo.lat, grupo.lng], {
-      radius: 15,
+    var score = e.criticidad_simulada && typeof e.criticidad_simulada.puntaje === "number"
+      ? e.criticidad_simulada.puntaje : 5;
+    var intensidad = Math.max(0.2, Math.min(1, score / 9));
+    puntosCalor.push([u.lat, u.lng, intensidad]);
+
+    var marcador = L.circleMarker([u.lat, u.lng], {
+      radius: 7,
       fillColor: "#2563eb",
       color: "#ffffff",
-      weight: 3,
+      weight: 2,
       opacity: 1,
-      fillOpacity: 0.98
+      fillOpacity: 0.95
     });
-    marcador.bindTooltip(String(grupo.items.length), {
-      permanent: true,
-      direction: "center",
-      className: "etiqueta-conteo-evidencias",
-      opacity: 1
-    });
-    marcador.bindPopup(contenido, { maxWidth: 290, maxHeight: 300 });
+    var archivo = String(e.foto || "").replace(/^.*\//, "");
+    var contenido = "<strong>" + e.id + "</strong><br>" +
+      "Ubicación y puntaje simulados para demostración<br>" +
+      "Cuadra de referencia: " + String(u.cuadra_referencia || "No asignada") +
+      "<br>Intensidad simulada: " + score + "/9" +
+      "<br><img src='datos/fotos/" + archivo + "' alt='" + e.id +
+      "' style='width:190px;max-height:140px;object-fit:contain;margin-top:6px'>";
+    marcador.bindPopup(contenido, { maxWidth: 230 });
+    marcador.bindTooltip(e.id, { direction: "top", opacity: 0.9 });
     marcador.addTo(capaEvidenciasAproximadas);
-    coordenadas.push([grupo.lat, grupo.lng]);
+    coordenadas.push([u.lat, u.lng]);
   });
+
+  if (heatDisponible() && puntosCalor.length) {
+    capaCalorEvidencias = L.heatLayer(puntosCalor, {
+      radius: 30,
+      blur: 22,
+      maxZoom: 18,
+      max: 1,
+      minOpacity: 0.35,
+      gradient: { 0.25: "#16a34a", 0.55: "#f59e0b", 1: "#dc2626" }
+    }).addTo(mapaRegistros);
+  }
   if (coordenadas.length) {
-    mapaRegistros.fitBounds(L.latLngBounds(coordenadas), { padding: [34, 34], maxZoom: 16 });
+    mapaRegistros.fitBounds(L.latLngBounds(coordenadas), { padding: [28, 28], maxZoom: 17 });
   } else if (vias && vias.zona && vias.zona.centro) {
     mapaRegistros.setView(vias.zona.centro, vias.zona.zoom || 16);
   }
