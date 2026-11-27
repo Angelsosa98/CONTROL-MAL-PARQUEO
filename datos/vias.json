@@ -12,9 +12,41 @@
       "lng_min": -74.27,
       "lng_max": -74.15
     },
-    "radio_max_m": 80
+    "radio_max_m": 90
   },
   "cuadras": [
+    {
+      "id": "CR32-C22-C24",
+      "nombre": "Carrera 32 entre Calles 22 y 24 (Sector Unimagdalena – Villa Marbella)",
+      "sector": "Villa Marbella - Cañaveral",
+      "tipo_via": "arterial",
+      "extremos": [
+        [
+          11.2252,
+          -74.1871
+        ],
+        [
+          11.2242,
+          -74.1872
+        ]
+      ]
+    },
+    {
+      "id": "CR32-C24-C26",
+      "nombre": "Carrera 32 entre Calles 24 y 26 (Acceso Villa Marbella)",
+      "sector": "Villa Marbella - Cañaveral",
+      "tipo_via": "arterial",
+      "extremos": [
+        [
+          11.2242,
+          -74.1872
+        ],
+        [
+          11.2233,
+          -74.1873
+        ]
+      ]
+    },
     {
       "id": "CR32-C26-C28",
       "nombre": "Carrera 32 entre Calles 26 y 28 (Costado Urbanización Villa Marbella)",
@@ -60,6 +92,22 @@
         [
           11.2202,
           -74.1876
+        ]
+      ]
+    },
+    {
+      "id": "C25-CR31-CR32",
+      "nombre": "Calle 25 entre Carreras 31 y 32 (Vía de acceso Villa Marbella)",
+      "sector": "Villa Marbella - Cañaveral",
+      "tipo_via": "secundaria",
+      "extremos": [
+        [
+          11.2239,
+          -74.189
+        ],
+        [
+          11.2237,
+          -74.1872
         ]
       ]
     },

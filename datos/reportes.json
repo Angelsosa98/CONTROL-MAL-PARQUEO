@@ -64,6 +64,70 @@
     }
   },
   {
+    "id": "MP-ASO-005",
+    "origen": "campo",
+    "fecha_hora": "2026-11-24T13:12",
+    "lat": 11.22395,
+    "lng": -74.18723,
+    "cuadra": "CR32-C24-C26",
+    "categoria": "invasion_anden",
+    "actor": "motocicleta",
+    "foto": "fotos/mp-aso-005.jpg",
+    "observaciones": "Dos motocicletas estacionadas sobre el andén peatonal frente a locales",
+    "criticidad": {
+      "puntaje": 8,
+      "nivel": "Alto"
+    }
+  },
+  {
+    "id": "MP-ASO-006",
+    "origen": "campo",
+    "fecha_hora": "2026-11-24T13:12",
+    "lat": 11.22375,
+    "lng": -74.18725,
+    "cuadra": "CR32-C24-C26",
+    "categoria": "invasion_anden",
+    "actor": "motocicleta",
+    "foto": "fotos/mp-aso-006.jpg",
+    "observaciones": "Motocicleta estacionada sobre el andén obstruyendo el paso de estudiantes",
+    "criticidad": {
+      "puntaje": 8,
+      "nivel": "Alto"
+    }
+  },
+  {
+    "id": "MP-ASO-007",
+    "origen": "campo",
+    "fecha_hora": "2026-11-24T13:12",
+    "lat": 11.22355,
+    "lng": -74.18727,
+    "cuadra": "CR32-C24-C26",
+    "categoria": "doble_fila",
+    "actor": "motocicleta",
+    "foto": "fotos/mp-aso-007.jpg",
+    "observaciones": "Motocicleta estacionada sobre la calzada comercial frente a Unimagdalena",
+    "criticidad": {
+      "puntaje": 9,
+      "nivel": "Alto"
+    }
+  },
+  {
+    "id": "MP-ASO-008",
+    "origen": "campo",
+    "fecha_hora": "2026-11-24T13:12",
+    "lat": 11.22382,
+    "lng": -74.18825,
+    "cuadra": "C25-CR31-CR32",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-008.jpg",
+    "observaciones": "Automóvil y motocicleta estacionados en fila sobre vía de acceso comercial",
+    "criticidad": {
+      "puntaje": 7,
+      "nivel": "Alto"
+    }
+  },
+  {
     "id": "MP-ASO-009",
     "origen": "campo",
     "fecha_hora": "2026-11-23T14:58",
@@ -189,6 +253,22 @@
     "criticidad": {
       "puntaje": 7,
       "nivel": "Alto"
+    }
+  },
+  {
+    "id": "MP-ASO-017",
+    "origen": "campo",
+    "fecha_hora": "2026-11-23T14:58",
+    "lat": 11.22378,
+    "lng": -74.18785,
+    "cuadra": "C25-CR31-CR32",
+    "categoria": "doble_fila",
+    "actor": "vehiculo_particular",
+    "foto": "fotos/mp-aso-017.jpg",
+    "observaciones": "Camioneta oscura estacionada en contraflujo sobre vía de acceso",
+    "criticidad": {
+      "puntaje": 5,
+      "nivel": "Medio"
     }
   },
   {
