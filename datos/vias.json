@@ -1,16 +1,16 @@
 {
   "zona": {
-    "nombre": "Recorrido de campo — Universidad del Magdalena y Parque Villa Marbella",
+    "nombre": "Universidad del Magdalena y circuito de campo en Villa Marbella",
     "centro": [
-      11.2248,
-      -74.1905
+      11.2229,
+      -74.1887
     ],
     "zoom": 16,
     "limites": {
-      "lat_min": 11.2228,
-      "lat_max": 11.227,
-      "lng_min": -74.193,
-      "lng_max": -74.1875
+      "lat_min": 11.2198,
+      "lat_max": 11.2252,
+      "lng_min": -74.1904,
+      "lng_max": -74.1867
     },
     "radio_max_m": 90
   },
@@ -178,66 +178,66 @@
   ],
   "recorrido_campo": {
     "tipo": "esquematico_aproximado",
-    "descripcion": "Circuito descrito por el equipo: vía de la Universidad del Magdalena, avance aproximado de seis cuadras, giro a la izquierda hacia Villa Marbella, dos cuadras al interior, giro, una cuadra más y retorno a la vía de la Universidad.",
-    "nota": "Los hitos son referencias del sector; no son un trazado GPS levantado en campo ni ubicaciones exactas de las fotografías.",
+    "descripcion": "Recorrido descrito por el equipo: salida por el corredor de la Universidad del Magdalena, avance aproximado de seis cuadras, giro a la izquierda hacia Villa Marbella, retorno de dos cuadras por vías interiores, avance de una cuadra y salida de nuevo hacia el corredor universitario.",
+    "nota": "La línea representa un circuito aproximado siguiendo los ejes de vía configurados en este proyecto. No es una traza GPS ni asigna una coordenada exacta a cada fotografía.",
     "hitos": [
       {
-        "id": "R15",
-        "nombre": "Referencia de inicio — Calle 29H, sector La U",
+        "id": "R1",
+        "nombre": "Inicio del recorrido — corredor de la Universidad",
         "coordenadas": [
-          11.225135,
-          -74.190833
-        ]
-      },
-      {
-        "id": "R12",
-        "nombre": "Referencia del tramo — Calle 29H, sector La U",
-        "coordenadas": [
-          11.226321,
-          -74.189069
+          11.2248,
+          -74.1879
         ]
       },
       {
         "id": "R2",
-        "nombre": "Referencia del giro hacia Villa Marbella",
+        "nombre": "Avance por el corredor — sector Calle 24",
         "coordenadas": [
-          11.224755,
-          -74.191224
+          11.2238,
+          -74.188
         ]
       },
       {
         "id": "R3",
-        "nombre": "Ingreso al sector del parque Villa Marbella",
+        "nombre": "Giro a la izquierda hacia Villa Marbella — sector Calle 28",
         "coordenadas": [
-          11.224274,
-          -74.191058
+          11.2214,
+          -74.1882
+        ]
+      },
+      {
+        "id": "R4",
+        "nombre": "Ingreso al tramo interior — Carrera 31",
+        "coordenadas": [
+          11.2216,
+          -74.18975
         ]
       },
       {
         "id": "R5",
-        "nombre": "Tramo interior del recorrido",
+        "nombre": "Retorno aproximado de dos cuadras — sector Calle 26",
         "coordenadas": [
-          11.223982,
-          -74.191079
+          11.2231,
+          -74.1896
         ]
       },
       {
         "id": "R6",
-        "nombre": "Retorno del circuito — sector Villa Marbella",
+        "nombre": "Giro hacia el corredor de salida — sector Calle 26",
         "coordenadas": [
-          11.2238,
-          -74.191002
+          11.2229,
+          -74.1881
         ]
       },
       {
-        "id": "R1",
+        "id": "R7",
         "nombre": "Salida hacia la vía de la Universidad",
         "coordenadas": [
-          11.223948,
-          -74.192187
+          11.2248,
+          -74.1879
         ]
       }
     ],
-    "fuente_referencias": "Coordenadas de referencias de cestas reportadas para Calle 29H sector La U y Parque Villa Marbella en relación de ATESA (2025); secuencia aproximada según descripción del equipo."
+    "fuente_referencias": "Secuencia inferida de la descripción del equipo y trazada sobre los segmentos de vía existentes en datos/vias.json; requiere confirmación de campo para considerarse recorrido GPS."
   }
 }
