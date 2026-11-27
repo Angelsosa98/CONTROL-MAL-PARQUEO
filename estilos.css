@@ -1110,3 +1110,37 @@ button {
 .popup-item-evidencia span {
   font-size: 12px;
 }
+
+
+/* Selector claro de las tres vistas del mapa */
+.barra-capas-mapa {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 12px;
+}
+.btn-capa-mapa {
+  min-height: 42px;
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+.btn-capa-mapa.activo {
+  border: 2px solid #0369a1;
+  background: #e0f2fe;
+  color: #075985;
+  box-shadow: 0 1px 3px rgba(3,105,161,.12);
+}
+.btn-capa-mapa:focus-visible {
+  outline: 3px solid rgba(2,132,199,.3);
+  outline-offset: 2px;
+}
+@media (max-width: 520px) {
+  .barra-capas-mapa { grid-template-columns: 1fr; }
+}
