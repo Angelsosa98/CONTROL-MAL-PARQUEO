@@ -27,3 +27,16 @@ Las 10 cuadras de `datos/vias.json` siguen definidas por segmentos aproximados. 
 ## 4. Pruebas
 
 La validación sintáctica de JavaScript y las pruebas unitarias de criticidad son verificaciones parciales. Debe completarse una prueba en navegador para comprobar mapas, GPS, controles, filtros, persistencia, galería, importación y exportación. No se declara aprobada una prueba visual que no se haya ejecutado.
+
+
+## 5. Correcciones de integridad y visualización — 27 de noviembre de 2026
+
+- Se sustituyeron los puntos de referencia del recorrido que estaban alejados de las vías por siete hitos colocados sobre los segmentos viales configurados. El circuito sigue siendo esquemático y debe contrastarse con el recorrido GPS real.
+- El mapa mantiene visibles la línea del circuito y sus paradas numeradas; los controles muestran ambos, calor o puntos de reportes.
+- Se corrigió la validación cartográfica para comprobar proximidad a la cuadra asignada, no a cualquier vía cercana.
+- Se eliminó la limpieza automática de reportes locales al iniciar la aplicación, evitando borrar IDs con prefijo ASO.
+- Se reforzó la validación de fechas y coordenadas en importaciones JSON y se protegió la importación ante fallos al recalcular criticidad.
+- Se actualizó la versión de recursos locales para evitar que el navegador reutilice archivos JavaScript y CSS antiguos.
+- Se mantuvieron las 30 evidencias como galería independiente; no se les asignan ubicaciones individuales ni puntajes inventados.
+
+Las pruebas de esta actualización verifican sintaxis, integridad de IDs del HTML, existencia de archivos fotográficos, cálculos de criticidad, filtros y validaciones de importación. No sustituyen la comprobación visual final en un navegador real.
