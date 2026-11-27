@@ -224,15 +224,15 @@
        VISTA 2: REGISTROS Y EXPORTACIÓN / IMPORTACIÓN
        ====================================================================== -->
   <main id="vista-registros" class="contenedor-principal" hidden>
-    <!-- Resumen de avance hacia los 24 registros de campo -->
+    <!-- Resumen de la nueva muestra fotográfica -->
     <section class="tarjeta no-imprimir">
       <div class="fila-cabecera-seccion">
-        <h2>Avance de campo</h2>
-        <span id="contador-meta-30" class="contador-grande">0 de 24</span>
+        <h2>Nueva muestra fotográfica</h2>
+        <span id="contador-meta-30" class="contador-grande">0 de 30</span>
       </div>
-      <p id="desglose-franjas" class="texto-destacado">Hora pico: 0 · Hora valle: 0</p>
-      <div id="desglose-cuadras" class="contenedor-chips"></div>
-      <p id="uso-almacenamiento" class="texto-suave margen-superior">Almacenamiento: 0,00 de 5 MB</p>
+      <p id="desglose-franjas" class="texto-destacado">Evidencias fotográficas seleccionadas.</p>
+      <div id="desglose-cuadras" class="texto-suave"></div>
+      <p id="uso-almacenamiento" class="texto-suave margen-superior">Reportes georreferenciados: 0</p>
     </section>
 
     <!-- Exportar e importar (RF-06) -->
@@ -353,8 +353,14 @@
 
     <!-- Lista de reportes (más recientes primero) -->
     <section class="tarjeta no-imprimir">
-      <h2>Reportes (más recientes primero)</h2>
+      <h2>Reportes georreferenciados</h2>
       <div id="lista-registros" class="lista-tarjetas"></div>
+    </section>
+
+    <section class="tarjeta" id="seccion-galeria-evidencias">
+      <h2 id="titulo-galeria-evidencias">Evidencias fotográficas</h2>
+      <p class="ayuda-campo">Muestra fotográfica seleccionada. Las imágenes documentan vehículos y contexto vial; no implican por sí solas una infracción confirmada.</p>
+      <div id="galeria-evidencias" class="galeria-evidencias"></div>
     </section>
   </main>
 
