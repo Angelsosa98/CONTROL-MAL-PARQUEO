@@ -19,7 +19,7 @@
 
 ## 2. Fallos Detectados en Asistencia con IA y Correcciones Aplicadas
 
-Durante la construcción del prototipo se identificaron cuatro fallos técnicos en el código o datos generados inicialmente por la IA, los cuales fueron diagnosticados y corregidos por el equipo:
+Durante la construcción del prototipo se documentan cinco ajustes técnicos en el código o datos generados inicialmente por la IA, los cuales fueron diagnosticados y corregidos por el equipo:
 
 ### Ajuste 1: Delimitación del conjunto de análisis
 * **Hallazgo:** El repositorio contenía dos zonas de levantamiento: 24 reportes del entorno Unimagdalena–Villa Marbella–Cañaveral y 6 del Mercado Público.
