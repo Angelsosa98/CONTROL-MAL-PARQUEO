@@ -1144,3 +1144,30 @@ button {
 @media (max-width: 520px) {
   .barra-capas-mapa { grid-template-columns: 1fr; }
 }
+
+/* Identificación del recorrido aproximado en el mapa */
+.linea-leyenda-recorrido {
+  display: inline-block;
+  width: 18px;
+  margin: 0 5px 3px 0;
+  border-top: 3px dashed #2563eb;
+  vertical-align: middle;
+}
+.marcador-recorrido {
+  background: transparent;
+  border: 0;
+}
+.marcador-recorrido span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.45);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
