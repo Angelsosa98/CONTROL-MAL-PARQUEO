@@ -1,9 +1,8 @@
 /* ============================================================================
  * ARCHIVO: captura.js
- * RESPONSABILIDAD: Controlador principal de la aplicación web Control Vial
- * Santa Marta. Orquesta las 3 vistas (Captura, Registros, Resumen), GPS,
- * selección de ubicación en mapa/buscador, asignación de cuadra, pixelado en
- * canvas, guardado/edición/eliminación y sincronización de filtros y resumen.
+ * RESPONSABILIDAD: Controlador principal de Control Vial Santa Marta. Conecta
+ * index.html con los módulos: criticidad.js, almacenamiento.js, filtros.js,
+ * resumen.js y mapa.js. Aquí NO se repiten funciones de esos módulos.
  * ============================================================================ */
 
 var AppEstado = {
@@ -12,62 +11,92 @@ var AppEstado = {
   reportesPrecargados: [],
   reportesLocales: [],
   reportesUnificados: [],
-  ubicacionActual: null, // { lat, lng, cuadraId, distanciaM, fueraDeZona }
-  seleccionManualCuadra: false,
-  categoriaSeleccionada: "",
-  actorSeleccionado: "",
-  editandoId: null,
-  imagenOriginalDataUrl: null,
-  imagenProcesadaDataUrl: null,
-  regionAnonimizacion: null, // { x, y, w, h } en coordenadas del canvas
-  arrastrandoAnonimizacion: false,
-  inicioArrastre: null,
-  filtros: {
-    texto: "",
-    cuadra: "",
-    categoria: "",
-    actor: "",
-    nivel: "",
-    franja: ""
-  }
+  ubicacion: null,          // { lat, lng }
+  cuadraId: "",
+  categoria: "",
+  actor: "",
+  fechaManual: false,
+  inicioCaptura: null,      // para medir el tiempo de registro
+  foto: null,               // objeto Image con la foto cargada
+  regiones: [],             // zonas pixeladas [{ x, y, w, h }]
+  trazo: null,              // zona que se está dibujando
+  reportePendiente: null    // reporte que no cupo en localStorage
 };
 
-/**
- * Carga un archivo JSON relativo mediante fetch con respaldo seguro.
- */
-function cargarJSON(ruta, valorDefecto) {
+/* ---------------------------- Utilidades de DOM --------------------------- */
+
+function porId(id) {
+  return document.getElementById(id);
+}
+
+/** Muestra un texto en un elemento; si el texto está vacío, lo oculta. */
+function mostrarTexto(id, texto) {
+  var el = porId(id);
+  if (!el) return;
+  el.textContent = texto || "";
+  el.hidden = !texto;
+}
+
+function alPulsar(id, accion) {
+  var el = porId(id);
+  if (el) el.addEventListener("click", accion);
+}
+
+function crear(etiqueta, clase, texto) {
+  var el = document.createElement(etiqueta);
+  if (clase) el.className = clase;
+  if (texto !== undefined) el.textContent = texto;
+  return el;
+}
+
+function etiquetaCategoria(valor) {
+  var nombres = {
+    doble_fila: "Doble fila / vía prohibida",
+    bloqueo_rampa_cebra_paradero: "Bloqueo rampa, cebra o paradero",
+    invasion_anden: "Invasión de andén"
+  };
+  return nombres[valor] || valor || "—";
+}
+
+function etiquetaActor(valor) {
+  var nombres = {
+    vehiculo_particular: "Vehículo particular",
+    motocicleta: "Motocicleta",
+    vehiculo_carga: "Vehículo de carga",
+    mobiliario_comercial: "Mobiliario comercial"
+  };
+  return nombres[valor] || valor || "—";
+}
+
+/** Fecha y hora LOCAL como "AAAA-MM-DDTHH:MM" (sin toISOString, que usa UTC). */
+function obtenerFechaHoraLocalActual() {
+  var d = new Date();
+  function dos(n) { return String(n).padStart(2, "0"); }
+  return d.getFullYear() + "-" + dos(d.getMonth() + 1) + "-" + dos(d.getDate()) +
+    "T" + dos(d.getHours()) + ":" + dos(d.getMinutes());
+}
+
+/** Carga un JSON; devuelve null si falla. */
+function cargarJSON(ruta) {
   return fetch(ruta + "?v=" + Date.now())
     .then(function (resp) {
-      if (!resp.ok) {
-        throw new Error("No se pudo cargar " + ruta + " (HTTP " + resp.status + ")");
-      }
+      if (!resp.ok) throw new Error("HTTP " + resp.status);
       return resp.json();
     })
     .catch(function (err) {
-      console.warn("Aviso cargando " + ruta + ":", err.message);
-      if (typeof valorDefecto !== "undefined") {
-        return valorDefecto;
-      }
-      throw err;
+      console.error("No se pudo cargar " + ruta + ":", err.message);
+      return null;
     });
 }
 
-/**
- * Garantiza un objeto vias con arreglo 'cuadras' válido para evitar errores
- * en módulos que requieren vias.cuadras.
- */
-function normalizarViasSeguras(vias) {
-  if (vias && Array.isArray(vias.cuadras)) {
-    return vias;
-  }
-  return {
-    zona: (vias && vias.zona) || {
-      nombre: "Santa Marta",
-      centro: [11.2232, -74.1885],
-      zoom: 15
-    },
-    cuadras: []
-  };
+/* ------------------------------ Cuadras ----------------------------------- */
+
+function listaCuadras() {
+  return AppEstado.vias && Array.isArray(AppEstado.vias.cuadras) ? AppEstado.vias.cuadras : [];
+}
+
+function obtenerCuadraPorId(cuadraId) {
+  return listaCuadras().find(function (c) { return c.id === cuadraId; }) || null;
 }
 
 /**
@@ -125,1375 +154,843 @@ function distanciaACuadraMetros(lat, lng, cuadra) {
   return minDist;
 }
 
-/**
- * Busca la cuadra más cercana a (lat, lng) dentro de vias.cuadras.
- * Siempre permite reportar en cualquier punto sin mostrar advertencia de fuera de zona.
- */
-function encontrarCuadraMasCercana(lat, lng, vias) {
-  var viasSeguras = normalizarViasSeguras(vias);
-  if (viasSeguras.cuadras.length === 0) {
-    return { cuadra: null, distanciaM: null, fueraDeZona: false };
-  }
-
-  var mejorCuadra = null;
+/** Devuelve la cuadra más cercana al punto, o null si no hay cuadras. */
+function encontrarCuadraMasCercana(lat, lng) {
+  var mejor = null;
   var mejorDistancia = Infinity;
-
-  for (var i = 0; i < viasSeguras.cuadras.length; i++) {
-    var c = viasSeguras.cuadras[i];
-    var dist = distanciaACuadraMetros(lat, lng, c);
-    if (dist < mejorDistancia) {
-      mejorDistancia = dist;
-      mejorCuadra = c;
+  listaCuadras().forEach(function (c) {
+    var d = distanciaACuadraMetros(lat, lng, c);
+    if (d < mejorDistancia) {
+      mejorDistancia = d;
+      mejor = c;
     }
-  }
-
-  return {
-    cuadra: mejorCuadra,
-    distanciaM: Math.round(mejorDistancia),
-    fueraDeZona: false
-  };
+  });
+  return mejor;
 }
 
-/**
- * Verifica si (lat, lng) está dentro de los límites generales definidos en vias.json.
- */
-function estaDentroDeLimitesZona(lat, lng, vias) {
-  if (typeof lat !== "number" || typeof lng !== "number" || isNaN(lat) || isNaN(lng)) {
-    return false;
-  }
-  if (!vias || !vias.zona || !vias.zona.limites) {
-    return true;
-  }
-  var lim = vias.zona.limites;
-  return (
-    lat >= lim.lat_min &&
-    lat <= lim.lat_max &&
-    lng >= lim.lng_min &&
-    lng <= lim.lng_max
-  );
+function poblarSelectoresCuadras() {
+  var selCaptura = porId("select-cuadra");
+  var selFiltro = porId("filtro-cuadra");
+  listaCuadras().forEach(function (c) {
+    [selCaptura, selFiltro].forEach(function (sel) {
+      var opcion = crear("option", "", c.nombre);
+      opcion.value = c.id;
+      sel.appendChild(opcion);
+    });
+  });
 }
 
-/**
- * Busca un objeto cuadra por su id.
- */
-function obtenerCuadraPorId(cuadraId) {
-  var viasSeguras = normalizarViasSeguras(AppEstado.vias);
-  for (var i = 0; i < viasSeguras.cuadras.length; i++) {
-    if (viasSeguras.cuadras[i].id === cuadraId) {
-      return viasSeguras.cuadras[i];
-    }
-  }
-  return null;
-}
-
-/**
- * Recalcula criticidad de todos los reportes usando los criterios vigentes y
- * garantizando que 'vias' tenga arreglo 'cuadras'.
- */
-function recalcularTodosLosReportes(lista, criterios, vias) {
-  var viasSeguras = normalizarViasSeguras(vias);
-  var resultado = [];
-
-  for (var i = 0; i < lista.length; i++) {
-    var item = Object.assign({}, lista[i]);
-    var cuadraObj = obtenerCuadraPorId(item.cuadra);
-    var tipoVia = cuadraObj ? cuadraObj.tipo_via : "secundaria";
-
-    if (typeof calcularCriticidad === "function" && criterios && viasSeguras.cuadras.length > 0) {
-      try {
-        item.criticidad = calcularCriticidad(item, criterios, tipoVia);
-      } catch (err) {
-        item.criticidad = item.criticidad || { puntaje: 5, nivel: "Medio", franja: "valle" };
-      }
-    } else if (!item.criticidad) {
-      item.criticidad = { puntaje: 5, nivel: "Medio", franja: "valle" };
-    }
-
-    resultado.push(item);
-  }
-
-  return resultado;
-}
-
-/**
- * Sincroniza la lista unificada de reportes (locales + precargados), evitando
- * duplicar ids si un reporte local edita o sobrescribe uno precargado.
- */
-function sincronizarListaUnicaReportes() {
-  var mapaPorId = {};
-
-  for (var i = 0; i < AppEstado.reportesPrecargados.length; i++) {
-    var pre = AppEstado.reportesPrecargados[i];
-    if (pre && pre.id) {
-      mapaPorId[pre.id] = Object.assign({ origen: pre.origen || "precargado" }, pre);
-    }
-  }
-
-  for (var j = 0; j < AppEstado.reportesLocales.length; j++) {
-    var loc = AppEstado.reportesLocales[j];
-    if (loc && loc.id) {
-      mapaPorId[loc.id] = Object.assign({ origen: loc.origen || "campo" }, loc);
-    }
-  }
-
-  var lista = [];
-  for (var clave in mapaPorId) {
-    if (Object.prototype.hasOwnProperty.call(mapaPorId, clave)) {
-      lista.push(mapaPorId[clave]);
-    }
-  }
-
-  AppEstado.reportesUnificados = recalcularTodosLosReportes(lista, AppEstado.criterios, AppEstado.vias);
-}
-
-/**
- * Formatea fecha y hora local actual como "AAAA-MM-DDTHH:MM" para <input type="datetime-local">.
- */
-function obtenerFechaHoraLocalActual() {
-  var ahora = new Date();
-  var anio = ahora.getFullYear();
-  var mes = String(ahora.getMonth() + 1).padStart(2, "0");
-  var dia = String(ahora.getDate()).padStart(2, "0");
-  var horas = String(ahora.getHours()).padStart(2, "0");
-  var mins = String(ahora.getMinutes()).padStart(2, "0");
-  return anio + "-" + mes + "-" + dia + "T" + horas + ":" + mins;
-}
-
-/**
- * Escapa caracteres HTML básicos para evitar inyección en plantillas.
- */
-function escaparHTML(texto) {
-  return String(texto || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-/**
- * Actualiza el subtítulo de zona en la cabecera superior si existe.
- */
-function actualizarSubtituloZona(vias) {
-  var subEl = document.getElementById("subtitulo-zona") || document.querySelector(".subtitulo-app");
-  if (!subEl) return;
-  if (vias && vias.zona && vias.zona.nombre) {
-    subEl.textContent = vias.zona.nombre;
-  } else {
-    subEl.textContent = "Santa Marta";
-  }
-}
-
-/**
- * Actualiza el texto de coordenadas bajo el mapa de captura.
- */
-function mostrarCoordenadasTexto(lat, lng) {
-  var el = document.getElementById("texto-coordenadas");
-  if (!el) return;
-  if (typeof lat === "number" && typeof lng === "number" && !isNaN(lat) && !isNaN(lng)) {
-    el.textContent = "Lat: " + lat.toFixed(6) + ", Lng: " + lng.toFixed(6);
-  } else {
-    el.textContent = "Lat: —, Lng: —";
-  }
-}
-
-/**
- * Actualiza la tarjeta de cuadra asignada manteniendo oculto el aviso de fuera de zona.
- */
-function actualizarUIAsignacionCuadra(cuadraId) {
-  var nombreEl = document.getElementById("nombre-cuadra-asignada");
-  var tipoEl = document.getElementById("badge-tipo-via");
-  var avisoEl = document.getElementById("aviso-fuera-zona");
-  var selectCuadra = document.getElementById("select-cuadra-manual");
-
-  if (avisoEl) {
-    avisoEl.hidden = true;
-    avisoEl.textContent = "";
-  }
-
+function asignarCuadra(cuadraId) {
   var cuadra = obtenerCuadraPorId(cuadraId);
+  AppEstado.cuadraId = cuadra ? cuadra.id : "";
+  porId("select-cuadra").value = AppEstado.cuadraId;
+  porId("cuadra-nombre-lectura").textContent = cuadra ? cuadra.nombre : "Marca un punto en el mapa";
 
-  if (cuadra) {
-    if (nombreEl) nombreEl.textContent = cuadra.nombre;
-    if (tipoEl) {
-      tipoEl.textContent = "Tipo de vía: " + (cuadra.tipo_via === "arterial" ? "Arterial" : "Secundaria");
-    }
-    if (selectCuadra && selectCuadra.value !== cuadra.id) {
-      selectCuadra.value = cuadra.id;
-    }
-  } else {
-    if (nombreEl) nombreEl.textContent = "Sin cuadra asignada";
-    if (tipoEl) tipoEl.textContent = "Tipo de vía: —";
-    if (selectCuadra) selectCuadra.value = "";
-  }
+  var tipo = porId("cuadra-tipo-lectura");
+  tipo.className = "etiqueta-via" + (cuadra ? " via-" + cuadra.tipo_via : "");
+  tipo.textContent = "Tipo de vía: " +
+    (cuadra ? (cuadra.tipo_via === "arterial" ? "Arterial" : "Secundaria") : "—");
+  if (cuadra) mostrarTexto("error-cuadra", "");
 }
 
-/**
- * Fija una ubicación (lat, lng) en el formulario de captura, actualiza el mapa
- * y asigna la cuadra más cercana sin mostrar advertencias de zona.
- */
+/* ----------------------------- Ubicación ---------------------------------- */
+
+function marcarInicioCaptura() {
+  if (!AppEstado.inicioCaptura) AppEstado.inicioCaptura = Date.now();
+}
+
+/** Guarda el punto, mueve el marcador y asigna la cuadra más cercana. */
 function fijarUbicacion(lat, lng, opciones) {
   var opts = opciones || {};
-  var latNum = Number(lat);
-  var lngNum = Number(lng);
-  if (isNaN(latNum) || isNaN(lngNum)) return;
+  AppEstado.ubicacion = { lat: Number(Number(lat).toFixed(6)), lng: Number(Number(lng).toFixed(6)) };
+  porId("texto-coordenadas").textContent =
+    "Lat: " + AppEstado.ubicacion.lat.toFixed(6) + ", Lng: " + AppEstado.ubicacion.lng.toFixed(6);
+  mostrarTexto("error-ubicacion", "");
+  mostrarTexto("aviso-fuera-zona", estaDentroDeLimitesZona(lat, lng)
+    ? ""
+    : "Este punto está fuera de la zona de estudio: se puede guardar, pero la importación del equipo lo rechazará.");
 
-  if (!opts.conservarManual) {
-    AppEstado.seleccionManualCuadra = false;
-  }
+  actualizarMarcadorCaptura(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng, function (la, ln) {
+    marcarInicioCaptura();
+    fijarUbicacion(la, ln);
+  });
 
-  mostrarCoordenadasTexto(latNum, lngNum);
-
-  if (!opts.sinMoverMapa && typeof actualizarMarcadorCaptura === "function") {
-    actualizarMarcadorCaptura(latNum, lngNum, function (nuevaLat, nuevaLng) {
-      fijarUbicacion(nuevaLat, nuevaLng, { conservarManual: false, sinMoverMapa: true });
-    });
-  }
-
-  var cuadraAsignadaId = AppEstado.ubicacionActual ? AppEstado.ubicacionActual.cuadraId : "";
-  var distancia = null;
-
-  if (!AppEstado.seleccionManualCuadra || !cuadraAsignadaId) {
-    var det = encontrarCuadraMasCercana(latNum, lngNum, AppEstado.vias);
-    cuadraAsignadaId = det.cuadra ? det.cuadra.id : "";
-    distancia = det.distanciaM;
-  } else {
-    var cManual = obtenerCuadraPorId(cuadraAsignadaId);
-    if (cManual) {
-      distancia = Math.round(distanciaACuadraMetros(latNum, lngNum, cManual));
-    }
-  }
-
-  AppEstado.ubicacionActual = {
-    lat: Number(latNum.toFixed(6)),
-    lng: Number(lngNum.toFixed(6)),
-    cuadraId: cuadraAsignadaId,
-    distanciaM: distancia,
-    fueraDeZona: false
-  };
-
-  actualizarUIAsignacionCuadra(cuadraAsignadaId);
-  if (typeof resaltarCuadraCaptura === "function") {
-    resaltarCuadraCaptura(cuadraAsignadaId);
+  if (!opts.conservarCuadra) {
+    var cercana = encontrarCuadraMasCercana(lat, lng);
+    asignarCuadra(cercana ? cercana.id : "");
   }
 }
 
-/**
- * Solicita geolocalización del dispositivo mediante Geolocation API.
- */
-function solicitarGeolocalizacion(esAutomaticaAlInicio) {
-  var estadoGps = document.getElementById("estado-gps");
+function estaDentroDeLimitesZona(lat, lng) {
+  var lim = AppEstado.vias && AppEstado.vias.zona && AppEstado.vias.zona.limites;
+  if (!lim) return true;
+  return lat >= lim.lat_min && lat <= lim.lat_max && lng >= lim.lng_min && lng <= lim.lng_max;
+}
 
+function usarGPS() {
+  marcarInicioCaptura();
   if (!navigator.geolocation) {
-    if (estadoGps && !esAutomaticaAlInicio) {
-      estadoGps.textContent = "Tu navegador no soporta GPS. Toca el mapa o elige una cuadra.";
-    }
+    mostrarTexto("error-ubicacion", "Tu navegador no soporta GPS. Toca el mapa o elige una cuadra.");
     return;
   }
-
-  if (estadoGps && !esAutomaticaAlInicio) {
-    estadoGps.textContent = "Obteniendo ubicación GPS...";
-  }
-
+  mostrarTexto("estado-gps", "Obteniendo ubicación GPS...");
   navigator.geolocation.getCurrentPosition(
     function (pos) {
-      var lat = pos.coords.latitude;
-      var lng = pos.coords.longitude;
-
-      if (esAutomaticaAlInicio && AppEstado.seleccionManualCuadra) {
-        return;
-      }
-
-      if (estadoGps) {
-        estadoGps.textContent = "Ubicación GPS detectada (±" + Math.round(pos.coords.accuracy || 15) + " m).";
-      }
-
-      fijarUbicacion(lat, lng, { conservarManual: AppEstado.seleccionManualCuadra });
+      var precision = Math.round(pos.coords.accuracy);
+      fijarUbicacion(pos.coords.latitude, pos.coords.longitude);
+      mostrarTexto("estado-gps", "Ubicación GPS detectada (±" + precision + " m).");
+      mostrarTexto("aviso-precision", precision > 30
+        ? "La precisión es baja. Revisa el marcador y arrástralo si hace falta."
+        : "");
     },
     function (err) {
-      if (estadoGps && !esAutomaticaAlInicio) {
-        if (err.code === 1) {
-          estadoGps.textContent = "Permiso de ubicación denegado. Toca el mapa o selecciona la cuadra.";
-        } else {
-          estadoGps.textContent = "No se pudo obtener GPS. Toca el mapa para marcar el punto.";
-        }
-      }
+      mostrarTexto("estado-gps", "");
+      mostrarTexto("error-ubicacion", err.code === 1
+        ? "Permiso de ubicación denegado. Toca el mapa o selecciona la cuadra."
+        : "No se pudo obtener el GPS. Toca el mapa para marcar el punto.");
     },
-    {
-      enableHighAccuracy: true,
-      timeout: 8000,
-      maximumAge: 30000
-    }
+    { enableHighAccuracy: true, timeout: 8000, maximumAge: 30000 }
   );
 }
 
-/**
- * Pobla el selector manual de cuadras y el filtro de cuadras en Registros.
- */
-function poblarSelectoresCuadras(vias) {
-  var viasSeguras = normalizarViasSeguras(vias);
-  var selectManual = document.getElementById("select-cuadra-manual");
-  var filtroCuadra = document.getElementById("filtro-cuadra");
-
-  if (selectManual) {
-    selectManual.innerHTML = '<option value="">-- Selecciona una cuadra --</option>';
-  }
-  if (filtroCuadra) {
-    filtroCuadra.innerHTML = '<option value="">Todas las cuadras</option>';
-  }
-
-  for (var i = 0; i < viasSeguras.cuadras.length; i++) {
-    var c = viasSeguras.cuadras[i];
-
-    if (selectManual) {
-      var opt1 = document.createElement("option");
-      opt1.value = c.id;
-      opt1.textContent = c.nombre;
-      selectManual.appendChild(opt1);
-    }
-
-    if (filtroCuadra) {
-      var opt2 = document.createElement("option");
-      opt2.value = c.id;
-      opt2.textContent = c.nombre;
-      filtroCuadra.appendChild(opt2);
-    }
-  }
-}
-
-/**
- * Maneja el cambio manual en el <select> de cuadra.
- */
+/** Al elegir una cuadra a mano: se respeta; si no hay punto, usa su centro. */
 function seleccionarCuadraManual(cuadraId) {
-  AppEstado.seleccionManualCuadra = Boolean(cuadraId);
-
+  marcarInicioCaptura();
+  asignarCuadra(cuadraId);
   var cuadra = obtenerCuadraPorId(cuadraId);
-  if (!cuadra) {
-    if (AppEstado.ubicacionActual) {
-      AppEstado.ubicacionActual.cuadraId = "";
-      AppEstado.ubicacionActual.fueraDeZona = false;
-    }
-    actualizarUIAsignacionCuadra("");
-    if (typeof resaltarCuadraCaptura === "function") resaltarCuadraCaptura("");
-    return;
+  if (!cuadra || !Array.isArray(cuadra.extremos) || cuadra.extremos.length === 0) return;
+
+  if (!AppEstado.ubicacion || distanciaACuadraMetros(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng, cuadra) >
+      (AppEstado.vias.zona.radio_max_m || 90)) {
+    var n = cuadra.extremos.length;
+    var lat = cuadra.extremos.reduce(function (s, p) { return s + p[0]; }, 0) / n;
+    var lng = cuadra.extremos.reduce(function (s, p) { return s + p[1]; }, 0) / n;
+    fijarUbicacion(lat, lng, { conservarCuadra: true });
   }
-
-  var lat = AppEstado.ubicacionActual ? AppEstado.ubicacionActual.lat : null;
-  var lng = AppEstado.ubicacionActual ? AppEstado.ubicacionActual.lng : null;
-
-  if ((typeof lat !== "number" || typeof lng !== "number" || isNaN(lat) || isNaN(lng)) && Array.isArray(cuadra.extremos) && cuadra.extremos.length > 0) {
-    var sumaLat = 0;
-    var sumaLng = 0;
-    for (var i = 0; i < cuadra.extremos.length; i++) {
-      sumaLat += Number(cuadra.extremos[i][0]);
-      sumaLng += Number(cuadra.extremos[i][1]);
-    }
-    lat = Number((sumaLat / cuadra.extremos.length).toFixed(6));
-    lng = Number((sumaLng / cuadra.extremos.length).toFixed(6));
-  }
-
-  if (typeof lat === "number" && typeof lng === "number" && !isNaN(lat) && !isNaN(lng)) {
-    AppEstado.ubicacionActual = {
-      lat: Number(lat.toFixed(6)),
-      lng: Number(lng.toFixed(6)),
-      cuadraId: cuadra.id,
-      distanciaM: Math.round(distanciaACuadraMetros(lat, lng, cuadra)),
-      fueraDeZona: false
-    };
-    mostrarCoordenadasTexto(lat, lng);
-    if (typeof actualizarMarcadorCaptura === "function") {
-      actualizarMarcadorCaptura(lat, lng, function (nuevaLat, nuevaLng) {
-        fijarUbicacion(nuevaLat, nuevaLng, { conservarManual: false, sinMoverMapa: true });
-      });
-    }
-  } else {
-    AppEstado.ubicacionActual = {
-      lat: null,
-      lng: null,
-      cuadraId: cuadra.id,
-      distanciaM: null,
-      fueraDeZona: false
-    };
-  }
-
-  actualizarUIAsignacionCuadra(cuadra.id);
-  if (typeof resaltarCuadraCaptura === "function") resaltarCuadraCaptura(cuadra.id);
 }
 
-/**
- * Configura el buscador de direcciones / calles / puntos de interés en Santa Marta.
- */
-function configurarBuscadorDireccion() {
-  var input = document.getElementById("input-buscar-direccion");
-  var btnLimpiar = document.getElementById("btn-limpiar-direccion");
-  var listaEl = document.getElementById("resultados-direccion");
-  if (!input || !listaEl) return;
-
+function configurarBuscador() {
+  var input = porId("input-buscar-direccion");
+  var lista = porId("lista-sugerencias-direccion");
+  var btnLimpiar = porId("btn-limpiar-busqueda");
   var temporizador = null;
 
-  function ocultarResultados() {
-    listaEl.hidden = true;
-    listaEl.innerHTML = "";
+  function ocultar() {
+    lista.hidden = true;
+    lista.innerHTML = "";
+    mostrarTexto("estado-busqueda-direccion", "");
   }
 
-  function renderizarResultados(items) {
-    listaEl.innerHTML = "";
-    if (!Array.isArray(items) || items.length === 0) {
-      var vacio = document.createElement("div");
-      vacio.className = "resultado-direccion-vacio";
-      vacio.textContent = "Sin coincidencias en Santa Marta. Prueba con otra calle, carrera o lugar.";
-      listaEl.appendChild(vacio);
-      listaEl.hidden = false;
-      return;
-    }
-
-    for (var i = 0; i < items.length; i++) {
-      (function (item) {
-        var btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "resultado-direccion-item";
-        btn.innerHTML =
-          '<span class="resultado-direccion-titulo">' + escaparHTML(item.titulo) + "</span>" +
-          '<span class="resultado-direccion-sub">' + escaparHTML(item.subtitulo) + "</span>";
-
-        btn.addEventListener("click", function () {
+  function buscar() {
+    var consulta = input.value.trim();
+    if (consulta.length < 3) return ocultar();
+    mostrarTexto("estado-busqueda-direccion", "Buscando...");
+    buscarDireccionesMapa(consulta, AppEstado.vias).then(function (items) {
+      if (input.value.trim() !== consulta) return;
+      ocultar();
+      if (items.length === 0) {
+        mostrarTexto("estado-busqueda-direccion", "Sin coincidencias. Prueba con otra calle, carrera o lugar.");
+        return;
+      }
+      items.forEach(function (item) {
+        var li = crear("li", "item-sugerencia");
+        li.setAttribute("role", "option");
+        li.appendChild(crear("span", "sugerencia-titulo", item.titulo));
+        li.appendChild(crear("span", "sugerencia-sub", item.subtitulo));
+        li.addEventListener("click", function () {
           input.value = item.titulo;
-          if (btnLimpiar) btnLimpiar.hidden = false;
-          ocultarResultados();
-          AppEstado.seleccionManualCuadra = false;
-          fijarUbicacion(item.lat, item.lng, { conservarManual: false });
+          ocultar();
+          marcarInicioCaptura();
+          fijarUbicacion(item.lat, item.lng);
         });
-
-        listaEl.appendChild(btn);
-      })(items[i]);
-    }
-    listaEl.hidden = false;
+        lista.appendChild(li);
+      });
+      lista.hidden = false;
+    });
   }
 
   input.addEventListener("input", function () {
-    var val = input.value.trim();
-    if (btnLimpiar) btnLimpiar.hidden = val.length === 0;
-
-    if (temporizador) clearTimeout(temporizador);
-    if (val.length < 2) {
-      ocultarResultados();
-      return;
-    }
-
-    temporizador = setTimeout(function () {
-      if (typeof buscarDireccionesMapa === "function") {
-        buscarDireccionesMapa(val, AppEstado.vias).then(function (items) {
-          if (input.value.trim() === val) {
-            renderizarResultados(items);
-          }
-        });
-      }
-    }, 280);
+    btnLimpiar.hidden = input.value.length === 0;
+    clearTimeout(temporizador);
+    if (input.value.trim().length < 3) return ocultar();
+    temporizador = setTimeout(buscar, 800);
   });
-
   input.addEventListener("keydown", function (e) {
     if (e.key === "Enter") {
       e.preventDefault();
-      var val = input.value.trim();
-      if (val.length >= 2 && typeof buscarDireccionesMapa === "function") {
-        buscarDireccionesMapa(val, AppEstado.vias).then(function (items) {
-          renderizarResultados(items);
-        });
-      }
+      clearTimeout(temporizador);
+      buscar();
     } else if (e.key === "Escape") {
-      ocultarResultados();
+      ocultar();
     }
   });
-
-  if (btnLimpiar) {
-    btnLimpiar.addEventListener("click", function () {
-      input.value = "";
-      btnLimpiar.hidden = true;
-      ocultarResultados();
-      input.focus();
-    });
-  }
-
+  btnLimpiar.addEventListener("click", function () {
+    clearTimeout(temporizador);
+    input.value = "";
+    btnLimpiar.hidden = true;
+    ocultar();
+  });
   document.addEventListener("click", function (e) {
-    if (!e.target.closest(".buscador-direccion-wrapper")) {
-      ocultarResultados();
-    }
+    if (!e.target.closest(".buscador-direccion")) ocultar();
   });
 }
 
-/**
- * Configura los botones de categoría y actor en la vista Captura.
- */
-function configurarBotonesSeleccion() {
-  var botonesCat = document.querySelectorAll(".btn-categoria");
-  for (var i = 0; i < botonesCat.length; i++) {
-    botonesCat[i].addEventListener("click", function () {
-      var val = this.getAttribute("data-categoria") || "";
-      seleccionarCategoria(val);
+/* ------------------------- Categoría y actor ------------------------------ */
+
+function marcarOpcion(idGrupo, valor) {
+  porId(idGrupo).querySelectorAll(".btn-opcion").forEach(function (boton) {
+    var activo = boton.getAttribute("data-valor") === valor;
+    boton.classList.toggle("activo", activo);
+    boton.setAttribute("aria-pressed", activo ? "true" : "false");
+  });
+}
+
+function configurarOpciones(idGrupo, propiedad, idError) {
+  porId(idGrupo).querySelectorAll(".btn-opcion").forEach(function (boton) {
+    boton.addEventListener("click", function () {
+      marcarInicioCaptura();
+      AppEstado[propiedad] = boton.getAttribute("data-valor");
+      marcarOpcion(idGrupo, AppEstado[propiedad]);
+      mostrarTexto(idError, "");
     });
-  }
-
-  var botonesActor = document.querySelectorAll(".btn-actor");
-  for (var j = 0; j < botonesActor.length; j++) {
-    botonesActor[j].addEventListener("click", function () {
-      var val = this.getAttribute("data-actor") || "";
-      seleccionarActor(val);
-    });
-  }
+  });
 }
 
-function seleccionarCategoria(valor) {
-  AppEstado.categoriaSeleccionada = valor;
-  var inputHidden = document.getElementById("categoria-seleccionada");
-  if (inputHidden) inputHidden.value = valor;
+/* -------------------------- Foto y pixelado ------------------------------- */
 
-  var botones = document.querySelectorAll(".btn-categoria");
-  for (var i = 0; i < botones.length; i++) {
-    var activo = botones[i].getAttribute("data-categoria") === valor;
-    botones[i].classList.toggle("activo", activo);
-    botones[i].setAttribute("aria-pressed", activo ? "true" : "false");
-  }
-}
+/** Pixela una zona promediando el color de cada bloque (irreversible). */
+function pixelarRegion(ctx, canvas, region) {
+  var x0 = Math.max(0, Math.floor(region.x));
+  var y0 = Math.max(0, Math.floor(region.y));
+  var x1 = Math.min(canvas.width, Math.ceil(region.x + region.w));
+  var y1 = Math.min(canvas.height, Math.ceil(region.y + region.h));
+  var bloque = Math.max(12, Math.round(canvas.width / 45));
 
-function seleccionarActor(valor) {
-  AppEstado.actorSeleccionado = valor;
-  var inputHidden = document.getElementById("actor-seleccionada");
-  if (inputHidden) inputHidden.value = valor;
-
-  var botones = document.querySelectorAll(".btn-actor");
-  for (var i = 0; i < botones.length; i++) {
-    var activo = botones[i].getAttribute("data-actor") === valor;
-    botones[i].classList.toggle("activo", activo);
-    botones[i].setAttribute("aria-pressed", activo ? "true" : "false");
-  }
-}
-
-/**
- * Dibuja en el <canvas> la imagen base y, si existe, la región pixelada.
- */
-function renderizarCanvasAnonimizacion() {
-  var canvas = document.getElementById("canvas-foto");
-  if (!canvas || !AppEstado.imagenOriginalDataUrl) return;
-
-  var img = new Image();
-  img.onload = function () {
-    var maxAncho = 900;
-    var ancho = img.width;
-    var alto = img.height;
-
-    if (ancho > maxAncho) {
-      var escala = maxAncho / ancho;
-      ancho = maxAncho;
-      alto = Math.round(img.height * escala);
-    }
-
-    canvas.width = ancho;
-    canvas.height = alto;
-
-    var ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, ancho, alto);
-    ctx.drawImage(img, 0, 0, ancho, alto);
-
-    var reg = AppEstado.regionAnonimizacion;
-    if (reg && reg.w > 2 && reg.h > 2) {
-      aplicarPixeladoEnRegion(ctx, canvas, reg.x, reg.y, reg.w, reg.h, 12);
-
-      ctx.save();
-      ctx.strokeStyle = "#0284c7";
-      ctx.lineWidth = 2;
-      ctx.setLineDash([6, 4]);
-      ctx.strokeRect(reg.x, reg.y, reg.w, reg.h);
-      ctx.restore();
-    }
-
-    var tempCanvas = document.createElement("canvas");
-    tempCanvas.width = ancho;
-    tempCanvas.height = alto;
-    var tempCtx = tempCanvas.getContext("2d");
-    tempCtx.drawImage(img, 0, 0, ancho, alto);
-    if (reg && reg.w > 2 && reg.h > 2) {
-      aplicarPixeladoEnRegion(tempCtx, tempCanvas, reg.x, reg.y, reg.w, reg.h, 12);
-    }
-    AppEstado.imagenProcesadaDataUrl = tempCanvas.toDataURL("image/jpeg", 0.78);
-  };
-  img.src = AppEstado.imagenOriginalDataUrl;
-}
-
-/**
- * Aplica pixelado irreversible (mosaico de bloques) sobre un rectángulo del canvas.
- */
-function aplicarPixeladoEnRegion(ctx, canvas, rx, ry, rw, rh, tamBloque) {
-  var x0 = Math.max(0, Math.floor(rx));
-  var y0 = Math.max(0, Math.floor(ry));
-  var x1 = Math.min(canvas.width, Math.ceil(rx + rw));
-  var y1 = Math.min(canvas.height, Math.ceil(ry + rh));
-  var w = x1 - x0;
-  var h = y1 - y0;
-  if (w <= 0 || h <= 0) return;
-
-  var bloque = tamBloque || 12;
   for (var y = y0; y < y1; y += bloque) {
     for (var x = x0; x < x1; x += bloque) {
       var bw = Math.min(bloque, x1 - x);
       var bh = Math.min(bloque, y1 - y);
-      var pixel = ctx.getImageData(x, y, 1, 1).data;
-      ctx.fillStyle = "rgb(" + pixel[0] + "," + pixel[1] + "," + pixel[2] + ")";
+      var datos = ctx.getImageData(x, y, bw, bh).data;
+      var r = 0, g = 0, b = 0, n = datos.length / 4;
+      for (var i = 0; i < datos.length; i += 4) {
+        r += datos[i];
+        g += datos[i + 1];
+        b += datos[i + 2];
+      }
+      ctx.fillStyle = "rgb(" + Math.round(r / n) + "," + Math.round(g / n) + "," + Math.round(b / n) + ")";
       ctx.fillRect(x, y, bw, bh);
     }
   }
 }
 
-function obtenerCoordenadasCanvas(evento, canvas) {
-  var rect = canvas.getBoundingClientRect();
-  var clientX = evento.touches && evento.touches.length > 0 ? evento.touches[0].clientX : evento.clientX;
-  var clientY = evento.touches && evento.touches.length > 0 ? evento.touches[0].clientY : evento.clientY;
+function dibujarFoto() {
+  var canvas = porId("canvas-foto");
+  if (!AppEstado.foto) return;
+  var ctx = canvas.getContext("2d");
+  ctx.drawImage(AppEstado.foto, 0, 0, canvas.width, canvas.height);
+  AppEstado.regiones.forEach(function (reg) { pixelarRegion(ctx, canvas, reg); });
+  if (AppEstado.trazo) {
+    ctx.strokeStyle = "#0284c7";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(AppEstado.trazo.x, AppEstado.trazo.y, AppEstado.trazo.w, AppEstado.trazo.h);
+  }
+}
 
-  var escalaX = canvas.width / (rect.width || 1);
-  var escalaY = canvas.height / (rect.height || 1);
+function quitarFoto() {
+  AppEstado.foto = null;
+  AppEstado.regiones = [];
+  AppEstado.trazo = null;
+  porId("input-foto-camara").value = "";
+  porId("input-foto-galeria").value = "";
+  porId("check-privacidad-foto").checked = false;
+  porId("zona-edicion-foto").hidden = true;
+  mostrarTexto("error-foto", "");
+}
 
-  return {
-    x: (clientX - rect.left) * escalaX,
-    y: (clientY - rect.top) * escalaY
+function cargarFoto(archivo) {
+  if (!archivo) return;
+  var url = URL.createObjectURL(archivo);
+  var img = new Image();
+  img.onload = function () {
+    URL.revokeObjectURL(url);
+    quitarFoto();
+    AppEstado.foto = img;
+    // Reducir a 800 px de ancho para ahorrar espacio en localStorage
+    var escala = Math.min(1, 800 / img.width);
+    var canvas = porId("canvas-foto");
+    canvas.width = Math.round(img.width * escala);
+    canvas.height = Math.round(img.height * escala);
+    porId("zona-edicion-foto").hidden = false;
+    dibujarFoto();
   };
-}
-
-function configurarAnonimizacionCanvas() {
-  var inputFoto = document.getElementById("input-foto");
-  var canvas = document.getElementById("canvas-foto");
-  var editorEl = document.getElementById("editor-anonimizacion");
-  var btnLimpiar = document.getElementById("btn-limpiar-anonimizacion");
-  var chkConfirmacion = document.getElementById("chk-confirmar-anonimizacion");
-
-  if (inputFoto) {
-    inputFoto.addEventListener("change", function () {
-      var archivo = inputFoto.files && inputFoto.files[0];
-      if (!archivo) return;
-
-      var lector = new FileReader();
-      lector.onload = function (e) {
-        AppEstado.imagenOriginalDataUrl = e.target.result;
-        AppEstado.regionAnonimizacion = null;
-        if (chkConfirmacion) chkConfirmacion.checked = false;
-        if (editorEl) editorEl.hidden = false;
-        renderizarCanvasAnonimizacion();
-      };
-      lector.readAsDataURL(archivo);
-    });
-  }
-
-  if (!canvas) return;
-
-  function iniciarTrazo(e) {
-    if (!AppEstado.imagenOriginalDataUrl) return;
-    e.preventDefault();
-    var pt = obtenerCoordenadasCanvas(e, canvas);
-    AppEstado.arrastrandoAnonimizacion = true;
-    AppEstado.inicioArrastre = pt;
-    AppEstado.regionAnonimizacion = { x: pt.x, y: pt.y, w: 1, h: 1 };
-  }
-
-  function moverTrazo(e) {
-    if (!AppEstado.arrastrandoAnonimizacion || !AppEstado.inicioArrastre) return;
-    e.preventDefault();
-    var pt = obtenerCoordenadasCanvas(e, canvas);
-    var x = Math.min(AppEstado.inicioArrastre.x, pt.x);
-    var y = Math.min(AppEstado.inicioArrastre.y, pt.y);
-    var w = Math.abs(pt.x - AppEstado.inicioArrastre.x);
-    var h = Math.abs(pt.y - AppEstado.inicioArrastre.y);
-    AppEstado.regionAnonimizacion = { x: x, y: y, w: w, h: h };
-    renderizarCanvasAnonimizacion();
-  }
-
-  function finalizarTrazo() {
-    if (!AppEstado.arrastrandoAnonimizacion) return;
-    AppEstado.arrastrandoAnonimizacion = false;
-    AppEstado.inicioArrastre = null;
-    renderizarCanvasAnonimizacion();
-  }
-
-  canvas.addEventListener("mousedown", iniciarTrazo);
-  canvas.addEventListener("mousemove", moverTrazo);
-  window.addEventListener("mouseup", finalizarTrazo);
-
-  canvas.addEventListener("touchstart", iniciarTrazo, { passive: false });
-  canvas.addEventListener("touchmove", moverTrazo, { passive: false });
-  window.addEventListener("touchend", finalizarTrazo);
-
-  if (btnLimpiar) {
-    btnLimpiar.addEventListener("click", function () {
-      AppEstado.regionAnonimizacion = null;
-      renderizarCanvasAnonimizacion();
-    });
-  }
-}
-
-function mostrarMensajeFormulario(texto, tipo) {
-  var el = document.getElementById("mensaje-formulario");
-  if (!el) return;
-  el.textContent = texto;
-  el.className = "mensaje-estado " + (tipo || "info");
-  el.hidden = !texto;
-}
-
-function limpiarFormularioCaptura() {
-  AppEstado.editandoId = null;
-  AppEstado.seleccionManualCuadra = false;
-  AppEstado.categoriaSeleccionada = "";
-  AppEstado.actorSeleccionado = "";
-  AppEstado.imagenOriginalDataUrl = null;
-  AppEstado.imagenProcesadaDataUrl = null;
-  AppEstado.regionAnonimizacion = null;
-
-  var fechaInput = document.getElementById("input-fecha-hora");
-  if (fechaInput) fechaInput.value = obtenerFechaHoraLocalActual();
-
-  var obsInput = document.getElementById("input-observaciones");
-  if (obsInput) obsInput.value = "";
-
-  var inputFoto = document.getElementById("input-foto");
-  if (inputFoto) inputFoto.value = "";
-
-  var editorEl = document.getElementById("editor-anonimizacion");
-  if (editorEl) editorEl.hidden = true;
-
-  var chkConf = document.getElementById("chk-confirmar-anonimizacion");
-  if (chkConf) chkConf.checked = false;
-
-  var btnCancelarEdicion = document.getElementById("btn-cancelar-edicion");
-  if (btnCancelarEdicion) btnCancelarEdicion.hidden = true;
-
-  var tituloForm = document.getElementById("titulo-form-captura");
-  if (tituloForm) tituloForm.textContent = "Nuevo reporte de mal parqueo";
-
-  seleccionarCategoria("");
-  seleccionarActor("");
-
-  var viasSeguras = normalizarViasSeguras(AppEstado.vias);
-  var centro = (viasSeguras.zona && viasSeguras.zona.centro)
-    ? viasSeguras.zona.centro
-    : [11.2232, -74.1885];
-  fijarUbicacion(centro[0], centro[1], { conservarManual: false });
-}
-
-function cargarReporteEnFormulario(reporte) {
-  if (!reporte) return;
-
-  AppEstado.editandoId = reporte.id;
-  AppEstado.seleccionManualCuadra = true;
-
-  var fechaInput = document.getElementById("input-fecha-hora");
-  if (fechaInput) fechaInput.value = reporte.fecha_hora || obtenerFechaHoraLocalActual();
-
-  fijarUbicacion(reporte.lat, reporte.lng, { conservarManual: true });
-  seleccionarCuadraManual(reporte.cuadra || "");
-  seleccionarCategoria(reporte.categoria || "");
-  seleccionarActor(reporte.actor || "");
-
-  var obsInput = document.getElementById("input-observaciones");
-  if (obsInput) obsInput.value = reporte.observaciones || "";
-
-  var editorEl = document.getElementById("editor-anonimizacion");
-  var chkConf = document.getElementById("chk-confirmar-anonimizacion");
-  if (reporte.foto && String(reporte.foto).indexOf("data:image/") === 0) {
-    AppEstado.imagenOriginalDataUrl = reporte.foto;
-    AppEstado.imagenProcesadaDataUrl = reporte.foto;
-    AppEstado.regionAnonimizacion = null;
-    if (editorEl) editorEl.hidden = false;
-    if (chkConf) chkConf.checked = true;
-    renderizarCanvasAnonimizacion();
-  } else {
-    AppEstado.imagenOriginalDataUrl = null;
-    AppEstado.imagenProcesadaDataUrl = null;
-    AppEstado.regionAnonimizacion = null;
-    if (editorEl) editorEl.hidden = true;
-    if (chkConf) chkConf.checked = false;
-  }
-
-  var btnCancelarEdicion = document.getElementById("btn-cancelar-edicion");
-  if (btnCancelarEdicion) btnCancelarEdicion.hidden = false;
-
-  var tituloForm = document.getElementById("titulo-form-captura");
-  if (tituloForm) tituloForm.textContent = "Editando reporte " + reporte.id;
-
-  cambiarVista("vista-captura");
-  mostrarMensajeFormulario("Editando " + reporte.id + ". Modifica los campos y pulsa Guardar reporte.", "info");
-}
-
-function guardarReporteDesdeFormulario(evento) {
-  evento.preventDefault();
-
-  var fechaHora = (document.getElementById("input-fecha-hora") || {}).value || obtenerFechaHoraLocalActual();
-  var observaciones = ((document.getElementById("input-observaciones") || {}).value || "").trim();
-  var chkAnon = document.getElementById("chk-confirmar-anonimizacion");
-
-  var lat = AppEstado.ubicacionActual ? AppEstado.ubicacionActual.lat : null;
-  var lng = AppEstado.ubicacionActual ? AppEstado.ubicacionActual.lng : null;
-  var cuadraId = AppEstado.ubicacionActual ? AppEstado.ubicacionActual.cuadraId : "";
-
-  if (!cuadraId) {
-    var selectC = document.getElementById("select-cuadra-manual");
-    if (selectC && selectC.value) cuadraId = selectC.value;
-  }
-
-  if (typeof lat !== "number" || typeof lng !== "number" || isNaN(lat) || isNaN(lng)) {
-    mostrarMensajeFormulario("Selecciona primero un punto en el mapa o usa tu ubicación.", "error");
-    return;
-  }
-
-  if (!cuadraId) {
-    mostrarMensajeFormulario("Selecciona una cuadra en el desplegable.", "error");
-    return;
-  }
-
-  if (!AppEstado.categoriaSeleccionada) {
-    mostrarMensajeFormulario("Selecciona una categoría de obstrucción.", "error");
-    return;
-  }
-
-  if (!AppEstado.actorSeleccionado) {
-    mostrarMensajeFormulario("Selecciona el tipo de vehículo o actor.", "error");
-    return;
-  }
-
-  var tieneFotoNueva = Boolean(AppEstado.imagenOriginalDataUrl);
-  if (tieneFotoNueva && (!chkAnon || !chkAnon.checked)) {
-    mostrarMensajeFormulario("Confirma que revisaste la foto y pixelaste placas o rostros visibles antes de guardar.", "error");
-    return;
-  }
-
-  var cuadraObj = obtenerCuadraPorId(cuadraId);
-  var tipoVia = cuadraObj ? cuadraObj.tipo_via : "secundaria";
-
-  var fotoFinal = "fotos/captura-local.jpg";
-  if (tieneFotoNueva) {
-    fotoFinal = AppEstado.imagenProcesadaDataUrl || AppEstado.imagenOriginalDataUrl;
-  } else if (AppEstado.editandoId) {
-    var anterior = null;
-    for (var i = 0; i < AppEstado.reportesUnificados.length; i++) {
-      if (AppEstado.reportesUnificados[i].id === AppEstado.editandoId) {
-        anterior = AppEstado.reportesUnificados[i];
-        break;
-      }
-    }
-    if (anterior && anterior.foto) {
-      fotoFinal = anterior.foto;
-    }
-  }
-
-  var idReporte = AppEstado.editandoId || (typeof generarIdReporteLocal === "function"
-    ? generarIdReporteLocal(AppEstado.reportesUnificados)
-    : "MP-LOC-" + Date.now());
-
-  var reporteObjeto = {
-    id: idReporte,
-    origen: "campo",
-    fecha_hora: fechaHora,
-    lat: Number(lat.toFixed(6)),
-    lng: Number(lng.toFixed(6)),
-    cuadra: cuadraId,
-    categoria: AppEstado.categoriaSeleccionada,
-    actor: AppEstado.actorSeleccionado,
-    foto: fotoFinal,
-    observaciones: observaciones
+  img.onerror = function () {
+    URL.revokeObjectURL(url);
+    mostrarTexto("error-foto", "No se pudo abrir esa imagen. Prueba con una foto JPG o PNG.");
   };
-
-  var viasSeguras = normalizarViasSeguras(AppEstado.vias);
-  if (typeof calcularCriticidad === "function" && AppEstado.criterios && viasSeguras.cuadras.length > 0) {
-    reporteObjeto.criticidad = calcularCriticidad(reporteObjeto, AppEstado.criterios, tipoVia);
-  } else {
-    reporteObjeto.criticidad = { puntaje: 5, nivel: "Medio", franja: "valle" };
-  }
-
-  var nuevaListaLocal = [];
-  var reemplazado = false;
-  for (var j = 0; j < AppEstado.reportesLocales.length; j++) {
-    if (AppEstado.reportesLocales[j].id === idReporte) {
-      nuevaListaLocal.push(reporteObjeto);
-      reemplazado = true;
-    } else {
-      nuevaListaLocal.push(AppEstado.reportesLocales[j]);
-    }
-  }
-  if (!reemplazado) {
-    nuevaListaLocal.unshift(reporteObjeto);
-  }
-
-  var resGuardado = typeof guardarReportesLocales === "function"
-    ? guardarReportesLocales(nuevaListaLocal)
-    : { ok: true };
-
-  if (!resGuardado.ok && resGuardado.motivo === "cuota_excedida" && tieneFotoNueva) {
-    reporteObjeto.foto = "fotos/sin-foto-por-cuota.jpg";
-    nuevaListaLocal = [];
-    var rep2 = false;
-    for (var k = 0; k < AppEstado.reportesLocales.length; k++) {
-      if (AppEstado.reportesLocales[k].id === idReporte) {
-        nuevaListaLocal.push(reporteObjeto);
-        rep2 = true;
-      } else {
-        nuevaListaLocal.push(AppEstado.reportesLocales[k]);
-      }
-    }
-    if (!rep2) nuevaListaLocal.unshift(reporteObjeto);
-    resGuardado = typeof guardarReportesLocales === "function"
-      ? guardarReportesLocales(nuevaListaLocal)
-      : { ok: true };
-
-    if (resGuardado.ok) {
-      AppEstado.reportesLocales = nuevaListaLocal;
-      refrescarTodoElEstado();
-      limpiarFormularioCaptura();
-      mostrarMensajeFormulario(
-        "Reporte " + idReporte + " guardado sin foto porque el almacenamiento local alcanzó su límite. Exporta JSON o borra reportes antiguos.",
-        "warn"
-      );
-      return;
-    }
-  }
-
-  if (!resGuardado.ok) {
-    mostrarMensajeFormulario(
-      "No se pudo guardar en el almacenamiento local. Exporta tus datos a JSON o libera espacio.",
-      "error"
-    );
-    return;
-  }
-
-  AppEstado.reportesLocales = nuevaListaLocal;
-  refrescarTodoElEstado();
-  limpiarFormularioCaptura();
-  mostrarMensajeFormulario(
-    "Reporte " + idReporte + " guardado (" + reporteObjeto.criticidad.nivel + ", " + reporteObjeto.criticidad.puntaje + " pts).",
-    "ok"
-  );
+  img.src = url;
 }
 
-function eliminarReportePorId(idReporte) {
-  if (!idReporte) return;
+function configurarFoto() {
+  var canvas = porId("canvas-foto");
+  var inicio = null;
 
-  var filtrados = [];
-  for (var i = 0; i < AppEstado.reportesLocales.length; i++) {
-    if (AppEstado.reportesLocales[i].id !== idReporte) {
-      filtrados.push(AppEstado.reportesLocales[i]);
-    }
-  }
-
-  var res = typeof guardarReportesLocales === "function"
-    ? guardarReportesLocales(filtrados)
-    : { ok: true };
-
-  if (res.ok) {
-    AppEstado.reportesLocales = filtrados;
-    if (AppEstado.editandoId === idReporte) {
-      limpiarFormularioCaptura();
-    }
-    refrescarTodoElEstado();
-    mostrarMensajeFormulario("Reporte " + idReporte + " eliminado de los registros locales.", "info");
-  }
-}
-
-function etiquetaCategoria(cat) {
-  if (cat === "doble_fila") return "Doble fila / vía prohibida";
-  if (cat === "bloqueo_rampa_cebra_paradero") return "Bloqueo rampa, cebra o paradero";
-  if (cat === "invasion_anden") return "Invasión de andén";
-  return cat || "—";
-}
-
-function etiquetaActor(actor) {
-  if (actor === "vehiculo_particular") return "Vehículo particular";
-  if (actor === "motocicleta") return "Motocicleta";
-  if (actor === "vehiculo_carga") return "Vehículo de carga";
-  if (actor === "transporte_publico") return "Transporte público";
-  return actor || "—";
-}
-
-function renderizarListaRegistros(listaFiltrada) {
-  var contenedor = document.getElementById("lista-registros");
-  var contadorEl = document.getElementById("contador-registros");
-
-  if (contadorEl) {
-    contadorEl.textContent = listaFiltrada.length + " reporte" + (listaFiltrada.length === 1 ? "" : "s");
-  }
-
-  if (!contenedor) return;
-  contenedor.innerHTML = "";
-
-  if (listaFiltrada.length === 0) {
-    contenedor.innerHTML = '<p class="texto-vacio">No hay reportes que coincidan con los filtros seleccionados.</p>';
-    return;
-  }
-
-  var ordenados = listaFiltrada.slice().sort(function (a, b) {
-    if (a.fecha_hora < b.fecha_hora) return 1;
-    if (a.fecha_hora > b.fecha_hora) return -1;
-    return 0;
+  alPulsar("btn-tomar-foto", function () { porId("input-foto-camara").click(); });
+  alPulsar("btn-galeria-foto", function () { porId("input-foto-galeria").click(); });
+  ["input-foto-camara", "input-foto-galeria"].forEach(function (id) {
+    porId(id).addEventListener("change", function () {
+      marcarInicioCaptura();
+      cargarFoto(this.files && this.files[0]);
+    });
+  });
+  alPulsar("btn-quitar-foto", quitarFoto);
+  alPulsar("btn-deshacer-pixel", function () {
+    AppEstado.regiones.pop();
+    porId("check-privacidad-foto").checked = false;
+    dibujarFoto();
   });
 
-  var idsLocales = {};
-  for (var i = 0; i < AppEstado.reportesLocales.length; i++) {
-    idsLocales[AppEstado.reportesLocales[i].id] = true;
+  function punto(e) {
+    var caja = canvas.getBoundingClientRect();
+    return {
+      x: (e.clientX - caja.left) * canvas.width / caja.width,
+      y: (e.clientY - caja.top) * canvas.height / caja.height
+    };
   }
 
-  for (var j = 0; j < ordenados.length; j++) {
-    var r = ordenados[j];
-    var cuadraObj = obtenerCuadraPorId(r.cuadra);
-    var nombreCuadra = cuadraObj ? cuadraObj.nombre : r.cuadra;
-    var nivel = r.criticidad ? r.criticidad.nivel : "Bajo";
-    var puntaje = r.criticidad ? r.criticidad.puntaje : 0;
-    var franja = r.criticidad ? r.criticidad.franja : (typeof deducirFranjaHoraria === "function" ? deducirFranjaHoraria(r.fecha_hora, AppEstado.criterios) : "valle");
-    var claseNivel = "nivel-" + nivel.toLowerCase();
-    var esLocal = Boolean(idsLocales[r.id]);
-
-    var tieneMiniatura = r.foto && String(r.foto).indexOf("data:image/") === 0;
-    var bloqueFoto = tieneMiniatura
-      ? '<img class="miniatura-reporte" src="' + r.foto + '" alt="Evidencia ' + escaparHTML(r.id) + '">'
-      : '<span class="etiqueta-foto-ref">' + escaparHTML(r.foto || "Sin foto") + "</span>";
-
-    var botonesAccion = esLocal
-      ? '<div class="acciones-tarjeta">' +
-        '<button type="button" class="btn-secundario btn-sm btn-editar-rep" data-id="' + escaparHTML(r.id) + '">Editar</button>' +
-        '<button type="button" class="btn-peligro btn-sm btn-eliminar-rep" data-id="' + escaparHTML(r.id) + '">Eliminar</button>' +
-        "</div>"
-      : '<span class="etiqueta-precargado">Precargado</span>';
-
-    var tarjeta = document.createElement("article");
-    tarjeta.className = "tarjeta-reporte";
-    tarjeta.innerHTML =
-      '<div class="tarjeta-cabecera">' +
-        '<div>' +
-          '<strong class="id-reporte">' + escaparHTML(r.id) + "</strong> " +
-          '<span class="fecha-reporte">' + escaparHTML((r.fecha_hora || "").replace("T", " ")) + "</span>" +
-        "</div>" +
-        '<span class="badge-criticidad ' + claseNivel + '">' + escaparHTML(nivel) + " (" + puntaje + ")</span>" +
-      "</div>" +
-      '<p class="cuadra-reporte">' + escaparHTML(nombreCuadra) + "</p>" +
-      '<div class="meta-reporte">' +
-        "<span><strong>Categoría:</strong> " + escaparHTML(etiquetaCategoria(r.categoria)) + "</span>" +
-        "<span><strong>Actor:</strong> " + escaparHTML(etiquetaActor(r.actor)) + "</span>" +
-        "<span><strong>Franja:</strong> " + escaparHTML(franja === "pico" ? "Hora pico" : "Hora valle") + "</span>" +
-      "</div>" +
-      (r.observaciones ? '<p class="obs-reporte">' + escaparHTML(r.observaciones) + "</p>" : "") +
-      '<div class="pie-tarjeta">' +
-        bloqueFoto +
-        botonesAccion +
-      "</div>";
-
-    contenedor.appendChild(tarjeta);
+  // Los eventos "pointer" sirven igual para dedo y para ratón
+  canvas.addEventListener("pointerdown", function (e) {
+    if (!AppEstado.foto) return;
+    canvas.setPointerCapture(e.pointerId);
+    inicio = punto(e);
+  });
+  canvas.addEventListener("pointermove", function (e) {
+    if (!inicio) return;
+    var p = punto(e);
+    AppEstado.trazo = {
+      x: Math.min(inicio.x, p.x), y: Math.min(inicio.y, p.y),
+      w: Math.abs(p.x - inicio.x), h: Math.abs(p.y - inicio.y)
+    };
+    dibujarFoto();
+  });
+  function terminar() {
+    if (AppEstado.trazo && AppEstado.trazo.w > 4 && AppEstado.trazo.h > 4) {
+      AppEstado.regiones.push(AppEstado.trazo);
+    }
+    inicio = null;
+    AppEstado.trazo = null;
+    dibujarFoto();
   }
+  canvas.addEventListener("pointerup", terminar);
+  canvas.addEventListener("pointercancel", terminar);
+}
 
-  var btnsEditar = contenedor.querySelectorAll(".btn-editar-rep");
-  for (var eIdx = 0; eIdx < btnsEditar.length; eIdx++) {
-    btnsEditar[eIdx].addEventListener("click", function () {
-      var idBuscado = this.getAttribute("data-id");
-      for (var x = 0; x < AppEstado.reportesUnificados.length; x++) {
-        if (AppEstado.reportesUnificados[x].id === idBuscado) {
-          cargarReporteEnFormulario(AppEstado.reportesUnificados[x]);
-          break;
-        }
-      }
-    });
-  }
+/* --------------------------- Estado y guardado ---------------------------- */
 
-  var btnsEliminar = contenedor.querySelectorAll(".btn-eliminar-rep");
-  for (var dIdx = 0; dIdx < btnsEliminar.length; dIdx++) {
-    btnsEliminar[dIdx].addEventListener("click", function () {
-      var idElim = this.getAttribute("data-id");
-      eliminarReportePorId(idElim);
-    });
+/** Une precargados y locales (sin duplicar ids) y calcula su criticidad. */
+function sincronizarReportes() {
+  var porClave = new Map();
+  AppEstado.reportesPrecargados.concat(AppEstado.reportesLocales).forEach(function (r) {
+    if (r && r.id) porClave.set(r.id, r);
+  });
+
+  var resultado = [];
+  porClave.forEach(function (reporte) {
+    try {
+      resultado.push(recalcularTodosLosReportes([reporte], AppEstado.criterios, AppEstado.vias)[0]);
+    } catch (err) {
+      // Un reporte dañado no debe tumbar la app, pero tampoco se le inventa un nivel
+      console.error("Reporte " + reporte.id + " omitido:", err.message);
+    }
+  });
+  AppEstado.reportesUnificados = resultado;
+}
+
+function limpiarFormulario() {
+  AppEstado.ubicacion = null;
+  AppEstado.categoria = "";
+  AppEstado.actor = "";
+  AppEstado.fechaManual = false;
+  AppEstado.inicioCaptura = null;
+  asignarCuadra("");
+  marcarOpcion("grupo-categoria", "");
+  marcarOpcion("grupo-actor", "");
+  quitarFoto();
+  porId("input-observaciones").value = "";
+  porId("contador-obs").textContent = "0 / 140";
+  porId("input-buscar-direccion").value = "";
+  porId("btn-limpiar-busqueda").hidden = true;
+  porId("detalle-fecha-hora").open = false;
+  porId("texto-coordenadas").textContent = "Sin ubicación marcada";
+  ["estado-gps", "aviso-precision", "aviso-fuera-zona", "error-ubicacion",
+    "error-cuadra", "error-categoria", "error-actor"].forEach(function (id) { mostrarTexto(id, ""); });
+  quitarMarcadorCaptura();
+  actualizarReloj();
+}
+
+function quitarMarcadorCaptura() {
+  if (marcadorCaptura) {
+    marcadorCaptura.remove();
+    marcadorCaptura = null;
   }
 }
 
-function renderizarResumenOperativo(listaFiltrada) {
-  var contenedorTop = document.getElementById("top5-cuadras");
-  var contenedorStats = document.getElementById("estadisticas-resumen");
-  var viasSeguras = normalizarViasSeguras(AppEstado.vias);
-  if (!contenedorTop || !contenedorStats || typeof generarResumenOperativo !== "function" || viasSeguras.cuadras.length === 0) return;
+function actualizarReloj() {
+  if (!AppEstado.fechaManual) porId("input-fecha-hora").value = obtenerFechaHoraLocalActual();
+  porId("texto-fecha-actual").textContent = porId("input-fecha-hora").value.replace("T", " ");
+}
 
-  var resumen = generarResumenOperativo(listaFiltrada, viasSeguras, AppEstado.criterios);
+/** Revisa los campos obligatorios y muestra el error junto a cada uno. */
+function validarFormulario() {
+  var errores = [
+    ["error-ubicacion", !AppEstado.ubicacion, "Marca el punto en el mapa, usa el GPS o elige una cuadra."],
+    ["error-cuadra", !AppEstado.cuadraId, "Selecciona una cuadra."],
+    ["error-categoria", !AppEstado.categoria, "Selecciona una categoría."],
+    ["error-actor", !AppEstado.actor, "Selecciona el tipo de actor."],
+    ["error-foto", AppEstado.foto && !porId("check-privacidad-foto").checked,
+      "Pixela placas y rostros y marca la casilla de confirmación."]
+  ];
+  var primero = null;
+  errores.forEach(function (e) {
+    mostrarTexto(e[0], e[1] ? e[2] : "");
+    if (e[1] && !primero) primero = porId(e[0]);
+  });
+  if (primero) primero.scrollIntoView({ behavior: "smooth", block: "center" });
+  return !primero;
+}
 
-  contenedorStats.innerHTML =
-    '<div class="kpi-grid">' +
-      '<div class="kpi-card"><span class="kpi-valor">' + resumen.totalReportes + '</span><span class="kpi-label">Reportes en vista</span></div>' +
-      '<div class="kpi-card kpi-alto"><span class="kpi-valor">' + resumen.conteoNiveles.Alto + '</span><span class="kpi-label">Criticidad Alta</span></div>' +
-      '<div class="kpi-card kpi-medio"><span class="kpi-valor">' + resumen.conteoNiveles.Medio + '</span><span class="kpi-label">Criticidad Media</span></div>' +
-      '<div class="kpi-card kpi-bajo"><span class="kpi-valor">' + resumen.conteoNiveles.Bajo + '</span><span class="kpi-label">Criticidad Baja</span></div>' +
-    "</div>";
+function guardarReporte() {
+  if (!validarFormulario()) return;
 
-  if (!resumen.top5 || resumen.top5.length === 0) {
-    contenedorTop.innerHTML = '<p class="texto-vacio">No hay datos suficientes para calcular el ranking de cuadras.</p>';
+  var config = cargarConfiguracion();
+  if (!config.iniciales) {
+    abrirAjustes("Escribe tus iniciales y vuelve a pulsar Guardar reporte.");
     return;
   }
 
-  var html = "";
-  for (var i = 0; i < resumen.top5.length; i++) {
-    var item = resumen.top5[i];
-    html +=
-      '<article class="tarjeta-top">' +
-        '<div class="top-cabecera">' +
-          '<span class="puesto-top">#' + (i + 1) + "</span>" +
-          '<div class="top-titulo-wrap">' +
-            "<strong>" + escaparHTML(item.nombre) + "</strong>" +
-            '<span class="top-sub">' + item.totalReportes + " reportes · Puntaje acumulado: " + item.puntajeAcumulado + " · Promedio: " + item.promedioCriticidad + "</span>" +
-          "</div>" +
-        "</div>" +
-        '<p class="recomendacion-top"><strong>Acción sugerida (' + escaparHTML(item.reglaAplicada) + "):</strong> " + escaparHTML(item.recomendacion) + "</p>" +
-      "</article>";
+  actualizarReloj();
+  var foto = null;
+  if (AppEstado.foto) {
+    AppEstado.trazo = null;
+    dibujarFoto();
+    foto = porId("canvas-foto").toDataURL("image/jpeg", 0.75);
   }
-  contenedorTop.innerHTML = html;
+
+  var reporte = {
+    id: generarSiguienteId(config.iniciales, AppEstado.reportesUnificados),
+    origen: config.origen,
+    fecha_hora: porId("input-fecha-hora").value.slice(0, 16),
+    lat: AppEstado.ubicacion.lat,
+    lng: AppEstado.ubicacion.lng,
+    cuadra: AppEstado.cuadraId,
+    categoria: AppEstado.categoria,
+    actor: AppEstado.actor,
+    foto: foto,
+    observaciones: porId("input-observaciones").value.trim()
+  };
+
+  var calculo;
+  try {
+    calculo = calcularCriticidad(reporte, AppEstado.criterios, AppEstado.vias);
+  } catch (err) {
+    mostrarTexto("error-ubicacion", "No se pudo calcular la criticidad: " + err.message);
+    porId("error-ubicacion").scrollIntoView({ block: "center" });
+    return;
+  }
+  reporte.criticidad = { puntaje: calculo.puntaje, nivel: calculo.nivel };
+
+  var nuevaLista = AppEstado.reportesLocales.concat([reporte]);
+  var guardado = guardarListaReportesLocales(nuevaLista);
+  if (!guardado.ok) {
+    AppEstado.reportePendiente = reporte;
+    porId("aviso-quota").hidden = false;
+    porId("aviso-quota").querySelector("strong").textContent = guardado.mensaje;
+    window.scrollTo(0, 0);
+    return;
+  }
+
+  var segundos = AppEstado.inicioCaptura ? Math.round((Date.now() - AppEstado.inicioCaptura) / 1000) : null;
+  AppEstado.reportesLocales = nuevaLista;
+  AppEstado.reportePendiente = null;
+  porId("aviso-quota").hidden = true;
+  refrescarTodo();
+  limpiarFormulario();
+
+  var d = calculo.desglose;
+  porId("confirmacion-desglose").textContent = reporte.id + " · Categoría " + d.categoria +
+    " + Vía " + d.via + " + Franja " + d.franja + " = " + calculo.puntaje + " ";
+  var badge = porId("confirmacion-badge-nivel");
+  badge.className = "badge-nivel nivel-" + calculo.nivel.toLowerCase();
+  badge.textContent = calculo.nivel;
+  porId("confirmacion-tiempo").textContent = segundos === null ? "" : "Registrado en " + segundos + " s.";
+  porId("tarjeta-confirmacion").hidden = false;
+  window.scrollTo(0, 0);
 }
 
-function configurarControlesModoMapa() {
-  var botonesModo = document.querySelectorAll(".btn-modo-mapa");
-  for (var i = 0; i < botonesModo.length; i++) {
-    botonesModo[i].addEventListener("click", function () {
-      var modo = this.getAttribute("data-modo") || "ambos";
-      if (typeof cambiarModoMapaRegistros === "function") {
-        cambiarModoMapaRegistros(modo);
-      }
+function eliminarReporte(id) {
+  if (!window.confirm("¿Eliminar el reporte " + id + "?")) return;
+  var filtrados = AppEstado.reportesLocales.filter(function (r) { return r.id !== id; });
+  var res = guardarListaReportesLocales(filtrados);
+  if (!res.ok) {
+    window.alert(res.mensaje);
+    return;
+  }
+  AppEstado.reportesLocales = filtrados;
+  refrescarTodo();
+}
 
-      for (var j = 0; j < botonesModo.length; j++) {
-        var activo = botonesModo[j].getAttribute("data-modo") === modo;
-        botonesModo[j].classList.toggle("activo", activo);
-        botonesModo[j].setAttribute("aria-pressed", activo ? "true" : "false");
-      }
+/* --------------------------- Vista Registros ------------------------------ */
+
+function leerFiltros() {
+  return {
+    cuadra: porId("filtro-cuadra").value,
+    franja: porId("filtro-franja").value,
+    categoria: porId("filtro-categoria").value,
+    actor: porId("filtro-actor").value
+  };
+}
+
+function renderizarAvance() {
+  var campo = AppEstado.reportesUnificados.filter(function (r) { return r.origen === "campo"; });
+  var pico = campo.filter(function (r) { return r._franja === "pico"; }).length;
+  porId("contador-meta-30").textContent = campo.length + " de 30";
+  porId("desglose-franjas").textContent = "Hora pico: " + pico + " · Hora valle: " + (campo.length - pico);
+
+  var chips = porId("desglose-cuadras");
+  chips.innerHTML = "";
+  listaCuadras().forEach(function (c) {
+    var n = campo.filter(function (r) { return r.cuadra === c.id; }).length;
+    if (n > 0) chips.appendChild(crear("span", "chip-conteo", c.id + ": " + n));
+  });
+  porId("uso-almacenamiento").textContent = "Almacenamiento: " + calcularUsoAlmacenamiento().texto;
+  porId("badge-total-registros").textContent = AppEstado.reportesUnificados.length;
+}
+
+function renderizarPorcentajes(filtrados) {
+  var stats = calcularEstadisticasFiltradas(filtrados);
+  porId("conteo-filtrado-texto").textContent =
+    "Mostrando " + stats.total + " de " + AppEstado.reportesUnificados.length + " reportes";
+  var caja = porId("desglose-porcentajes-categoria");
+  caja.innerHTML = "";
+  stats.categorias.forEach(function (cat) {
+    var item = crear("div", "item-porcentaje");
+    var fila = crear("div", "fila-texto-porcentaje");
+    fila.appendChild(crear("span", "", cat.etiqueta));
+    fila.appendChild(crear("strong", "", cat.conteo + " (" + cat.porcentaje + " %)"));
+    var fondo = crear("div", "barra-progreso-fondo");
+    var relleno = crear("div", "barra-progreso-relleno");
+    relleno.style.width = cat.porcentaje + "%";
+    fondo.appendChild(relleno);
+    item.appendChild(fila);
+    item.appendChild(fondo);
+    caja.appendChild(item);
+  });
+}
+
+function renderizarTop5(filtrados) {
+  var caja = porId("lista-top-5-cuadras");
+  var top = generarResumenOperativo(filtrados, AppEstado.vias, AppEstado.criterios); // devuelve un arreglo
+  caja.innerHTML = "";
+  if (top.length === 0) {
+    caja.appendChild(crear("p", "texto-suave", "No hay reportes para calcular el ranking."));
+    return;
+  }
+  top.forEach(function (item, i) {
+    var clase = item.conteoNivel.Alto > 0 ? " top5-critico" : (item.conteoNivel.Medio > 0 ? " top5-medio" : "");
+    var tarjeta = crear("article", "tarjeta-top5" + clase);
+    var cabecera = crear("div", "top5-cabecera");
+    var titulo = crear("div");
+    titulo.appendChild(crear("span", "top5-puesto", "#" + (i + 1)));
+    titulo.appendChild(crear("strong", "", item.nombreCuadra));
+    cabecera.appendChild(titulo);
+    cabecera.appendChild(crear("span", "top5-puntaje", item.puntajeAcumulado + " pts"));
+    tarjeta.appendChild(cabecera);
+    tarjeta.appendChild(crear("div", "top5-metricas", item.totalReportes + " reportes · Alto: " +
+      item.conteoNivel.Alto + " · Medio: " + item.conteoNivel.Medio + " · Bajo: " + item.conteoNivel.Bajo));
+    var rec = crear("div", "caja-recomendacion-top5");
+    rec.appendChild(crear("div", "titulo-recomendacion", item.recomendacion));
+    rec.appendChild(crear("div", "texto-regla-aplicada", item.reglaAplicada));
+    tarjeta.appendChild(rec);
+    caja.appendChild(tarjeta);
+  });
+}
+
+/** Ruta segura de la foto: capturada (data:) o archivo dentro de datos/fotos/. */
+function rutaFoto(foto) {
+  if (typeof foto !== "string") return null;
+  if (foto.indexOf("data:image/") === 0) return foto;
+  return /^fotos\/[\w-]+\.(jpe?g|png|webp)$/i.test(foto) ? "datos/" + foto : null;
+}
+
+function abrirFoto(src, detalle) {
+  porId("img-modal-foto").src = src;
+  porId("detalle-modal-foto").textContent = detalle;
+  porId("modal-foto").hidden = false;
+}
+
+function crearBloqueFoto(r) {
+  var src = rutaFoto(r.foto);
+  if (!src) return crear("div", "miniatura-vacia", "Sin foto");
+
+  var caja = crear("div", "contenedor-foto-registro");
+  var img = crear("img", "miniatura-registro");
+  img.alt = "Evidencia " + r.id;
+  img.loading = "lazy";
+  img.onerror = function () { caja.replaceWith(crear("div", "miniatura-vacia", "Foto no hallada")); };
+  img.src = src;
+  caja.appendChild(img);
+  caja.appendChild(crear("span", "pie-ampliar-foto", "Ampliar"));
+  caja.addEventListener("click", function () {
+    abrirFoto(src, r.id + " · " + r.fecha_hora.replace("T", " "));
+  });
+  return caja;
+}
+
+function renderizarLista(filtrados) {
+  var contenedor = porId("lista-registros");
+  contenedor.innerHTML = "";
+  if (filtrados.length === 0) {
+    contenedor.appendChild(crear("p", "texto-suave", "No hay reportes que coincidan con los filtros."));
+    return;
+  }
+  var locales = new Set(AppEstado.reportesLocales.map(function (r) { return r.id; }));
+
+  filtrados.slice().sort(function (a, b) {
+    return String(b.fecha_hora).localeCompare(String(a.fecha_hora));
+  }).forEach(function (r) {
+    var cuadra = obtenerCuadraPorId(r.cuadra);
+    var tarjeta = crear("article", "tarjeta-registro");
+
+    var cabecera = crear("div", "registro-cabecera");
+    cabecera.appendChild(crear("strong", "", r.id));
+    cabecera.appendChild(crear("span", "badge-nivel nivel-" + r.criticidad.nivel.toLowerCase(),
+      r.criticidad.nivel + " (" + r.criticidad.puntaje + ")"));
+    tarjeta.appendChild(cabecera);
+
+    var cuerpo = crear("div", "registro-cuerpo");
+    cuerpo.appendChild(crearBloqueFoto(r));
+    var det = crear("div", "registro-detalles");
+    var fecha = crear("div", "linea-detalle-reg", r.fecha_hora.replace("T", " "));
+    fecha.appendChild(crear("span", "chip-franja", r._franja === "pico" ? "Hora pico" : "Hora valle"));
+    det.appendChild(fecha);
+    det.appendChild(crear("div", "linea-detalle-reg", cuadra ? cuadra.nombre : r.cuadra));
+    det.appendChild(crear("div", "linea-detalle-reg", etiquetaCategoria(r.categoria)));
+    det.appendChild(crear("div", "linea-detalle-reg", etiquetaActor(r.actor)));
+    if (r.observaciones) det.appendChild(crear("div", "obs-texto", r.observaciones));
+    cuerpo.appendChild(det);
+    tarjeta.appendChild(cuerpo);
+
+    var pie = crear("div", "registro-pie");
+    pie.appendChild(crear("span", "etiqueta-precargado", locales.has(r.id) ? "Guardado en este equipo" : "Precargado"));
+    if (locales.has(r.id)) {
+      var borrar = crear("button", "btn-eliminar-registro", "Eliminar");
+      borrar.type = "button";
+      borrar.addEventListener("click", function () { eliminarReporte(r.id); });
+      pie.appendChild(borrar);
+    }
+    tarjeta.appendChild(pie);
+    contenedor.appendChild(tarjeta);
+  });
+}
+
+function aplicarFiltros() {
+  var filtrados = filtrarReportes(AppEstado.reportesUnificados, leerFiltros(), AppEstado.criterios);
+  renderizarPorcentajes(filtrados);
+  actualizarMarcadoresRegistros(filtrados, AppEstado.vias);
+  renderizarTop5(filtrados);
+  renderizarLista(filtrados);
+}
+
+function refrescarTodo() {
+  sincronizarReportes();
+  actualizarPuntosEnMapaCaptura(AppEstado.reportesUnificados);
+  renderizarAvance();
+  aplicarFiltros();
+}
+
+/* ------------------------- Exportar e importar ---------------------------- */
+
+function mostrarResultadoTransferencia(texto) {
+  mostrarTexto("resultado-importacion", texto);
+}
+
+function exportarJSON(incluirFotos) {
+  if (AppEstado.reportesLocales.length === 0) {
+    mostrarResultadoTransferencia("Todavía no hay reportes guardados en este equipo para exportar.");
+    return;
+  }
+  var nombre = exportarReportesJSON(AppEstado.reportesLocales, cargarConfiguracion().iniciales, incluirFotos);
+  mostrarResultadoTransferencia("Archivo exportado: " + nombre);
+}
+
+function exportarZIP() {
+  if (AppEstado.reportesLocales.length === 0) {
+    mostrarResultadoTransferencia("Todavía no hay reportes guardados en este equipo para exportar.");
+    return;
+  }
+  exportarPaqueteZIP(AppEstado.reportesLocales, cargarConfiguracion().iniciales)
+    .then(function (nombre) { mostrarResultadoTransferencia("Paquete exportado: " + nombre); })
+    .catch(function (err) { mostrarResultadoTransferencia(err.message); });
+}
+
+function importarArchivo(archivo) {
+  archivo.text().then(function (texto) {
+    var res = importarReportesDesdeTexto(texto, AppEstado.reportesPrecargados, AppEstado.criterios, AppEstado.vias);
+    if (!res.ok) {
+      mostrarResultadoTransferencia(res.mensaje);
+      return;
+    }
+    AppEstado.reportesLocales = cargarReportesLocales();
+    refrescarTodo();
+    var detalles = res.detallesInvalidos.concat(res.detallesConflictos)
+      .slice(0, 5)
+      .map(function (d) { return d.id + ": " + d.motivo; });
+    mostrarResultadoTransferencia("Nuevos: " + res.nuevos + " · Repetidos: " + res.repetidos +
+      " · Inválidos: " + res.invalidos + " · Conflictos: " + res.conflictos +
+      (detalles.length ? " — " + detalles.join(" | ") : ""));
+  }).catch(function (err) {
+    mostrarResultadoTransferencia("No se pudo importar: " + err.message);
+  });
+}
+
+/* ------------------------ Ajustes y navegación ---------------------------- */
+
+function actualizarIndicadorIniciales() {
+  porId("indicador-iniciales").textContent = cargarConfiguracion().iniciales || "Configurar";
+}
+
+function abrirAjustes(mensaje) {
+  var config = cargarConfiguracion();
+  porId("input-iniciales").value = config.iniciales;
+  porId("select-origen").value = config.origen;
+  mostrarTexto("error-ajustes", mensaje || "");
+  porId("modal-ajustes").hidden = false;
+  porId("input-iniciales").focus();
+}
+
+function guardarAjustes() {
+  var res = guardarConfiguracion({
+    iniciales: porId("input-iniciales").value,
+    origen: porId("select-origen").value
+  });
+  if (!res.ok) {
+    mostrarTexto("error-ajustes", res.mensaje);
+    return;
+  }
+  porId("modal-ajustes").hidden = true;
+  actualizarIndicadorIniciales();
+}
+
+function cambiarVista(vista) {
+  var enCaptura = vista === "captura";
+  porId("vista-captura").hidden = !enCaptura;
+  porId("vista-registros").hidden = enCaptura;
+  porId("tab-captura").classList.toggle("activo", enCaptura);
+  porId("tab-registros").classList.toggle("activo", !enCaptura);
+  window.scrollTo(0, 0);
+  if (enCaptura) redimensionarMapaCaptura();
+  else redimensionarMapaRegistros();
+}
+
+function configurarEventos() {
+  alPulsar("tab-captura", function () { cambiarVista("captura"); });
+  alPulsar("tab-registros", function () { cambiarVista("registros"); });
+
+  alPulsar("btn-abrir-ajustes", function () { abrirAjustes(); });
+  alPulsar("btn-cerrar-ajustes", function () { porId("modal-ajustes").hidden = true; });
+  alPulsar("btn-guardar-ajustes", guardarAjustes);
+  alPulsar("btn-cerrar-modal-foto", function () { porId("modal-foto").hidden = true; });
+
+  alPulsar("btn-usar-gps", usarGPS);
+  porId("select-cuadra").addEventListener("change", function () { seleccionarCuadraManual(this.value); });
+  configurarBuscador();
+  configurarOpciones("grupo-categoria", "categoria", "error-categoria");
+  configurarOpciones("grupo-actor", "actor", "error-actor");
+  configurarFoto();
+
+  porId("input-observaciones").addEventListener("input", function () {
+    porId("contador-obs").textContent = this.value.length + " / 140";
+  });
+  porId("input-fecha-hora").addEventListener("change", function () {
+    AppEstado.fechaManual = Boolean(this.value);
+    actualizarReloj();
+  });
+  setInterval(actualizarReloj, 20000);
+
+  alPulsar("btn-guardar", guardarReporte);
+  alPulsar("btn-registrar-otro", function () { porId("tarjeta-confirmacion").hidden = true; });
+
+  ["filtro-cuadra", "filtro-franja", "filtro-categoria", "filtro-actor"].forEach(function (id) {
+    porId(id).addEventListener("change", aplicarFiltros);
+  });
+  alPulsar("btn-limpiar-filtros", function () {
+    ["filtro-cuadra", "filtro-franja", "filtro-categoria", "filtro-actor"].forEach(function (id) {
+      porId(id).value = "todas";
     });
-  }
-}
+    aplicarFiltros();
+  });
 
-function configurarFiltros() {
-  var inputTexto = document.getElementById("filtro-texto");
-  var selCuadra = document.getElementById("filtro-cuadra");
-  var selCat = document.getElementById("filtro-categoria");
-  var selActor = document.getElementById("filtro-actor");
-  var selNivel = document.getElementById("filtro-nivel");
-  var selFranja = document.getElementById("filtro-franja");
-  var btnLimpiar = document.getElementById("btn-limpiar-filtros");
-
-  function alCambiarFiltro() {
-    AppEstado.filtros = {
-      texto: inputTexto ? inputTexto.value : "",
-      cuadra: selCuadra ? selCuadra.value : "",
-      categoria: selCat ? selCat.value : "",
-      actor: selActor ? selActor.value : "",
-      nivel: selNivel ? selNivel.value : "",
-      franja: selFranja ? selFranja.value : ""
-    };
-    aplicarFiltrosYActualizarVistas();
-  }
-
-  if (inputTexto) inputTexto.addEventListener("input", alCambiarFiltro);
-  if (selCuadra) selCuadra.addEventListener("change", alCambiarFiltro);
-  if (selCat) selCat.addEventListener("change", alCambiarFiltro);
-  if (selActor) selActor.addEventListener("change", alCambiarFiltro);
-  if (selNivel) selNivel.addEventListener("change", alCambiarFiltro);
-  if (selFranja) selFranja.addEventListener("change", alCambiarFiltro);
-
-  if (btnLimpiar) {
-    btnLimpiar.addEventListener("click", function () {
-      if (inputTexto) inputTexto.value = "";
-      if (selCuadra) selCuadra.value = "";
-      if (selCat) selCat.value = "";
-      if (selActor) selActor.value = "";
-      if (selNivel) selNivel.value = "";
-      if (selFranja) selFranja.value = "";
-      AppEstado.filtros = {
-        texto: "",
-        cuadra: "",
-        categoria: "",
-        actor: "",
-        nivel: "",
-        franja: ""
-      };
-      aplicarFiltrosYActualizarVistas();
-    });
-  }
-}
-
-function aplicarFiltrosYActualizarVistas() {
-  var filtrados = typeof filtrarReportes === "function"
-    ? filtrarReportes(AppEstado.reportesUnificados, AppEstado.filtros, AppEstado.criterios)
-    : AppEstado.reportesUnificados;
-
-  renderizarListaRegistros(filtrados);
-  if (typeof actualizarMarcadoresRegistros === "function") {
-    actualizarMarcadoresRegistros(filtrados, normalizarViasSeguras(AppEstado.vias));
-  }
-  renderizarResumenOperativo(filtrados);
-}
-
-function refrescarTodoElEstado() {
-  sincronizarListaUnicaReportes();
-  if (typeof actualizarPuntosEnMapaCaptura === "function") {
-    actualizarPuntosEnMapaCaptura(AppEstado.reportesUnificados);
-  }
-  aplicarFiltrosYActualizarVistas();
-}
-
-function configurarExportarImportar() {
-  var btnExportar = document.getElementById("btn-exportar-json");
-  var inputImportar = document.getElementById("input-importar-json");
-  var msgEl = document.getElementById("mensaje-transferencia");
-
-  if (btnExportar && typeof exportarReportesAJSON === "function") {
-    btnExportar.addEventListener("click", function () {
-      exportarReportesAJSON(AppEstado.reportesLocales);
-      if (msgEl) {
-        msgEl.textContent = "Archivo JSON exportado con " + AppEstado.reportesLocales.length + " reporte(s) local(es).";
-        msgEl.hidden = false;
-      }
-    });
-  }
-
-  if (inputImportar && typeof importarReportesDesdeArchivo === "function") {
-    inputImportar.addEventListener("change", function () {
-      var archivo = inputImportar.files && inputImportar.files[0];
-      if (!archivo) return;
-
-      importarReportesDesdeArchivo(archivo, AppEstado.reportesLocales, normalizarViasSeguras(AppEstado.vias), function (res) {
-        inputImportar.value = "";
-        if (!msgEl) return;
-
-        if (!res.ok) {
-          msgEl.textContent = res.mensaje || "No se pudo importar el archivo.";
-          msgEl.hidden = false;
-          return;
-        }
-
-        AppEstado.reportesLocales = res.reportes;
-        refrescarTodoElEstado();
-        msgEl.textContent =
-          "Importados " + res.importados + " reporte(s)" +
-          (res.omitidos > 0 ? " (" + res.omitidos + " omitidos por duplicado o formato)" : "") + ".";
-        msgEl.hidden = false;
+  document.querySelectorAll(".btn-capa-mapa").forEach(function (boton) {
+    boton.addEventListener("click", function () {
+      var modo = boton.getAttribute("data-modo");
+      cambiarModoMapaRegistros(modo);
+      document.querySelectorAll(".btn-capa-mapa").forEach(function (b) {
+        b.classList.toggle("activo", b === boton);
+        b.setAttribute("aria-pressed", b === boton ? "true" : "false");
       });
     });
-  }
-}
+  });
 
-function cambiarVista(idVistaActiva) {
-  var vistas = document.querySelectorAll(".vista-app");
-  for (var i = 0; i < vistas.length; i++) {
-    var esActiva = vistas[i].id === idVistaActiva;
-    vistas[i].hidden = !esActiva;
-    vistas[i].classList.toggle("activa", esActiva);
-  }
-
-  var pestanas = document.querySelectorAll(".btn-pestana");
-  for (var j = 0; j < pestanas.length; j++) {
-    var target = pestanas[j].getAttribute("data-vista");
-    var activa = target === idVistaActiva;
-    pestanas[j].classList.toggle("activa", activa);
-    pestanas[j].setAttribute("aria-selected", activa ? "true" : "false");
-  }
-
-  if (idVistaActiva === "vista-captura" && typeof redimensionarMapaCaptura === "function") {
-    redimensionarMapaCaptura();
-  } else if (idVistaActiva === "vista-registros" && typeof redimensionarMapaRegistros === "function") {
-    redimensionarMapaRegistros();
-  } else if (idVistaActiva === "vista-resumen") {
-    var filtrados = typeof filtrarReportes === "function"
-      ? filtrarReportes(AppEstado.reportesUnificados, AppEstado.filtros, AppEstado.criterios)
-      : AppEstado.reportesUnificados;
-    renderizarResumenOperativo(filtrados);
-  }
-}
-
-function configurarPestanas() {
-  var pestanas = document.querySelectorAll(".btn-pestana");
-  for (var i = 0; i < pestanas.length; i++) {
-    pestanas[i].addEventListener("click", function () {
-      var vistaId = this.getAttribute("data-vista");
-      if (vistaId) {
-        cambiarVista(vistaId);
-      }
-    });
-  }
+  alPulsar("btn-imprimir-resumen", function () { window.print(); });
+  alPulsar("btn-exportar-con-fotos", function () { exportarJSON(true); });
+  alPulsar("btn-exportar-sin-fotos", function () { exportarJSON(false); });
+  alPulsar("btn-exportar-zip", exportarZIP);
+  alPulsar("btn-importar-json", function () { porId("input-importar-json").click(); });
+  porId("input-importar-json").addEventListener("change", function () {
+    if (this.files && this.files[0]) importarArchivo(this.files[0]);
+    this.value = "";
+  });
+  alPulsar("btn-exportar-emergencia", function () {
+    var lista = AppEstado.reportesLocales.concat(AppEstado.reportePendiente ? [AppEstado.reportePendiente] : []);
+    exportarReportesJSON(lista, cargarConfiguracion().iniciales, true);
+  });
 }
 
 function inicializarApp() {
-  var fechaInput = document.getElementById("input-fecha-hora");
-  if (fechaInput && !fechaInput.value) {
-    fechaInput.value = obtenerFechaHoraLocalActual();
-  }
-
-  configurarPestanas();
-  configurarBotonesSeleccion();
-  configurarAnonimizacionCanvas();
-  configurarControlesModoMapa();
-  configurarFiltros();
-  configurarExportarImportar();
-  configurarBuscadorDireccion();
-
-  var btnUbicacion = document.getElementById("btn-ubicacion");
-  if (btnUbicacion) {
-    btnUbicacion.addEventListener("click", function () {
-      AppEstado.seleccionManualCuadra = false;
-      solicitarGeolocalizacion(false);
-    });
-  }
-
-  var selectManual = document.getElementById("select-cuadra-manual");
-  if (selectManual) {
-    selectManual.addEventListener("change", function () {
-      seleccionarCuadraManual(this.value);
-    });
-  }
-
-  var formCaptura = document.getElementById("form-captura");
-  if (formCaptura) {
-    formCaptura.addEventListener("submit", guardarReporteDesdeFormulario);
-  }
-
-  var btnLimpiarForm = document.getElementById("btn-limpiar-formulario");
-  if (btnLimpiarForm) {
-    btnLimpiarForm.addEventListener("click", function () {
-      limpiarFormularioCaptura();
-      mostrarMensajeFormulario("Formulario limpio.", "info");
-    });
-  }
-
-  var btnCancelarEdicion = document.getElementById("btn-cancelar-edicion");
-  if (btnCancelarEdicion) {
-    btnCancelarEdicion.addEventListener("click", function () {
-      limpiarFormularioCaptura();
-      mostrarMensajeFormulario("Edición cancelada.", "info");
-    });
-  }
-
-  AppEstado.reportesLocales = typeof cargarReportesLocales === "function" ? cargarReportesLocales() : [];
+  AppEstado.reportesLocales = cargarReportesLocales();
+  porId("btn-guardar").disabled = true; // hasta que carguen los datos
 
   Promise.all([
-    cargarJSON("datos/vias.json", {
-      zona: { nombre: "Santa Marta", centro: [11.2232, -74.1885], zoom: 15 },
-      cuadras: []
-    }),
-    cargarJSON("datos/criterios.json", null),
-    cargarJSON("datos/reportes.json", [])
-  ]).then(function (resultados) {
-    AppEstado.vias = normalizarViasSeguras(resultados[0]);
-    AppEstado.criterios = resultados[1];
-    AppEstado.reportesPrecargados = Array.isArray(resultados[2]) ? resultados[2] : [];
-
-    actualizarSubtituloZona(AppEstado.vias);
-    poblarSelectoresCuadras(AppEstado.vias);
-
-    if (typeof iniciarMapaCaptura === "function") {
-      iniciarMapaCaptura("mapa-captura", AppEstado.vias, function (lat, lng) {
-        AppEstado.seleccionManualCuadra = false;
-        fijarUbicacion(lat, lng, { conservarManual: false });
-      });
+    cargarJSON("datos/vias.json"),
+    cargarJSON("datos/criterios.json"),
+    cargarJSON("datos/reportes.json")
+  ]).then(function (datos) {
+    var vias = datos[0];
+    var criterios = datos[1];
+    if (!vias || !Array.isArray(vias.cuadras) || !criterios) {
+      porId("aviso-fetch").hidden = false;
+      porId("nombre-zona-header").textContent = "No se pudo cargar la zona de estudio";
+      return;
     }
+    if (!Array.isArray(datos[2])) porId("aviso-fetch").hidden = false;
 
-    if (typeof iniciarMapaRegistros === "function") {
-      iniciarMapaRegistros("mapa-registros", AppEstado.vias);
-    }
+    AppEstado.vias = vias;
+    AppEstado.criterios = criterios;
+    AppEstado.reportesPrecargados = Array.isArray(datos[2]) ? datos[2] : [];
+    porId("nombre-zona-header").textContent = vias.zona.nombre;
+    poblarSelectoresCuadras();
 
-    var centro = (AppEstado.vias && AppEstado.vias.zona && AppEstado.vias.zona.centro)
-      ? AppEstado.vias.zona.centro
-      : [11.2232, -74.1885];
-    fijarUbicacion(centro[0], centro[1], { conservarManual: false });
+    var hayMapa = iniciarMapaCaptura("mapa-captura", vias, function (lat, lng) {
+      marcarInicioCaptura();
+      fijarUbicacion(lat, lng);
+    });
+    iniciarMapaRegistros("mapa-registros", vias);
+    porId("aviso-sin-mapa").hidden = Boolean(hayMapa);
 
-    refrescarTodoElEstado();
-    solicitarGeolocalizacion(true);
+    configurarEventos();
+    actualizarIndicadorIniciales();
+    actualizarReloj();
+    refrescarTodo();
+    porId("btn-guardar").disabled = false;
   });
 }
 
