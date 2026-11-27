@@ -179,7 +179,7 @@
   "recorrido_campo": {
     "tipo": "esquematico_aproximado",
     "descripcion": "Recorrido descrito por el equipo: salida por el corredor de la Universidad del Magdalena, avance aproximado de seis cuadras, giro a la izquierda hacia Villa Marbella, retorno de dos cuadras por vías interiores, avance de una cuadra y salida de nuevo hacia el corredor universitario.",
-    "nota": "La línea representa un circuito aproximado siguiendo los ejes de vía configurados en este proyecto. No es una traza GPS ni asigna una coordenada exacta a cada fotografía.",
+    "nota": "La línea representa un circuito aproximado siguiendo los ejes de vía configurados. No es una traza GPS ni asigna una coordenada exacta a cada fotografía.",
     "hitos": [
       {
         "id": "R1",
@@ -231,10 +231,10 @@
       },
       {
         "id": "R7",
-        "nombre": "Salida hacia la vía de la Universidad",
+        "nombre": "Salida hacia el corredor de la Universidad",
         "coordenadas": [
-          11.2248,
-          -74.1879
+          11.2235,
+          -74.18805
         ]
       }
     ],
