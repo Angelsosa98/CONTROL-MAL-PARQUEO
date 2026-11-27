@@ -699,7 +699,9 @@ function renderizarGaleriaEvidencias() {
     tarjeta.appendChild(img);
     var info = crear("div", "detalle-evidencia");
     info.appendChild(crear("strong", "", e.id));
-    info.appendChild(crear("span", "estado-evidencia", "Evidencia fotográfica de campo"));
+    var sectorEvidencia = e.ubicacion_aproximada && e.ubicacion_aproximada.sector
+      ? e.ubicacion_aproximada.sector : "Evidencia fotográfica de campo";
+    info.appendChild(crear("span", "estado-evidencia", sectorEvidencia + " · punto aproximado en mapa"));
     tarjeta.appendChild(info);
     contenedor.appendChild(tarjeta);
   });
@@ -844,6 +846,7 @@ function aplicarFiltros() {
 function refrescarTodo() {
   sincronizarReportes();
   actualizarPuntosEnMapaCaptura(AppEstado.reportesUnificados, AppEstado.vias);
+  actualizarMarcadoresEvidencias(AppEstado.evidenciasFotograficas, AppEstado.vias);
   renderizarAvance();
   aplicarFiltros();
 }
