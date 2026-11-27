@@ -13,7 +13,7 @@ Aplicación web estática desarrollada con HTML, CSS, JavaScript y Leaflet para 
 - Las fotografías se consultan en Evidencias. No se dibujan como puntos ni se utilizan para calcular calor, porcentajes, criticidad o ranking.
 - Los seis registros históricos del Mercado Público no forman parte del conjunto activo.
 
-**Importante:** la configuración de 10 cuadras en `datos/vias.json` utiliza segmentos de referencia aproximados. El límite de 90 m comprueba distancia a esos segmentos, no demuestra que el punto esté sobre la calzada. Antes de usar los registros como evidencia espacial del estudio, deben verificarse las geometrías viales y los puntos con cartografía y trabajo de campo.
+**Importante:** la configuración de 10 cuadras en `datos/vias.json` utiliza segmentos de referencia aproximados. El límite de 30 m comprueba distancia a esos segmentos, no demuestra que el punto esté sobre la calzada. Antes de usar los registros como evidencia espacial del estudio, deben verificarse las geometrías viales y los puntos con cartografía y trabajo de campo.
 
 ## Funcionalidades
 
