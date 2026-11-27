@@ -546,12 +546,18 @@ function actualizarReloj() {
 
 /** Revisa los campos obligatorios y muestra el error junto a cada uno. */
 function validarFormulario() {
+  var radioMaximo = Number(AppEstado.vias && AppEstado.vias.zona && AppEstado.vias.zona.radio_max_m) || 30;
+  var mensajeUbicacion = "";
+  if (!AppEstado.ubicacion) {
+    mensajeUbicacion = "Marca el punto exacto en el mapa o usa el GPS.";
+  } else if (!estaDentroDeLimitesZona(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng) ||
+      !AppEstado.cuadraId ||
+      distanciaACuadraMetros(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng, obtenerCuadraPorId(AppEstado.cuadraId)) > radioMaximo) {
+    mensajeUbicacion = "Ajusta el marcador sobre la vía seleccionada. La tolerancia máxima respecto al eje vial de referencia es " + radioMaximo + " m.";
+  }
+
   var errores = [
-    ["error-ubicacion", !AppEstado.ubicacion, "Marca el punto en el mapa, usa el GPS o elige una cuadra."],
-    ["error-ubicacion", AppEstado.ubicacion && (!estaDentroDeLimitesZona(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng) ||
-      !AppEstado.cuadraId || distanciaACuadraMetros(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng, obtenerCuadraPorId(AppEstado.cuadraId)) >
-      (Number(AppEstado.vias && AppEstado.vias.zona && AppEstado.vias.zona.radio_max_m) || 90)),
-      "La ubicación debe estar dentro del área de estudio y a máximo 90 m de una cuadra configurada."],
+    ["error-ubicacion", Boolean(mensajeUbicacion), mensajeUbicacion],
     ["error-cuadra", !AppEstado.cuadraId, "Selecciona una cuadra."],
     ["error-categoria", !AppEstado.categoria, "Selecciona una categoría."],
     ["error-actor", !AppEstado.actor, "Selecciona el tipo de actor."],
@@ -665,6 +671,9 @@ function renderizarAvance() {
   porId("desglose-cuadras").textContent = "Las fotografías se muestran en esta galería. La línea azul representa el circuito aproximado del equipo.";
   porId("uso-almacenamiento").textContent = "Reportes: " + AppEstado.reportesUnificados.length;
   porId("badge-total-registros").textContent = totalEvidencias;
+  var hayReportes = AppEstado.reportesUnificados.length > 0;
+  porId("seccion-filtros").hidden = !hayReportes;
+  porId("seccion-resumen-operativo").hidden = !hayReportes;
   var estadoMapa = porId("estado-mapa-registros");
   if (estadoMapa) {
     estadoMapa.textContent = AppEstado.reportesUnificados.length
