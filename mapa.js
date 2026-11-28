@@ -475,11 +475,11 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
   var tamMapa = mapaRegistros.getSize();
   if (heatDisponible() && puntosCalor.length > 0 && tamMapa.x > 0 && tamMapa.y > 0) {
     capaCalorEvidencias = L.heatLayer(puntosCalor, {
-      radius: 22,
-      blur: 14,
+      radius: 14,
+      blur: 10,
       maxZoom: 19,
       max: 1,
-      minOpacity: 0.32,
+      minOpacity: 0.16,
       gradient: { 0.25: "#a78bfa", 0.55: "#f59e0b", 0.85: "#ef4444", 1: "#991b1b" }
     });
   }
