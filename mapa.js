@@ -879,7 +879,7 @@ function redimensionarMapaRegistros() {
  * priorizando Santa Marta / zona de estudio.
  * Devuelve Promise<Array<{ titulo, subtitulo, lat, lng, origen }>>.
  */
-function buscarDireccionesMapa(textoConsulta, vias) {
+function buscarDireccionesMapa(textoConsulta, vias, ambito) {
   var q = String(textoConsulta || "").trim();
   if (q.length < 2) {
     return Promise.resolve([]);
@@ -917,7 +917,11 @@ function buscarDireccionesMapa(textoConsulta, vias) {
     "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&countrycodes=co&q=" +
     encodeURIComponent(consultaConCiudad);
 
-  var lim = vias && vias.zona && vias.zona.limites;
+  // En el área de estudio se prioriza su rectángulo pequeño; para otros
+  // sectores se elimina ese sesgo y se busca en toda Santa Marta.
+  var lim = ambito === "otros_sectores_santa_marta"
+    ? null
+    : (vias && vias.zona && vias.zona.limites);
   if (
     lim &&
     typeof lim.lng_min === "number" &&
