@@ -222,3 +222,14 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - La aplicación sigue siendo estática y guarda reportes localmente en el navegador. Para trasladarlos a otro equipo se requiere exportar e importar JSON/ZIP; no existe sincronización central automática.
 - Se amplió pruebas.html con un caso de criticidad para reporte externo y un caso de rechazo de tipo de vía inválido. Se ejecutaron validaciones de sintaxis y pruebas programáticas de cálculo, importación, exportación de campos, filtros, aparición en mapas y agrupación; todos los casos comprobados pasaron.
 - **Limitación pendiente:** no se ha incorporado un polígono oficial de Santa Marta. El modo externo valida coordenadas dentro de los rangos globales de latitud/longitud y exige declarar el tipo de vía, pero corresponde al operador verificar que el punto sí esté dentro del municipio y sea correcto.
+
+## 28. Separación cartográfica de evidencias y reportes clasificados — versión 0.9.1.37
+
+- Se identificó que `actualizarMarcadoresEvidencias` construía una capa de 30 puntos morados y una capa de calor con intensidad constante 1.0, independiente de la criticidad. Esa capa podía saturar el mapa en rojo aunque las fotografías no fueran reportes clasificados.
+- Se retiró la capa de marcadores de evidencias y su capa de calor. La leyenda ya no incluye “30 evidencias (aprox.)”; conserva el recorrido y Reportes altos, medios y bajos.
+- Las fotografías se mantienen en la galería y en `datos/evidencias_nuevas.json`. No se borraron ni se modificaron sus coordenadas guardadas.
+- `actualizarMarcadoresRegistros` ahora dibuja solo reportes con `criticidad.nivel` válido: Alto, Medio o Bajo. Los reportes sin nivel válido se omiten, en vez de clasificarse implícitamente como Bajo.
+- La intensidad del calor se asigna por nivel: Alto 1.00 (rojo), Medio 0.65 (ámbar) y Bajo 0.30 (verde). Si no hay reportes clasificados no se crea capa térmica y el mapa encuadra la geometría del recorrido.
+- Se conservan los modos de visualización: Puntos, Mapa de calor y Ambos; ahora alternan únicamente marcadores y calor de reportes.
+- Se verificó sintaxis de `mapa.js` y `captura.js`; prueba programática con datos simulados confirmó que las 30 evidencias no crean marcadores, los tres niveles producen sus colores e intensidades, registros sin clasificación se omiten, los modos de capas funcionan y una lista vacía no crea calor.
+- Se confirmó que la galería de 30 fotografías, el recorrido exterior y los tres tramos interiores permanecen presentes. No se modificó `datos/vias.json` ni `datos/evidencias_nuevas.json`.
