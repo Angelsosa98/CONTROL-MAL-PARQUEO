@@ -110,7 +110,7 @@
 
     <!-- b) Cuadra (asignación automática + respaldo) -->
     <section class="tarjeta">
-      <h2>2. Cuadra asignada</h2>
+      <h2>2. Vía o cuadra asignada</h2>
       <div id="aviso-fuera-zona" class="aviso-alerta" hidden></div>
 
       <div id="panel-cuadra-estudio">
@@ -296,6 +296,14 @@
       <p class="ayuda-campo">Combina filtros para actualizar el mapa de calor, los porcentajes por categoría y los conteos al instante.</p>
 
       <div class="rejilla-filtros">
+        <div>
+          <label for="filtro-ambito" class="etiqueta-control">Ámbito:</label>
+          <select id="filtro-ambito" class="control-select">
+            <option value="todas">Todos los ámbitos</option>
+            <option value="area_estudio">Área de estudio</option>
+            <option value="otros_sectores_santa_marta">Otros sectores de Santa Marta</option>
+          </select>
+        </div>
         <div>
           <label for="filtro-cuadra" class="etiqueta-control">Cuadra:</label>
           <select id="filtro-cuadra" class="control-select">
