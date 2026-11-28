@@ -969,6 +969,33 @@ function configurarEventos() {
     aplicarFiltros();
   });
 
+
+  alPulsar("btn-pantalla-completa-mapa", function () {
+    var seccion = porId("seccion-mapa-recorrido");
+    var boton = porId("btn-pantalla-completa-mapa");
+    if (!seccion || !boton) return;
+    var expandido = seccion.classList.toggle("mapa-expandido");
+    document.body.classList.toggle("mapa-en-pantalla-completa", expandido);
+    boton.setAttribute("aria-pressed", expandido ? "true" : "false");
+    boton.textContent = expandido ? "✕ Volver al contenido" : "⛶ Pantalla completa";
+    window.setTimeout(function () {
+      if (typeof redimensionarMapaRegistros === "function") redimensionarMapaRegistros();
+    }, 120);
+  });
+  document.addEventListener("keydown", function (evento) {
+    if (evento.key !== "Escape") return;
+    var seccion = porId("seccion-mapa-recorrido");
+    var boton = porId("btn-pantalla-completa-mapa");
+    if (!seccion || !seccion.classList.contains("mapa-expandido")) return;
+    seccion.classList.remove("mapa-expandido");
+    document.body.classList.remove("mapa-en-pantalla-completa");
+    if (boton) {
+      boton.setAttribute("aria-pressed", "false");
+      boton.textContent = "⛶ Pantalla completa";
+    }
+    if (typeof redimensionarMapaRegistros === "function") window.setTimeout(redimensionarMapaRegistros, 120);
+  });
+
   document.querySelectorAll(".btn-capa-mapa").forEach(function (boton) {
     boton.addEventListener("click", function () {
       var modo = boton.getAttribute("data-modo");
