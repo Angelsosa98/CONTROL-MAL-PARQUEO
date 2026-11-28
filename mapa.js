@@ -55,24 +55,10 @@ function crearCapasBaseMapa(mapa) {
     }
   );
 
-  // Servicio transparente de referencia: dibuja carreteras y rótulos sobre la imagen.
-  var callesSobreSatelite = L.tileLayer(
-    "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}",
-    {
-      maxZoom: 19,
-      zIndex: 2,
-      opacity: 0.92,
-      attribution: "Roads & labels: Sources Esri, HERE, Garmin, &copy; OpenStreetMap contributors"
-    }
-  );
-
-  var sateliteConCalles = L.layerGroup([mapaSatelital, callesSobreSatelite]);
-
-  // La vista de trabajo abre en satélite con calles. El usuario puede cambiarla.
-  sateliteConCalles.addTo(mapa);
+  // Se abre en satélite sin superposiciones; las calles se consultan como base independiente.
+  mapaSatelital.addTo(mapa);
   return {
-    "Satélite + calles": sateliteConCalles,
-    "Satélite (sin rótulos)": mapaSatelital,
+    "Satélite": mapaSatelital,
     "Mapa de calles": mapaCalles
   };
 }
