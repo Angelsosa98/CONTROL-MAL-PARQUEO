@@ -100,3 +100,8 @@ Se recuperan las 30 posiciones sectoriales que estaban en la configuración de e
 ### Retiro de la capa Satélite + calles — versión 0.9.1.11
 
 Se eliminó la opción combinada Satélite + calles y su tesela transparente de referencia, que no se visualizaba correctamente. Se mantienen únicamente las capas independientes Satélite y Mapa de calles. El mapa abre en Satélite sin superposiciones.
+
+
+### Recuperación de las tres líneas intermedias originales — versión 0.9.1.12
+
+Se conservó sin cambios el trazado exterior original y se recuperaron únicamente los tres segmentos transversales interiores desde la geometría histórica del recorrido compartida por el equipo. Cada segmento se dibuja de forma independiente, sin cerrar circuitos ni crear ramales adicionales. No se modificaron las 30 evidencias.
