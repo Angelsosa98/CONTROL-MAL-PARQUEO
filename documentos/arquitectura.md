@@ -42,7 +42,7 @@ La aplicación es estática y conserva reportes en el almacenamiento local del n
 
 ## 5. Pruebas y alcance de verificación
 
-La suite `pruebas.html` cubre siete casos del motor de criticidad. `pruebas-integracion.html` cubre siete casos de vías activas e importación ZIP. Se revisan también sintaxis, referencias DOM, estructura de datos, IDs de evidencias y coherencia CSV/JSON. Estas pruebas no sustituyen una comprobación manual de GPS, mapas y almacenamiento en navegador.
+La suite `pruebas.html` cubre siete casos del motor de criticidad. `pruebas-integracion.html` cubre once casos de vías activas, búsqueda acotada, exclusión de resultados sobre vías desactivadas, distribución 9/21, coherencia CSV/JSON e importación ZIP. Se revisan también sintaxis, referencias DOM, estructura de datos, IDs de evidencias y coherencia CSV/JSON. Estas pruebas no sustituyen una comprobación manual de GPS, mapas y almacenamiento en navegador.
 
 
 ## 6. Capas cartográficas y procedencia de datos — versión 0.9.1.40
@@ -61,3 +61,13 @@ El calor combinado es una visualización exploratoria. Los análisis formales de
 La captura dispone de dos ámbitos: área de estudio (cuatro vías activas) y otros sectores de Santa Marta. La aplicación conserva los reportes en el navegador local. La exportación e importación admite JSON y paquetes ZIP exportados por la aplicación. El lector ZIP exige `reportes.json`, convierte las imágenes contenidas en la carpeta `fotos/` y aplica límites de tamaño y rutas permitidas.
 
 Todavía no existe sincronización central entre dispositivos ni un polígono oficial municipal para validar automáticamente otros sectores.
+
+## 8. Depuración del buscador y consistencia del inventario — versión 0.9.1.41
+
+En el modo Área de estudio, el buscador de Nominatim aplica el parámetro `bounded=1` al rectángulo de estudio. Además, los resultados geocodificados que caen a menos de la tolerancia configurada de una geometría vial desactivada se descartan. En el modo Otros sectores de Santa Marta no se usa ese límite ni se excluyen esas vías históricas, ya que el usuario puede buscar en toda la ciudad.
+
+Las sugerencias locales se construyen exclusivamente con vías activas. El punto sugerido sobre una polilínea se obtiene a mitad de la longitud del segmento, en vez de promediar los vértices, para reducir la posibilidad de mostrar un punto fuera de la calle.
+
+Se verificó la distribución desde JSON (9 Unimagdalena / 21 Villa Marbella) y la correspondencia de las 30 filas del CSV con sus fichas JSON. No se modificaron el inventario fotográfico, las coordenadas de los vehículos ni la geometría del recorrido.
+
+Las pruebas de integración se ampliaron a 11 casos. La suite de criticidad mantiene 7 casos. La importación ZIP ya estaba conectada al selector y continúa validada.
