@@ -36,3 +36,19 @@ Este archivo diferencia errores corregidos, limitaciones conocidas y pruebas rea
 - Verificación de que los 30 registros fotográficos, la geometría del recorrido exterior y los tres tramos interiores no se modificaron en esta implementación.
 
 La suite de navegador pruebas.html se amplió para incluir un caso de criticidad externa y un caso de rechazo de tipo de vía inválido. Las pruebas programáticas no sustituyen la comprobación visual y funcional de la versión desplegada.
+
+## Incidencias corregidas — versión 0.9.1.37
+
+| ID | Incidencia | Causa / efecto | Corrección | Estado |
+|---|---|---|---|---|
+| INC-004 | El mapa de calor permanecía rojo por las 30 evidencias | La capa de evidencias creaba 30 puntos de calor con intensidad constante 1.0, además de la capa ponderada por reportes. Las fotografías no tienen criticidad individual. | Se retiraron marcadores morados y calor de evidencias. El calor usa solo reportes clasificados: Alto 1.00, Medio 0.65 y Bajo 0.30. | **Resuelta en código; falta comprobar publicación visual** |
+
+### Verificaciones de INC-004
+
+- La actualización de evidencias no crea marcadores ni llama a Leaflet.heat.
+- El mapa de reportes dibuja solamente niveles Alto, Medio y Bajo válidos.
+- Intensidades simuladas verificadas: Alto 1.00, Medio 0.65, Bajo 0.30.
+- Un reporte sin nivel o con nivel desconocido no se representa.
+- Los modos Puntos, Calor y Ambos actúan solo sobre reportes.
+- Con una lista vacía no se crea capa térmica y el mapa encuadra el recorrido.
+- La galería fotográfica, los 30 registros de evidencia y las cuatro geometrías del recorrido permanecen intactos.
