@@ -966,22 +966,41 @@ function exportarZIP() {
     .catch(function (err) { mostrarResultadoTransferencia(err.message); });
 }
 
+function procesarTextoImportado(texto) {
+  var res = importarReportesDesdeTexto(texto, AppEstado.reportesPrecargados, AppEstado.criterios, AppEstado.vias);
+  if (!res.ok) {
+    mostrarResultadoTransferencia(res.mensaje);
+    return;
+  }
+  AppEstado.reportesLocales = cargarReportesLocales();
+  refrescarTodo();
+  var detalles = res.detallesInvalidos.concat(res.detallesConflictos)
+    .slice(0, 5)
+    .map(function (d) { return d.id + ": " + d.motivo; });
+  mostrarResultadoTransferencia("Nuevos: " + res.nuevos + " · Repetidos: " + res.repetidos +
+    " · Inválidos: " + res.invalidos + " · Conflictos: " + res.conflictos +
+    (detalles.length ? " — " + detalles.join(" | ") : ""));
+}
+
 function importarArchivo(archivo) {
-  archivo.text().then(function (texto) {
-    var res = importarReportesDesdeTexto(texto, AppEstado.reportesPrecargados, AppEstado.criterios, AppEstado.vias);
-    if (!res.ok) {
-      mostrarResultadoTransferencia(res.mensaje);
-      return;
-    }
-    AppEstado.reportesLocales = cargarReportesLocales();
-    refrescarTodo();
-    var detalles = res.detallesInvalidos.concat(res.detallesConflictos)
-      .slice(0, 5)
-      .map(function (d) { return d.id + ": " + d.motivo; });
-    mostrarResultadoTransferencia("Nuevos: " + res.nuevos + " · Repetidos: " + res.repetidos +
-      " · Inválidos: " + res.invalidos + " · Conflictos: " + res.conflictos +
-      (detalles.length ? " — " + detalles.join(" | ") : ""));
-  }).catch(function (err) {
+  if (!archivo) return;
+  var nombre = String(archivo.name || "").toLowerCase();
+  var esZIP = nombre.endsWith(".zip") || archivo.type === "application/zip" ||
+    archivo.type === "application/x-zip-compressed";
+
+  if (esZIP) {
+    extraerJSONDePaqueteZIP(archivo).then(procesarTextoImportado).catch(function (err) {
+      mostrarResultadoTransferencia("No se pudo importar el paquete ZIP: " + err.message);
+    });
+    return;
+  }
+
+  if (nombre && !nombre.endsWith(".json") && archivo.type !== "application/json") {
+    mostrarResultadoTransferencia("Formato no admitido. Selecciona un archivo JSON o un paquete ZIP exportado por esta aplicación.");
+    return;
+  }
+
+  archivo.text().then(procesarTextoImportado).catch(function (err) {
     mostrarResultadoTransferencia("No se pudo importar: " + err.message);
   });
 }
