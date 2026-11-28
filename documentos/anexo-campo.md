@@ -11,14 +11,14 @@ La revisión del repositorio encontró:
 
 - **Reportes georreferenciados precargados:** 0 (`datos/reportes.json` contiene `[]`).
 - **Fotografías conservadas:** 30 (`datos/evidencias_nuevas.json`).
-- **Estado de las fotografías:** evidencia visual con ubicación sectorial aproximada para visualización agregada.
+- **Estado de las fotografías:** evidencia visual con ubicación sectorial aproximada y valoración visual preliminar Alto/Medio/Bajo; no equivale a GPS individual ni al índice formal de criticidad.
 - **Cuadras de referencia configuradas:** 10 en `datos/vias.json`, con segmentos aproximados aún no validados como geometría oficial de calzada.
 
-Las fotografías no incluyen actualmente coordenadas GPS verificadas, fecha/hora de campo ni una clasificación de criticidad sustentada en datos completos. Por esta razón no se calculan porcentajes por categoría, actor, franja horaria o nivel de criticidad, y no se presenta un ranking espacial.
+Las fotografías no incluyen coordenadas GPS individuales ni fecha/hora verificadas. Cada una tiene una valoración visual preliminar de la obstrucción visible, separada del cálculo formal de criticidad. Por ello no se calcula para ellas franja pico/valle ni puntaje formal, y no se incorporan a estadísticas o ranking de reportes.
 
 ## 2. Tratamiento de las fotografías
 
-Las 30 fotografías se mantienen en el repositorio y en la galería. A partir del trazado satelital enviado por el equipo y de la distribución comunicada en campo, las fichas conservan metadatos sectoriales aproximados para consulta documental. Desde la versión 0.9.1.37 esas posiciones no se dibujan como marcadores ni se usan para el mapa de calor. Las fotografías no equivalen a GPS original ni a ubicación individual verificada.
+Las 30 fotografías se mantienen en el repositorio, la galería y el mapa como puntos sectoriales aproximados. La distribución actual es 9 evidencias en la calle de la Universidad del Magdalena y 21 en Villa Marbella. Los puntos indican dónde se observaron vehículos; no tienen que coincidir con el recorrido verde del equipo, que representa únicamente el camino realizado por los observadores. Ningún punto se ha desplazado para forzarlo a coincidir con esa ruta.
 
 Antes de utilizar cada fotografía como evidencia de un reporte, el equipo debe documentar su ubicación real, fecha/hora, categoría, actor y observación de campo, y verificar la privacidad de las personas y placas visibles.
 
@@ -61,3 +61,16 @@ La distancia máxima de 30 m implementada en la aplicación se calcula respecto 
 | `EVID-029` | `fotos/evidencia-039.jpg` | Ubicación sectorial aproximada; GPS individual no disponible |
 | `EVID-030` | `fotos/evidencia-040.jpg` | Ubicación sectorial aproximada; GPS individual no disponible |
 
+
+
+## 5. Distribución y separación del recorrido
+
+| Sector | Evidencias |
+|---|---:|
+| Calle de la Universidad del Magdalena | 9 |
+| Villa Marbella | 21 |
+| **Total** | **30** |
+
+El recorrido verde corresponde a la trayectoria del equipo de campo. Las ubicaciones de los vehículos observados son otra capa y pueden encontrarse fuera de la línea del recorrido. La distancia de un punto al recorrido no constituye por sí sola un error ni una regla para moverlo.
+
+El archivo `datos/fotos/indice_evidencias.csv` refleja el sector, la vía aproximada y la valoración visual del JSON. La columna de GPS continúa indicando que el GPS individual no está disponible.
