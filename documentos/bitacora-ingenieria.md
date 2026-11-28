@@ -178,3 +178,12 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - El nuevo texto solo indica que la fotografía está asociada al punto sectorial aproximado representado en el mapa.
 - No se modificaron coordenadas, puntos, vías ni recorrido.
 - No se asignaron carreras ni niveles de clasificación sin validación de la usuaria.
+
+
+## 24. Consulta vial redundante y ajuste de marcadores — versión 0.9.1.15
+
+- Se añadieron tres servidores Overpass en orden de respaldo para evitar depender de un único endpoint.
+- Se amplió la consulta a más clases de vías urbanas y el área de consulta.
+- Se amplió de 35 m a 80 m la distancia máxima para proyectar visualmente el marcador a la vía más cercana.
+- La proyección solo cambia la posición visual del marcador y la capa de calor en el mapa; no modifica las coordenadas sectoriales guardadas en `datos/evidencias_nuevas.json`.
+- Si todos los servidores fallan, se conservan las ubicaciones originales y se deja una advertencia técnica en consola.
