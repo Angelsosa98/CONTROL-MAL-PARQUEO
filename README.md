@@ -8,9 +8,9 @@ Aplicación web estática desarrollada con HTML, CSS, JavaScript y Leaflet para 
 
 - `datos/reportes.json` contiene actualmente **0 reportes precargados**.
 - `datos/evidencias_nuevas.json` contiene **30 fotografías** conservadas para revisión.
-- Las 30 fotografías se conservan en la galería con metadatos de ubicación sectorial aproximada. Esas coordenadas no se dibujan como puntos en el mapa ni se utilizan para generar el mapa de calor; no son coordenadas GPS individuales.
+- Las 30 fotografías se conservan en la galería y sus puntos sectoriales aproximados se muestran en el mapa con niveles visuales preliminares Alto, Medio o Bajo. Las coordenadas no son GPS individuales. La clasificación visual no equivale al índice formal de criticidad porque las fichas no incluyen fecha/hora.
 - Las coordenadas y puntajes sintéticos anteriores fueron retirados del archivo de evidencias.
-- Las fotografías se consultan únicamente en la galería Evidencias. Los marcadores y el mapa de calor de Registros usan exclusivamente reportes reales con nivel de criticidad válido (Alto, Medio o Bajo). Si todavía no hay reportes clasificados, el mapa no muestra puntos ni calor; conserva el recorrido de campo como referencia.
+- Las fotografías se consultan en la galería Evidencias y sus 30 ubicaciones sectoriales aproximadas se muestran como marcadores clasificados visualmente. El mapa de calor combina esas evidencias preliminares con reportes que tienen criticidad formal válida. Los dos orígenes se distinguen en los mensajes emergentes y las evidencias no se agregan a las estadísticas ni al ranking de reportes.
 - Los seis registros históricos del Mercado Público no forman parte del conjunto activo.
 
 **Importante:** la configuración de 10 cuadras en `datos/vias.json` utiliza segmentos de referencia aproximados. El límite de 30 m comprueba distancia a esos segmentos, no demuestra que el punto esté sobre la calzada. Antes de usar los registros como evidencia espacial del estudio, deben verificarse las geometrías viales y los puntos con cartografía y trabajo de campo.
@@ -23,7 +23,7 @@ Aplicación web estática desarrollada con HTML, CSS, JavaScript y Leaflet para 
 - Clasificación de criticidad según categoría, tipo de vía y franja horaria.
 - Evidencia fotográfica opcional y herramienta de pixelado.
 - Almacenamiento local, exportación e importación JSON y paquete ZIP.
-- Mapa de puntos y mapa de calor basados exclusivamente en reportes con coordenadas y clasificación válida Alto, Medio o Bajo.
+- Mapa de puntos y mapa de calor basados en evidencias con clasificación visual preliminar y reportes con criticidad formal válida; las dos fuentes se identifican por separado.
 - Línea verde del circuito aproximado del equipo. Con conexión, intenta ajustar la geometría a la red vial de OpenStreetMap mediante OSRM; si el servicio no responde o no logra un ajuste cercano, conserva el trazado manual.
 - Galería independiente de evidencias fotográficas.
 
@@ -81,7 +81,7 @@ Para revisar el motor de criticidad, abrir `pruebas.html` y verificar los casos 
 
 ### Geometría vial del recorrido — versión 0.9.1.8
 
-La línea verde se ajusta a la red vial mediante geometrías de OSRM, conservando el orden de los puntos de control del recorrido manual. El circuito exterior y cada ramal interior se procesan por separado para evitar conexiones inventadas entre tramos. La línea manual aparece primero y se conserva como respaldo si el servicio no está disponible. Este ajuste afecta exclusivamente a la visualización del recorrido; las 30 fotografías permanecen en su galería y no se dibujan como puntos en el mapa.
+La línea verde se ajusta a la red vial mediante geometrías de OSRM, conservando el orden de los puntos de control del recorrido manual. El circuito exterior y cada ramal interior se procesan por separado para evitar conexiones inventadas entre tramos. La línea manual aparece primero y se conserva como respaldo si el servicio no está disponible. Este ajuste afecta exclusivamente a la visualización del recorrido; las 30 fichas fotográficas permanecen en su galería y sus ubicaciones sectoriales se muestran como puntos clasificados visualmente.
 
 
 ### Recorrido original y posiciones de toma fotográfica — versión 0.9.1.9
@@ -124,7 +124,7 @@ Se amplió la consulta de geometría vial a tres servidores Overpass alternativo
 
 ## Zonificación y validación geográfica del trabajo de campo
 
-La zonificación preliminar se divide en tres áreas: Z1, corredor de acceso; Z2, Parque Villa Marbella y entorno; y Z3, vías circundantes. Según el equipo de campo, la mayor concentración de vehículos mal estacionados se observó en Z2, tanto en las calles perimetrales como en las vías interiores. Este hallazgo es cualitativo: no se asignan cantidades por zona ni zonas individuales a los registros EVID hasta verificar cada ubicación. Las 30 fichas conservan referencias sectoriales aproximadas comunicadas por el equipo, pero no se trazan como puntos de vehículo ni alimentan el mapa de calor. El recorrido del equipo se mantiene como geometría independiente.
+La zonificación preliminar se divide en tres áreas: Z1, corredor de acceso; Z2, Parque Villa Marbella y entorno; y Z3, vías circundantes. Según el equipo de campo, la mayor concentración de vehículos mal estacionados se observó en Z2, tanto en las calles perimetrales como en las vías interiores. Este hallazgo es cualitativo: no se asignan cantidades por zona ni zonas individuales a los registros EVID hasta verificar cada ubicación. Las 30 fichas conservan referencias sectoriales aproximadas comunicadas por el equipo y se muestran como puntos de severidad visual preliminar; sus niveles no son puntajes formales porque no existe fecha/hora. El recorrido del equipo se mantiene como geometría independiente.
 
 
 ### Ajuste visual de marcadores a calzadas — versión 0.9.1.16
@@ -151,8 +151,18 @@ Los problemas detectados durante el desarrollo y su estado se documentan en [doc
 - Se retiraron del mapa los 30 marcadores morados y la capa de calor construida a partir de fotografías.
 - Las 30 fotografías permanecen disponibles en la galería; sus archivos y metadatos no se eliminaron.
 - La leyenda cartográfica muestra el recorrido de campo y los tres niveles de reportes: Alto, Medio y Bajo.
-- Los puntos individuales y el mapa de calor se generan exclusivamente con reportes que tengan un nivel de criticidad válido.
+- Los puntos de evidencias usan nivel visual preliminar; los puntos de reportes usan su criticidad formal. El calor combina ambas fuentes sin convertir las evidencias en reportes para estadísticas.
 - La intensidad térmica usa la categoría: Alto = 1.00 (rojo), Medio = 0.65 (ámbar) y Bajo = 0.30 (verde).
 - Los reportes sin clasificación válida no se representan como Bajo.
 - Si no hay reportes clasificados, no se crea una capa de calor. El mapa encuadra el recorrido de campo.
 - La geometría verde, los 30 registros fotográficos, sus ubicaciones guardadas y las funcionalidades de captura/importación/exportación permanecen sin cambios.
+
+### Recuperación y clasificación visual preliminar de las 30 evidencias — versión 0.9.1.39
+
+- Se recuperaron los 30 puntos usando las coordenadas sectoriales que ya estaban guardadas en `datos/evidencias_nuevas.json`; no se modificó ninguna latitud ni longitud.
+- Se revisaron visualmente las 30 fotografías y se añadió a cada ficha `clasificacion_visual_preliminar`, con nivel Alto/Medio/Bajo, tipo de obstrucción observado, confianza y observación.
+- Distribución visual preliminar: 9 Alto, 16 Medio y 5 Bajo.
+- Los puntos de evidencias se muestran con los colores de los tres niveles. El mapa de calor recibe sus intensidades (Alto 1.00, Medio 0.65, Bajo 0.30) y también incorpora reportes reales con criticidad formal válida.
+- Los mensajes emergentes identifican cada punto como evidencia fotográfica y aclaran que su nivel es preliminar. No se copian las evidencias a `reportes.json`, no entran a estadísticas ni al Top 5, y no se presentan como reportes ciudadanos.
+- Las fichas no contienen fecha/hora (0 de 30); por tanto, no se calculó la franja pico/valle ni el puntaje formal completo. La valoración visual no es una determinación legal de infracción.
+- La galería de fotos, sus identificadores, sus 30 posiciones sectoriales y el recorrido verde (trazado exterior y tres líneas interiores) permanecen intactos.
