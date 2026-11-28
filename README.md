@@ -24,10 +24,10 @@ Aplicación web estática desarrollada con HTML, CSS, JavaScript y Leaflet para 
 - Evidencia fotográfica opcional y herramienta de pixelado.
 - Almacenamiento local, exportación e importación JSON y paquete ZIP.
 - Mapa de puntos y mapa de calor basados exclusivamente en reportes con coordenadas y datos completos.
-- Línea azul con el circuito aproximado descrito por el equipo, dibujada sobre los segmentos de vía configurados.
+- Línea verde del circuito aproximado del equipo. Con conexión, intenta ajustar la geometría a la red vial de OpenStreetMap mediante OSRM; si el servicio no responde o no logra un ajuste cercano, conserva el trazado manual.
 - Galería independiente de evidencias fotográficas.
 
-## Criterios de criticidad
+## Recorrido cartográfico\n\nEl circuito conserva sus puntos de paso sectoriales aproximados y, al abrir el mapa con conexión a internet, solicita a OSRM una geometría vial siguiendo esos puntos en orden. El mapa solo reemplaza la línea manual si todos los puntos se ajustan a menos de 22 m de la red vial. La geometría resultante es una referencia cartográfica, no un levantamiento GPS del recorrido real. La solicitud puede no estar disponible si el servicio público limita el tráfico o no encuentra un trayecto válido; en ese caso se mantiene la línea manual.\n\n## Criterios de criticidad
 
 `Puntaje = Peso(Categoría) + Peso(Tipo de vía) + Peso(Franja horaria)`
 
