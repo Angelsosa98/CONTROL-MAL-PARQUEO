@@ -848,6 +848,18 @@ function redimensionarMapaRegistros() {
  * priorizando Santa Marta / zona de estudio.
  * Devuelve Promise<Array<{ titulo, subtitulo, lat, lng, origen }>>.
  */
+/**
+ * Devuelve únicamente las vías habilitadas para búsquedas y asignaciones.
+ * Las vías históricas conservadas en vias.json con activa:false no deben
+ * volver a aparecer como sugerencias de ubicación.
+ */
+function obtenerCuadrasActivasParaBusqueda(vias) {
+  if (!vias || !Array.isArray(vias.cuadras)) return [];
+  return vias.cuadras.filter(function (cuadra) {
+    return cuadra && cuadra.activa !== false;
+  });
+}
+
 function buscarDireccionesMapa(textoConsulta, vias, ambito) {
   var q = String(textoConsulta || "").trim();
   if (q.length < 2) {
@@ -858,8 +870,9 @@ function buscarDireccionesMapa(textoConsulta, vias, ambito) {
   var resultados = [];
 
   if (vias && Array.isArray(vias.cuadras)) {
-    for (var i = 0; i < vias.cuadras.length; i++) {
-      var c = vias.cuadras[i];
+    var cuadrasDisponibles = obtenerCuadrasActivasParaBusqueda(vias);
+    for (var i = 0; i < cuadrasDisponibles.length; i++) {
+      var c = cuadrasDisponibles[i];
       if (!Array.isArray(c.extremos) || c.extremos.length === 0) continue;
 
       var textoCuadra = (String(c.nombre || "") + " " + String(c.id || "") + " " + String(c.tipo_via || "")).toLowerCase();
