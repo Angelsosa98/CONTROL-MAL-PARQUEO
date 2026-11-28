@@ -2,7 +2,7 @@
 
 Aplicación web estática con HTML, CSS, JavaScript y Leaflet para registrar reportes de mal parqueo, ubicarlos en el mapa y calcular su criticidad en Santa Marta, Colombia.
 
-**Versión actual:** 0.9.1.40  
+**Versión actual:** 0.9.1.41  
 **Publicación:** GitHub Pages. La dirección activa y el estado de despliegue se consultan en la configuración y en Actions del repositorio.
 
 ## Estado actual de los datos
@@ -47,7 +47,7 @@ La aplicación guarda los reportes en el navegador local. No hay sincronización
 ## Pruebas
 
 - `pruebas.html`: siete casos del motor de criticidad.
-- `pruebas-integracion.html`: siete casos de búsqueda de vías activas e importación ZIP.
+- `pruebas-integracion.html`: once casos de búsqueda, exclusión de vías desactivadas, coherencia del inventario y seguridad de importación ZIP.
 
 Abrir las pruebas desde GitHub Pages o un servidor HTTP local. Las pruebas automatizadas no sustituyen una comprobación manual de GPS, mapas y almacenamiento en navegador.
 
@@ -86,6 +86,10 @@ El repositorio es público. Algunas fotografías muestran placas legibles; las i
 
 ---
 
+## Historial de versiones anteriores
+
+Las notas siguientes describen el estado del proyecto en cada versión histórica; no sustituyen el estado actual resumido al inicio de este README.
+
 ### Ajuste de puntos y mapa satelital — versión 0.9.1.7
 
 - El mapa inicia en la vista "Puntos" para evitar que el mapa de calor oculte los marcadores y las calzadas.
@@ -111,7 +115,7 @@ La línea verde se ajusta a la red vial mediante geometrías de OSRM, conservand
 
 ### Restauración de posiciones de evidencias — versión 0.9.1.10
 
-Se recuperan las 30 posiciones sectoriales que estaban en la configuración de evidencias de la versión 0.9.1.7. Se conserva el ajuste cartográfico de marcadores a las calzadas de OpenStreetMap y la capa satelital con calles. La visualización de la línea verde sigue limitada al trazado original exterior; no se dibujan los tramos interiores adicionales ni se calcula una ruta alternativa.
+En esa versión se recuperaron las 30 posiciones sectoriales de la versión 0.9.1.7 y se probó el ajuste cartográfico a las calzadas de OpenStreetMap. La geometría exterior y la visualización de los tramos interiores fueron modificadas en versiones posteriores; consultar el estado actual descrito al inicio de este README.
 
 
 ### Retiro de la capa Satélite + calles — versión 0.9.1.11
@@ -183,3 +187,12 @@ Los problemas detectados durante el desarrollo y su estado se documentan en [doc
 - Los mensajes emergentes identifican cada punto como evidencia fotográfica y aclaran que su nivel es preliminar. No se copian las evidencias a `reportes.json`, no entran a estadísticas ni al Top 5, y no se presentan como reportes ciudadanos.
 - Las fichas no contienen fecha/hora (0 de 30); por tanto, no se calculó la franja pico/valle ni el puntaje formal completo. La valoración visual no es una determinación legal de infracción.
 - La galería de fotos, sus identificadores, sus 30 posiciones sectoriales y el recorrido verde (trazado exterior y tres líneas interiores) permanecen intactos.
+
+### Depuración de distribución, buscador e inventario — versión 0.9.1.41
+
+- Se confirmó que la distribución vigente se calcula desde los sectores del JSON: 9 evidencias en la calle de la Universidad del Magdalena y 21 en Villa Marbella. No se generaron coordenadas ni se redistribuyeron vehículos.
+- El buscador local sigue mostrando solo las cuatro vías activas. En el modo Área de estudio, Nominatim usa `bounded=1` con el rectángulo de estudio y se descartan resultados próximos a segmentos desactivados. En Otros sectores se mantiene la búsqueda abierta.
+- Se verificó fila por fila el inventario CSV frente al JSON: 30 IDs, fotos, sectores, vías aproximadas y valoraciones preliminares coinciden. El GPS individual continúa como no disponible.
+- Se verificó que hay 14 vías registradas: cuatro activas y diez históricas desactivadas. La importación JSON/ZIP ya estaba implementada y se mantiene.
+- El recorrido verde y las ubicaciones de vehículos son capas independientes. No se modificó la geometría verde ni se movió EVID-030 ni ningún otro punto por su distancia a la ruta.
+- Las pruebas de integración ampliadas incluyen once casos; las pruebas de criticidad conservan siete.
