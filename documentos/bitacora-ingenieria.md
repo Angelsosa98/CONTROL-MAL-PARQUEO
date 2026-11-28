@@ -127,3 +127,12 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - El circuito exterior y los tres ramales interiores se procesan por separado, sin conectar segmentos independientes.
 - La línea manual se dibuja de inmediato y permanece como respaldo si el servicio no responde o no encuentra una ruta válida.
 - No se modificaron las 30 evidencias, sus coordenadas sectoriales, ni el ajuste de marcadores a las calzadas.
+
+
+## 18. Restauración del recorrido original — versión 0.9.1.9
+
+- Se retiraron los tres tramos interiores adicionales de Villa Marbella.
+- Se eliminó el ajuste automático OSRM de la línea de recorrido para conservar exclusivamente la geometría original trazada por el equipo.
+- La línea verde representa solo el acceso por Calle 29H y el circuito perimetral original alrededor de Villa Marbella.
+- Se reubicaron las 30 evidencias como posiciones aproximadas desde donde se tomaron las fotografías: 5 en el tramo de acceso y 25 sobre el circuito perimetral. Las fotografías pueden mostrar vehículos observados a distancia, por lo que el marcador no pretende representar la ubicación exacta del vehículo.
+- Se mantienen las evidencias originales y su carácter aproximado; no se inventan GPS individuales.
