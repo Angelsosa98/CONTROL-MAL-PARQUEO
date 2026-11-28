@@ -52,3 +52,11 @@ Las fotografías (30 registros de `datos/evidencias_nuevas.json`) se muestran ú
 En el mapa de Registros, los marcadores individuales y la capa de calor se construyen exclusivamente con reportes que tengan `criticidad.nivel` igual a Alto, Medio o Bajo. La intensidad de calor es categórica: Alto 1.00, Medio 0.65 y Bajo 0.30. Los reportes sin nivel válido se omiten del mapa, en lugar de asignarles Bajo por defecto.
 
 Cuando no existen reportes clasificados, no se crea una capa de calor y el mapa encuadra el recorrido de campo. La leyenda conserva el recorrido y las tres categorías de reportes. La galería, archivos de fotos, geometría verde y datos sectoriales de las evidencias no se modifican.
+
+## 7. Puntos y calor de evidencias con clasificación visual preliminar — versión 0.9.1.39
+
+Las 30 fichas de `datos/evidencias_nuevas.json` vuelven a mostrarse como puntos en el mapa utilizando exactamente sus coordenadas sectoriales existentes. Cada ficha incluye `clasificacion_visual_preliminar`: nivel visual Alto/Medio/Bajo, tipo de obstrucción observado, confianza y observación breve. La distribución actual es 9 Alto, 16 Medio y 5 Bajo.
+
+Estos niveles son una valoración visual de la obstrucción que aparece en cada fotografía, no un resultado del algoritmo `calcularCriticidad`. Las 30 fichas tienen `fecha_hora: null`, así que no se puede deducir su franja pico/valle ni el puntaje formal. Cada popup aclara esa limitación y distingue una evidencia fotográfica de un reporte capturado.
+
+Los marcadores de evidencias y los reportes formales se dibujan en la capa de puntos del mapa. La capa de calor pondera ambos orígenes con Alto 1.00, Medio 0.65 y Bajo 0.30. Las evidencias no se añaden a la lista de reportes, estadísticas, filtros de reportes ni Top 5. La galería y el recorrido verde se mantienen sin modificaciones.
