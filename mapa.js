@@ -355,7 +355,7 @@ function dibujarRecorridoCampo(vias) {
       weight: 3,
       opacity: 0.95,
       lineCap: "butt",
-      lineJoin: "miter",
+      lineJoin: "round",
       smoothFactor: 0
     }).bindPopup(
       "<strong>Recorrido original de campo</strong><br>" +
