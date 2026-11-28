@@ -82,3 +82,11 @@ Para revisar el motor de criticidad, abrir `pruebas.html` y verificar los casos 
 ### Geometría vial del recorrido — versión 0.9.1.8
 
 La línea verde se ajusta a la red vial mediante geometrías de OSRM, conservando el orden de los puntos de control del recorrido manual. El circuito exterior y cada ramal interior se procesan por separado para evitar conexiones inventadas entre tramos. La línea manual aparece primero y se conserva como respaldo si el servicio no está disponible. Este ajuste afecta exclusivamente a la visualización del recorrido, no a los 30 puntos de evidencias.
+
+
+### Recorrido original y posiciones de toma fotográfica — versión 0.9.1.9
+
+- Se conserva únicamente el trazado original: acceso por Calle 29H y circuito perimetral de Villa Marbella.
+- Se eliminaron los tres tramos internos y el ajuste automático OSRM del recorrido.
+- Las 30 evidencias se ubican como posiciones aproximadas desde donde se tomaron las fotografías: 5 en el tramo de acceso y 25 sobre el recorrido perimetral. No representan la ubicación exacta de los vehículos observados a distancia ni GPS individuales.
+- No se agregan líneas ni marcadores adicionales en las calles interiores.
