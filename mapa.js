@@ -352,11 +352,11 @@ function dibujarRecorridoCampo(vias) {
   if (coordenadas.length >= 2) {
     L.polyline(coordenadas, {
       color: "#16a34a",
-      weight: 3.2,
-      opacity: 0.9,
-      lineCap: "round",
-      lineJoin: "round",
-      smoothFactor: 0.25
+      weight: 3,
+      opacity: 0.95,
+      lineCap: "butt",
+      lineJoin: "miter",
+      smoothFactor: 0
     }).bindPopup(
       "<strong>Recorrido original de campo</strong><br>" +
       "Acceso por Calle 29H y circuito perimetral de Villa Marbella."
@@ -373,11 +373,11 @@ function dibujarRecorridoCampo(vias) {
 
       L.polyline(puntos, {
         color: "#16a34a",
-        weight: 3.0,
-        opacity: 0.88,
-        lineCap: "round",
-        lineJoin: "round",
-        smoothFactor: 0.25
+        weight: 2.8,
+        opacity: 0.95,
+        lineCap: "butt",
+        lineJoin: "miter",
+        smoothFactor: 0
       }).bindPopup(
         "<strong>" + (tramo.nombre || ("Tramo transversal " + (indice + 1))) + "</strong><br>" +
         "Segmento de calle del recorrido original."
@@ -385,6 +385,10 @@ function dibujarRecorridoCampo(vias) {
     });
 
   capaRecorridoCampo.addTo(mapaRegistros);
+}
+
+function redimensionarMapaRegistros() {
+  if (leafletDisponible() && mapaRegistros) mapaRegistros.invalidateSize({ pan: false });
 }
 function aplicarModoCapasRegistros() {
   if (!leafletDisponible() || !mapaRegistros) return;
