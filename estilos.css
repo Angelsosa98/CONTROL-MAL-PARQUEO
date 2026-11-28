@@ -1244,3 +1244,52 @@ button {
     flex-direction: column;
   }
 }
+
+
+/* Vista ampliada del mapa de evidencias */
+.btn-pantalla-mapa {
+  min-height: 38px;
+  white-space: nowrap;
+  font-size: 0.82rem;
+}
+#seccion-mapa-recorrido.mapa-expandido {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  margin: 0;
+  padding: 10px;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+}
+#seccion-mapa-recorrido.mapa-expandido .fila-cabecera-seccion {
+  flex: 0 0 auto;
+}
+#seccion-mapa-recorrido.mapa-expandido > p,
+#seccion-mapa-recorrido.mapa-expandido #grupo-capas-mapa,
+#seccion-mapa-recorrido.mapa-expandido .control-recorrido-barra,
+#seccion-mapa-recorrido.mapa-expandido #aviso-sin-calor {
+  flex: 0 0 auto;
+}
+#seccion-mapa-recorrido.mapa-expandido #mapa-registros {
+  flex: 1 1 auto;
+  min-height: 160px;
+  height: auto;
+}
+body.mapa-en-pantalla-completa {
+  overflow: hidden;
+  padding-bottom: 0;
+}
+@media (max-width: 600px) {
+  #seccion-mapa-recorrido.mapa-expandido {
+    padding: 6px;
+  }
+  #seccion-mapa-recorrido.mapa-expandido > p {
+    display: none;
+  }
+  #seccion-mapa-recorrido.mapa-expandido .fila-cabecera-seccion h2 {
+    font-size: 0.92rem;
+  }
+}
