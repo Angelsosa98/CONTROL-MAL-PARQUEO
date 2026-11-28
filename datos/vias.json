@@ -354,60 +354,60 @@
   ],
   "recorrido_campo": {
     "tipo": "reconstruccion_cartografica_aproximada",
-    "descripcion": "Recorrido de campo corregido según la referencia satelital anotada por el equipo: acceso por Calle 29H, circuito perimetral y tres tramos interiores. La geometría verde sigue las líneas rojas indicadas en la referencia.",
-    "nota": "La línea representa el recorrido señalado en rojo por el equipo. Los puntos morados representan ubicaciones aproximadas de vehículos mal estacionados y son independientes del recorrido.",
+    "descripcion": "Recorrido de campo corregido siguiendo la línea roja marcada por el equipo en la referencia cartográfica. Se ajustó el tramo de Calle 29H señalado; los demás segmentos se conservan.",
+    "nota": "La línea verde debe coincidir con el trazado rojo indicado por el equipo. Los puntos morados son ubicaciones aproximadas de vehículos y no definen el recorrido.",
     "trazado": [
       [
-        11.2260462,
-        -74.1892044
+        11.2260392,
+        -74.1891844
       ],
       [
-        11.2259445,
-        -74.1893775
+        11.2259396,
+        -74.1893606
       ],
       [
-        11.2258234,
-        -74.1895504
+        11.2258206,
+        -74.1895366
       ],
       [
-        11.2256975,
-        -74.1897233
+        11.2256968,
+        -74.1897125
       ],
       [
-        11.2255716,
-        -74.1898962
+        11.2255729,
+        -74.1898885
       ],
       [
-        11.2254409,
-        -74.190069
+        11.2254443,
+        -74.1900644
       ],
       [
-        11.2253102,
-        -74.1902419
+        11.2253157,
+        -74.1902404
       ],
       [
-        11.2251818,
-        -74.1903106
+        11.2251894,
+        -74.1903122
       ],
       [
-        11.2250414,
-        -74.1904834
+        11.2250511,
+        -74.1904881
       ],
       [
-        11.2249011,
-        -74.1906562
+        11.2249129,
+        -74.190664
       ],
       [
-        11.2247752,
-        -74.1908291
+        11.224789,
+        -74.1908399
       ],
       [
-        11.2246927,
-        -74.1910022
+        11.2247086,
+        -74.1910161
       ],
       [
-        11.2246238,
-        -74.1911407
+        11.2246418,
+        -74.1911577
       ],
       [
         11.2244775,
