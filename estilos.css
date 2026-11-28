@@ -1293,3 +1293,59 @@ body.mapa-en-pantalla-completa {
     font-size: 0.92rem;
   }
 }
+
+
+/* Editor manual de la línea verde */
+.herramientas-edicion-recorrido {
+  margin: 8px 0 10px;
+  padding: 9px;
+  border: 1px solid var(--color-borde);
+  border-radius: 10px;
+  background: #f8fafc;
+}
+.barra-editor-recorrido,
+.barra-copias-recorrido {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0;
+}
+.barra-editor-recorrido button,
+.barra-copias-recorrido button {
+  min-height: 38px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  flex: 1 1 auto;
+}
+.barra-editor-recorrido button:disabled,
+.barra-copias-recorrido button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.estado-editor-recorrido {
+  margin: 6px 0 0;
+  padding: 7px 9px;
+  border-radius: 7px;
+  background: #eef2ff;
+  color: #27347a;
+  font-size: 0.8rem;
+}
+#seccion-mapa-recorrido.mapa-expandido #herramientas-edicion-recorrido {
+  flex: 0 0 auto;
+}
+#seccion-mapa-recorrido.mapa-expandido #herramientas-edicion-recorrido > p:first-child {
+  margin-bottom: 4px;
+}
+#seccion-mapa-recorrido.mapa-expandido #herramientas-edicion-recorrido .barra-editor-recorrido,
+#seccion-mapa-recorrido.mapa-expandido #herramientas-edicion-recorrido .barra-copias-recorrido {
+  margin: 4px 0;
+}
+@media (max-width: 600px) {
+  .barra-editor-recorrido button,
+  .barra-copias-recorrido button {
+    flex: 1 1 calc(50% - 6px);
+  }
+  #seccion-mapa-recorrido.mapa-expandido #herramientas-edicion-recorrido > p:first-child {
+    display: none;
+  }
+}
