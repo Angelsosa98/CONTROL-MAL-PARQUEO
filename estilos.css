@@ -1371,3 +1371,11 @@ body.mapa-en-pantalla-completa {
 .panel-via-externa .etiqueta-control { display: block; margin-top: 10px; }
 .panel-via-externa .control-input,
 .panel-via-externa .control-select { width: 100%; }
+
+
+.nota-clasificacion-visual {
+  margin: 6px 2px 0;
+  color: #64748b;
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
