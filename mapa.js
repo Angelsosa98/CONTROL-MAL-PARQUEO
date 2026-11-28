@@ -488,6 +488,87 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
     });
   }
   aplicarModoCapasRegistros();
+  ajustarPuntosEvidenciaACalles(vias);
+}
+
+
+/**
+ * Ajusta solo la posición visual de cada evidencia a un segmento vial OSM cercano.
+ * Conserva intacta la coordenada de origen y descarta ajustes mayores a 18 m.
+ */
+async function ajustarPuntosEvidenciaACalles(vias) {
+  if (!leafletDisponible() || !mapaRegistros || !vias || !vias.zona || !vias.zona.limites) return;
+  var b = vias.zona.limites;
+  var consulta = '[out:json][timeout:20];way["highway"~"^(primary|secondary|tertiary|residential|unclassified|service|living_street)$"](' +
+    b.lat_min + ',' + b.lng_min + ',' + b.lat_max + ',' + b.lng_max + ');out geom;';
+  var servidores = [
+    "https://overpass-api.de/api/interpreter?data=",
+    "https://overpass.kumi.systems/api/interpreter?data="
+  ];
+  var datos = null;
+  for (var i = 0; i < servidores.length && !datos; i++) {
+    try {
+      var respuesta = await fetch(servidores[i] + encodeURIComponent(consulta));
+      if (respuesta.ok) datos = await respuesta.json();
+    } catch (error) {}
+  }
+  if (!datos || !Array.isArray(datos.elements)) return;
+
+  var segmentos = [];
+  datos.elements.forEach(function (via) {
+    var g = Array.isArray(via.geometry) ? via.geometry : [];
+    for (var k = 0; k < g.length - 1; k++) {
+      if (g[k] && g[k + 1]) segmentos.push([g[k], g[k + 1]]);
+    }
+  });
+  if (!segmentos.length) return;
+
+  var metrosLat = 111320;
+  var latRef = (b.lat_min + b.lat_max) / 2;
+  var metrosLng = 111320 * Math.cos(latRef * Math.PI / 180);
+  var maxDistancia = 18;
+  var puntosCalor = [];
+
+  marcadoresEvidenciasMapa.forEach(function (item) {
+    var u = item.evidencia && item.evidencia.ubicacion_aproximada;
+    if (!u) return;
+    var lat = Number(u.lat), lng = Number(u.lng);
+    var mejor = null, mejorDistancia = Infinity;
+    segmentos.forEach(function (seg) {
+      var ax = (seg[0].lon - lng) * metrosLng;
+      var ay = (seg[0].lat - lat) * metrosLat;
+      var bx = (seg[1].lon - lng) * metrosLng;
+      var by = (seg[1].lat - lat) * metrosLat;
+      var dx = bx - ax, dy = by - ay;
+      var t = Math.max(0, Math.min(1, -(ax * dx + ay * dy) / (dx * dx + dy * dy || 1)));
+      var px = ax + t * dx, py = ay + t * dy;
+      var distancia = Math.hypot(px, py);
+      if (distancia < mejorDistancia) {
+        mejorDistancia = distancia;
+        mejor = {
+          lat: seg[0].lat + t * (seg[1].lat - seg[0].lat),
+          lng: seg[0].lon + t * (seg[1].lon - seg[0].lon)
+        };
+      }
+    });
+    if (mejor && mejorDistancia <= maxDistancia) {
+      item.marcador.setLatLng([mejor.lat, mejor.lng]);
+      puntosCalor.push([mejor.lat, mejor.lng, 1]);
+    } else {
+      puntosCalor.push([lat, lng, 1]);
+    }
+  });
+
+  if (capaCalorEvidencias && mapaRegistros.hasLayer(capaCalorEvidencias)) mapaRegistros.removeLayer(capaCalorEvidencias);
+  capaCalorEvidencias = null;
+  var tam = mapaRegistros.getSize();
+  if (heatDisponible() && puntosCalor.length && tam.x > 0 && tam.y > 0) {
+    capaCalorEvidencias = L.heatLayer(puntosCalor, {
+      radius: 14, blur: 10, maxZoom: 19, max: 1, minOpacity: 0.16,
+      gradient: { 0.25: "#a78bfa", 0.55: "#f59e0b", 0.85: "#ef4444", 1: "#991b1b" }
+    });
+  }
+  aplicarModoCapasRegistros();
 }
 
 function actualizarMarcadoresRegistros(listaReportes, vias) {
