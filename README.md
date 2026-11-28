@@ -125,3 +125,8 @@ Se amplió la consulta de geometría vial a tres servidores Overpass alternativo
 ## Zonificación y validación geográfica del trabajo de campo
 
 La zonificación preliminar se divide en tres áreas: Z1, corredor de acceso; Z2, Parque Villa Marbella y entorno; y Z3, vías circundantes. Según el equipo de campo, la mayor concentración de vehículos mal estacionados se observó en Z2, tanto en las calles perimetrales como en las vías interiores. Este hallazgo es cualitativo: no se asignan cantidades por zona ni zonas individuales a los registros EVID hasta verificar cada ubicación. Los 30 puntos representan ubicaciones aproximadas de vehículos observados, no posiciones de toma fotográfica. El recorrido del equipo se mantiene como geometría independiente.
+
+
+### Ajuste visual de marcadores a calzadas — versión 0.9.1.16
+
+Los marcadores de evidencias se proyectan visualmente al segmento de vía OpenStreetMap geométricamente más cercano, sin modificar ni sobrescribir las coordenadas originales de los registros. Se conserva temporalmente la distancia del ajuste y el identificador de la vía OSM para revisión. El mapa de calor utiliza la posición visual ajustada. Este procedimiento mejora la presentación cartográfica, pero no valida por sí solo que la vía elegida sea la correcta; la asignación de calle/carrera requiere revisión de campo.
