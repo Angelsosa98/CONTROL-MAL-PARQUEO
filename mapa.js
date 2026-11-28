@@ -508,8 +508,9 @@ function puntoMasCercanoSegmentoVial(punto, a, b) {
 }
 
 /**
- * Mueve cada marcador al eje de la vía OSM más cercana si está a 35 m o menos.
- * Si Overpass falla o no hay una vía próxima, deja el punto sectorial sin alterar.
+ * Ajusta SOLO la representación visual del marcador al segmento vial OSM más cercano.
+ * Las coordenadas originales del registro nunca se modifican ni se guardan como GPS.
+ * La distancia de ajuste se conserva como metadato temporal para revisión.
  */
 function ajustarMarcadoresEvidenciasAViasOSM(registros, puntosCalor, vias) {
   if (!registros || !registros.length) return;
@@ -517,27 +518,41 @@ function ajustarMarcadoresEvidenciasAViasOSM(registros, puntosCalor, vias) {
     registros.forEach(function (registro, indice) {
       var u = registro.evidencia && registro.evidencia.ubicacion_aproximada;
       if (!u) return;
+      var origen = [Number(u.lat), Number(u.lng)];
       var mejor = null;
       calles.forEach(function (calle) {
         var geometria = calle.geometry || [];
         for (var i = 0; i < geometria.length - 1; i++) {
-          var candidato = puntoMasCercanoSegmentoVial(
-            [Number(u.lat), Number(u.lng)], geometria[i], geometria[i + 1]
-          );
-          if (!mejor || candidato.distancia < mejor.distancia) mejor = candidato;
+          var candidato = puntoMasCercanoSegmentoVial(origen, geometria[i], geometria[i + 1]);
+          if (!mejor || candidato.distancia < mejor.distancia) {
+            mejor = {
+              lat: candidato.lat,
+              lng: candidato.lng,
+              distancia: candidato.distancia,
+              via: (calle.tags && (calle.tags.name || calle.tags.ref)) || null,
+              osmWayId: calle.id || null
+            };
+          }
         }
       });
-      if (mejor && mejor.distancia <= 80) {
-        registro.marcador.setLatLng([mejor.lat, mejor.lng]);
-        if (puntosCalor[indice]) puntosCalor[indice] = [mejor.lat, mejor.lng, 1];
+
+      // Se representa sobre el eje vial más cercano, sin alterar ubicacion_aproximada.
+      if (mejor && Number.isFinite(mejor.lat) && Number.isFinite(mejor.lng)) {
+        registro.posicionVisualVial = [mejor.lat, mejor.lng];
+        registro.distanciaAjusteVisualM = mejor.distancia;
+        registro.segmentoVisualOSM = mejor.osmWayId;
+        registro.marcador.setLatLng(registro.posicionVisualVial);
+        if (puntosCalor[indice]) {
+          puntosCalor[indice] = [mejor.lat, mejor.lng, 1];
+        }
       }
     });
     if (capaCalorEvidencias && typeof capaCalorEvidencias.setLatLngs === "function") {
       capaCalorEvidencias.setLatLngs(puntosCalor);
     }
   }).catch(function (error) {
-    if (typeof console !== "undefined" && console.info) {
-      console.warn("No se pudieron ajustar los puntos a las calles; se conservan las ubicaciones aproximadas:", error.message);
+    if (typeof console !== "undefined" && console.warn) {
+      console.warn("No se pudieron cargar las geometrías viales; se muestran las ubicaciones aproximadas originales:", error.message);
     }
   });
 }
