@@ -145,3 +145,11 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - La función de dibujo de recorrido se mantiene limitada a `recorrido_campo.trazado`, sin dibujar `tramos_internos` ni solicitar rutas OSRM.
 - No se modificó la geometría original exterior del recorrido.
 - Las posiciones siguen siendo aproximadas; no se presentan como GPS individuales.
+
+
+## 20. Retiro de Satélite + calles — versión 0.9.1.11
+
+- Se eliminó la capa combinada Satélite + calles y la llamada a World Transportation de Esri.
+- Se mantienen las opciones independientes Satélite (imagen Esri) y Mapa de calles (OpenStreetMap).
+- El mapa abre en Satélite sin superposiciones.
+- No se modificaron las 30 evidencias, sus posiciones, el ajuste de marcadores a calles ni la geometría del recorrido original.
