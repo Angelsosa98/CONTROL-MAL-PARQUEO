@@ -187,3 +187,13 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - Se amplió de 35 m a 80 m la distancia máxima para proyectar visualmente el marcador a la vía más cercana.
 - La proyección solo cambia la posición visual del marcador y la capa de calor en el mapa; no modifica las coordenadas sectoriales guardadas en `datos/evidencias_nuevas.json`.
 - Si todos los servidores fallan, se conservan las ubicaciones originales y se deja una advertencia técnica en consola.
+
+
+## 25. Criterio de zonificación de campo y validación geográfica
+
+- Se incorporó una zonificación preliminar: Z1 corredor de acceso; Z2 Parque Villa Marbella y entorno; Z3 vías circundantes.
+- Se registró el reporte cualitativo del equipo de que la mayor concentración de vehículos se observó en Z2, tanto alrededor del parque como en sus vías interiores.
+- No se distribuyeron numéricamente los 30 registros entre zonas ni se asignaron calles/carreras individuales sin validación.
+- Se estableció que cada EVID representa la ubicación aproximada de un vehículo mal estacionado identificado durante el recorrido, no la posición del fotógrafo.
+- Se estableció que el recorrido del equipo y las ubicaciones de los vehículos son capas independientes.
+- Se preservaron las coordenadas originales y se definió que cualquier ajuste cartográfico debe vincularse al segmento vial confirmado, no solo a la proximidad geométrica.
