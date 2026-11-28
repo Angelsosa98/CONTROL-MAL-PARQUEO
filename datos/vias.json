@@ -354,8 +354,8 @@
   ],
   "recorrido_campo": {
     "tipo": "reconstruccion_cartografica_aproximada",
-    "descripcion": "Recorrido exterior abierto y tres líneas interiores simplificadas, sin cierre diagonal duplicado ni quiebres innecesarios.",
-    "nota": "La línea verde representa una sola vez cada calle del recorrido. Los tramos interiores son líneas independientes, rectas y sin superposición del corredor de acceso.",
+    "descripcion": "Recorrido exterior y tres líneas interiores ajustadas al eje visual de las calles, siguiendo la secuencia de puntos morados de referencia.",
+    "nota": "Las tres líneas interiores siguen las ubicaciones sectoriales moradas de referencia y conservan una sola polilínea por calle, sin duplicar el corredor exterior.",
     "trazado": [
       [
         11.226037,
@@ -502,41 +502,65 @@
             -74.1910465
           ],
           [
-            11.2250063,
-            -74.1901186
+            11.224593,
+            -74.1909062
+          ],
+          [
+            11.224908,
+            -74.1903134
           ]
         ],
-        "metodo": "Tramo interior simplificado como una sola línea continua entre sus dos extremos, siguiendo el eje visual de la calle de referencia."
+        "metodo": "Línea interior reconstruida siguiendo en orden las ubicaciones moradas de referencia para acompañar el eje de la calle, en lugar de una diagonal recta que corta el trazado vial."
       },
       {
         "id": "INTERNO-2",
         "nombre": "Tramo transversal central de Villa Marbella",
         "coordenadas": [
           [
-            11.2242174,
-            -74.1909766
+            11.224263,
+            -74.1909059
           ],
           [
-            11.2247592,
-            -74.1900272
+            11.2243348,
+            -74.1907945
+          ],
+          [
+            11.2244771,
+            -74.1905414
+          ],
+          [
+            11.2245898,
+            -74.1903364
+          ],
+          [
+            11.224688,
+            -74.190155
           ]
         ],
-        "metodo": "Tramo interior simplificado como una sola línea continua entre sus dos extremos, siguiendo el eje visual de la calle de referencia."
+        "metodo": "Línea interior reconstruida siguiendo en orden las ubicaciones moradas de referencia para acompañar el eje de la calle, en lugar de una diagonal recta que corta el trazado vial."
       },
       {
         "id": "INTERNO-3",
         "nombre": "Tramo transversal sur de Villa Marbella",
         "coordenadas": [
           [
-            11.2238757,
-            -74.1906867
+            11.2239757,
+            -74.1900796
           ],
           [
-            11.2243017,
-            -74.1899626
+            11.2240645,
+            -74.1908592
+          ],
+          [
+            11.2244269,
+            -74.190631
+          ],
+          [
+            11.2242674,
+            -74.1908991
           ]
         ],
-        "metodo": "Tramo interior simplificado como una sola línea continua entre sus dos extremos, siguiendo el eje visual de la calle de referencia."
+        "metodo": "Línea interior reconstruida siguiendo en orden las ubicaciones moradas de referencia para acompañar el eje de la calle, en lugar de una diagonal recta que corta el trazado vial."
       }
     ]
   },
