@@ -234,6 +234,9 @@ function actualizarPanelAmbitoCaptura() {
 function cambiarAmbitoCaptura(ambito) {
   AppEstado.ambitoCaptura = ambito === "otros_sectores_santa_marta"
     ? "otros_sectores_santa_marta" : "area_estudio";
+  if (AppEstado.ambitoCaptura === "otros_sectores_santa_marta" && porId("select-tipo-via-externa")) {
+    porId("select-tipo-via-externa").value = "";
+  }
   actualizarPanelAmbitoCaptura();
 }
 
@@ -579,6 +582,7 @@ function limpiarFormulario() {
   porId("input-buscar-direccion").value = "";
   porId("btn-limpiar-busqueda").hidden = true;
   if (porId("input-sector-externo")) porId("input-sector-externo").value = "";
+  if (porId("select-tipo-via-externa")) porId("select-tipo-via-externa").value = "";
   porId("detalle-fecha-hora").open = false;
   porId("texto-coordenadas").textContent = "Sin ubicación marcada";
   ["estado-gps", "aviso-precision", "aviso-fuera-zona", "error-ubicacion",
