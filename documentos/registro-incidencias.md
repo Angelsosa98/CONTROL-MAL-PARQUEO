@@ -91,3 +91,18 @@ La suite de navegador pruebas.html se amplió para incluir un caso de criticidad
 |---|---|---|---|
 | LIM-007 | Privacidad de fotografías en repositorio público | El repositorio es público y algunas imágenes muestran placas legibles. No se alteraron las fotos originales durante esta depuración para preservar los archivos de evidencia. | Antes de difusión externa, usar copias anonimizadas o restringir la visibilidad del repositorio; comprobar placas y rostros de las 30 imágenes. |
 | LIM-008 | Calor combinado de dos fuentes | El mapa de calor combina evidencias con valoración visual preliminar y reportes con criticidad formal. Los popups separan el origen, pero no hay un control para mostrar cada fuente de calor por separado. | Para análisis comparativos formales, incorporar una selección de fuente o generar capas de calor separadas. No interpretar el calor combinado como una sola muestra homogénea. |
+
+
+## Incidencia corregida — versión 0.9.1.41
+
+| ID | Incidencia | Causa / efecto | Corrección | Estado |
+|---|---|---|---|---|
+| INC-010 | El geocodificador podía sugerir calles fuera del área de estudio o sobre vías históricas desactivadas | La lista local filtraba vías inactivas, pero Nominatim usaba `viewbox` sin convertirlo en límite estricto y sus resultados no se cotejaban con segmentos desactivados. | Se agregó `bounded=1` al modo Área de estudio y se descartan resultados cercanos a vías desactivadas. En Otros sectores se mantiene la búsqueda global. | **Resuelta y probada** |
+
+### Verificaciones de versión 0.9.1.41
+
+- Búsqueda en Área de estudio: el servicio recibe `bounded=1`; un resultado próximo a una vía desactivada se descarta.
+- Búsqueda en Otros sectores: no aplica `bounded=1` y permite resultados fuera del rectángulo del estudio.
+- Sugerencias locales: solo se incluyen vías activas; las vías sin bandera `activa` se conservan como habilitadas por compatibilidad.
+- Inventario CSV/JSON: 30 filas coincidentes; distribución 9/21.
+- Importación ZIP: se mantienen las siete pruebas de seguridad e integración existentes dentro de la suite ampliada a 11 casos.
