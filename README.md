@@ -105,7 +105,7 @@ La línea verde se ajusta a la red vial mediante geometrías de OSRM, conservand
 
 - Se conserva únicamente el trazado original: acceso por Calle 29H y circuito perimetral de Villa Marbella.
 - Se eliminaron los tres tramos internos y el ajuste automático OSRM del recorrido.
-- Las 30 evidencias se ubican como posiciones aproximadas desde donde se tomaron las fotografías: 5 en el tramo de acceso y 25 sobre el recorrido perimetral. No representan la ubicación exacta de los vehículos observados a distancia ni GPS individuales.
+- En esa versión se documentó una distribución provisional 5/25. Fue sustituida por el inventario sectorial actualizado de la versión 0.9.1.40: 9 en la calle de la Universidad del Magdalena y 21 en Villa Marbella. Los puntos representan ubicaciones aproximadas de vehículos, no el recorrido del equipo.
 - No se agregan líneas ni marcadores adicionales en las calles interiores.
 
 
@@ -163,7 +163,7 @@ Los reportes externos se guardan con el ámbito, el tipo de vía y la referencia
 
 Los problemas detectados durante el desarrollo y su estado se documentan en [documentos/registro-incidencias.md](documentos/registro-incidencias.md). La bitácora técnica de cambios se encuentra en [documentos/bitacora-ingenieria.md](documentos/bitacora-ingenieria.md).
 
-### Separación de evidencias y reportes clasificados — versión 0.9.1.37
+### Separación de evidencias y reportes clasificados — versión 0.9.1.37 (histórico, sustituido en 0.9.1.39)
 
 - Se retiraron del mapa los 30 marcadores morados y la capa de calor construida a partir de fotografías.
 - Las 30 fotografías permanecen disponibles en la galería; sus archivos y metadatos no se eliminaron.
