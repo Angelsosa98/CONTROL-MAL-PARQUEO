@@ -68,3 +68,14 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - Se redujo el grosor y la opacidad de la línea de recorrido.
 - Se redujeron radio y desenfoque de Leaflet.heat para que la concentración no se extienda tanto sobre las manzanas.
 - Se conservaron 5 puntos en Calle 29H y 25 en las vías interiores de Villa Marbella. Las ubicaciones siguen identificadas como aproximadas, no GPS individual.
+
+
+## 12. Ajuste de visualización sobre red vial — versión 0.9.1.3
+
+- Se incorporó un ajuste cartográfico opcional del circuito mediante OSRM y la red vial de OpenStreetMap.
+- La solicitud utiliza los vértices del recorrido en su orden original para conservar la secuencia de calles y los giros del circuito.
+- Se limita el ajuste a 22 m por punto de paso. La geometría vial solo sustituye la línea manual si todos los puntos fueron ajustados dentro de esa tolerancia y el servicio devuelve una ruta completa.
+- La línea manual se dibuja de inmediato y permanece como respaldo cuando no hay internet, falla el servicio o no se obtiene una geometría válida.
+- La geometría ajustada se almacena localmente durante un máximo de 30 días para reducir solicitudes repetidas.
+- El ajuste mejora la coincidencia visual con la cartografía vial, pero no convierte los puntos sectoriales en GPS reales ni acredita el recorrido exacto del trabajo de campo.
+- La disponibilidad y coincidencia visual del servicio externo deben verificarse en navegador al abrir la aplicación publicada.
