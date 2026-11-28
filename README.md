@@ -8,9 +8,9 @@ Aplicación web estática desarrollada con HTML, CSS, JavaScript y Leaflet para 
 
 - `datos/reportes.json` contiene actualmente **0 reportes precargados**.
 - `datos/evidencias_nuevas.json` contiene **30 fotografías** conservadas para revisión.
-- Las 30 fotografías se muestran con ubicación sectorial aproximada: 5 sobre Calle 29H y 25 distribuidas entre los bordes y tres tramos internos de Villa Marbella. Las separaciones son irregulares y se aplican ligeros desplazamientos laterales para evitar una fila geométrica. No son coordenadas GPS individuales.
+- Las 30 fotografías se conservan en la galería con metadatos de ubicación sectorial aproximada. Esas coordenadas no se dibujan como puntos en el mapa ni se utilizan para generar el mapa de calor; no son coordenadas GPS individuales.
 - Las coordenadas y puntajes sintéticos anteriores fueron retirados del archivo de evidencias.
-- Las fotografías se consultan en Evidencias y sus ubicaciones sectoriales aproximadas se muestran como 30 puntos y como mapa de calor. El calor resume la distribución aproximada de campo; no representa GPS exacto por vehículo ni puntajes de criticidad.
+- Las fotografías se consultan únicamente en la galería Evidencias. Los marcadores y el mapa de calor de Registros usan exclusivamente reportes reales con nivel de criticidad válido (Alto, Medio o Bajo). Si todavía no hay reportes clasificados, el mapa no muestra puntos ni calor; conserva el recorrido de campo como referencia.
 - Los seis registros históricos del Mercado Público no forman parte del conjunto activo.
 
 **Importante:** la configuración de 10 cuadras en `datos/vias.json` utiliza segmentos de referencia aproximados. El límite de 30 m comprueba distancia a esos segmentos, no demuestra que el punto esté sobre la calzada. Antes de usar los registros como evidencia espacial del estudio, deben verificarse las geometrías viales y los puntos con cartografía y trabajo de campo.
@@ -23,7 +23,7 @@ Aplicación web estática desarrollada con HTML, CSS, JavaScript y Leaflet para 
 - Clasificación de criticidad según categoría, tipo de vía y franja horaria.
 - Evidencia fotográfica opcional y herramienta de pixelado.
 - Almacenamiento local, exportación e importación JSON y paquete ZIP.
-- Mapa de puntos y mapa de calor basados exclusivamente en reportes con coordenadas y datos completos.
+- Mapa de puntos y mapa de calor basados exclusivamente en reportes con coordenadas y clasificación válida Alto, Medio o Bajo.
 - Línea verde del circuito aproximado del equipo. Con conexión, intenta ajustar la geometría a la red vial de OpenStreetMap mediante OSRM; si el servicio no responde o no logra un ajuste cercano, conserva el trazado manual.
 - Galería independiente de evidencias fotográficas.
 
@@ -81,7 +81,7 @@ Para revisar el motor de criticidad, abrir `pruebas.html` y verificar los casos 
 
 ### Geometría vial del recorrido — versión 0.9.1.8
 
-La línea verde se ajusta a la red vial mediante geometrías de OSRM, conservando el orden de los puntos de control del recorrido manual. El circuito exterior y cada ramal interior se procesan por separado para evitar conexiones inventadas entre tramos. La línea manual aparece primero y se conserva como respaldo si el servicio no está disponible. Este ajuste afecta exclusivamente a la visualización del recorrido, no a los 30 puntos de evidencias.
+La línea verde se ajusta a la red vial mediante geometrías de OSRM, conservando el orden de los puntos de control del recorrido manual. El circuito exterior y cada ramal interior se procesan por separado para evitar conexiones inventadas entre tramos. La línea manual aparece primero y se conserva como respaldo si el servicio no está disponible. Este ajuste afecta exclusivamente a la visualización del recorrido; las 30 fotografías permanecen en su galería y no se dibujan como puntos en el mapa.
 
 
 ### Recorrido original y posiciones de toma fotográfica — versión 0.9.1.9
@@ -124,12 +124,12 @@ Se amplió la consulta de geometría vial a tres servidores Overpass alternativo
 
 ## Zonificación y validación geográfica del trabajo de campo
 
-La zonificación preliminar se divide en tres áreas: Z1, corredor de acceso; Z2, Parque Villa Marbella y entorno; y Z3, vías circundantes. Según el equipo de campo, la mayor concentración de vehículos mal estacionados se observó en Z2, tanto en las calles perimetrales como en las vías interiores. Este hallazgo es cualitativo: no se asignan cantidades por zona ni zonas individuales a los registros EVID hasta verificar cada ubicación. Los 30 puntos representan ubicaciones aproximadas de vehículos observados, no posiciones de toma fotográfica. El recorrido del equipo se mantiene como geometría independiente.
+La zonificación preliminar se divide en tres áreas: Z1, corredor de acceso; Z2, Parque Villa Marbella y entorno; y Z3, vías circundantes. Según el equipo de campo, la mayor concentración de vehículos mal estacionados se observó en Z2, tanto en las calles perimetrales como en las vías interiores. Este hallazgo es cualitativo: no se asignan cantidades por zona ni zonas individuales a los registros EVID hasta verificar cada ubicación. Las 30 fichas conservan referencias sectoriales aproximadas comunicadas por el equipo, pero no se trazan como puntos de vehículo ni alimentan el mapa de calor. El recorrido del equipo se mantiene como geometría independiente.
 
 
 ### Ajuste visual de marcadores a calzadas — versión 0.9.1.16
 
-Los marcadores de evidencias se proyectan visualmente al segmento de vía OpenStreetMap geométricamente más cercano, sin modificar ni sobrescribir las coordenadas originales de los registros. Se conserva temporalmente la distancia del ajuste y el identificador de la vía OSM para revisión. El mapa de calor utiliza la posición visual ajustada. Este procedimiento mejora la presentación cartográfica, pero no valida por sí solo que la vía elegida sea la correcta; la asignación de calle/carrera requiere revisión de campo.
+Histórico de la versión 0.9.1.16: se probó la proyección visual de marcadores de evidencias a la vía OSM más cercana. Esta representación fue retirada del mapa en la versión 0.9.1.37 porque las fotografías no tienen clasificación de criticidad y no deben alimentar el mapa de calor.
 
 ## Captura en otros sectores de Santa Marta — versión 0.9.1.36
 
@@ -145,3 +145,14 @@ Los reportes externos se guardan con el ámbito, el tipo de vía y la referencia
 ## Registro de incidencias
 
 Los problemas detectados durante el desarrollo y su estado se documentan en [documentos/registro-incidencias.md](documentos/registro-incidencias.md). La bitácora técnica de cambios se encuentra en [documentos/bitacora-ingenieria.md](documentos/bitacora-ingenieria.md).
+
+### Separación de evidencias y reportes clasificados — versión 0.9.1.37
+
+- Se retiraron del mapa los 30 marcadores morados y la capa de calor construida a partir de fotografías.
+- Las 30 fotografías permanecen disponibles en la galería; sus archivos y metadatos no se eliminaron.
+- La leyenda cartográfica muestra el recorrido de campo y los tres niveles de reportes: Alto, Medio y Bajo.
+- Los puntos individuales y el mapa de calor se generan exclusivamente con reportes que tengan un nivel de criticidad válido.
+- La intensidad térmica usa la categoría: Alto = 1.00 (rojo), Medio = 0.65 (ámbar) y Bajo = 0.30 (verde).
+- Los reportes sin clasificación válida no se representan como Bajo.
+- Si no hay reportes clasificados, no se crea una capa de calor. El mapa encuadra el recorrido de campo.
+- La geometría verde, los 30 registros fotográficos, sus ubicaciones guardadas y las funcionalidades de captura/importación/exportación permanecen sin cambios.
