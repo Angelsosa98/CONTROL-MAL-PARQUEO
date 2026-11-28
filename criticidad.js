@@ -102,24 +102,27 @@ function calcularCriticidad(reporte, criterios, vias) {
     throw new Error("Categoría desconocida en criterios.json: '" + reporte.categoria + "'.");
   }
 
-  // Paso 3 (Repetición): Buscar la cuadra en vias.json para obtener su tipo de vía
-  if (!reporte.cuadra) {
-    throw new Error("El reporte no tiene cuadra asignada.");
-  }
-  var cuadraEncontrada = null;
-  for (var i = 0; i < vias.cuadras.length; i++) {
-    if (vias.cuadras[i].id === reporte.cuadra) {
-      cuadraEncontrada = vias.cuadras[i];
-      break;
+  // Paso 3: Determinar el tipo de vía según el ámbito del reporte.
+  // En el área de estudio se consulta la cuadra oficial; fuera de ella,
+  // el tipo de vía debe haber sido seleccionado explícitamente en la captura.
+  var tipoVia = "";
+  if (reporte.ambito === "otros_sectores_santa_marta") {
+    if (reporte.tipo_via_reporte !== "arterial" && reporte.tipo_via_reporte !== "secundaria") {
+      throw new Error("En otros sectores de Santa Marta debes seleccionar si la vía es arterial o secundaria.");
     }
+    tipoVia = reporte.tipo_via_reporte;
+  } else {
+    if (!reporte.cuadra) throw new Error("El reporte no tiene cuadra asignada.");
+    var cuadraEncontrada = null;
+    for (var i = 0; i < vias.cuadras.length; i++) {
+      if (vias.cuadras[i].id === reporte.cuadra) {
+        cuadraEncontrada = vias.cuadras[i];
+        break;
+      }
+    }
+    if (!cuadraEncontrada) throw new Error("Cuadra desconocida en vias.json: '" + reporte.cuadra + "'.");
+    tipoVia = cuadraEncontrada.tipo_via;
   }
-
-  // Condición: Si la cuadra no existe en vias.json, lanzar error explícito
-  if (!cuadraEncontrada) {
-    throw new Error("Cuadra desconocida en vias.json: '" + reporte.cuadra + "'.");
-  }
-
-  var tipoVia = cuadraEncontrada.tipo_via;
   var pesoVia = criterios.via[tipoVia];
   if (typeof pesoVia !== "number") {
     throw new Error("Tipo de vía desconocido en criterios.json: '" + tipoVia + "'.");
