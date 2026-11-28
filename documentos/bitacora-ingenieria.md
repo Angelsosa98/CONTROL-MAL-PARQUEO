@@ -197,3 +197,13 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - Se estableció que cada EVID representa la ubicación aproximada de un vehículo mal estacionado identificado durante el recorrido, no la posición del fotógrafo.
 - Se estableció que el recorrido del equipo y las ubicaciones de los vehículos son capas independientes.
 - Se preservaron las coordenadas originales y se definió que cualquier ajuste cartográfico debe vincularse al segmento vial confirmado, no solo a la proximidad geométrica.
+
+
+## 26. Ajuste visual de puntos sobre vías — versión 0.9.1.16
+
+- Se sustituyó el límite de ajuste visual de 80 m por una proyección al segmento OSM geométricamente más cercano cuando hay geometría vial disponible.
+- El ajuste afecta únicamente a la posición visual del marcador y del mapa de calor.
+- Se preservan intactas las coordenadas originales en `ubicacion_aproximada`.
+- Se guardan en memoria de ejecución la distancia del ajuste y el ID del segmento OSM para revisión; no se presentan como coordenadas GPS validadas.
+- Si falla la consulta de calles, se mantienen visibles las ubicaciones aproximadas originales y se informa en consola.
+- No se modificaron las 30 evidencias, la zonificación ni el recorrido del equipo.
