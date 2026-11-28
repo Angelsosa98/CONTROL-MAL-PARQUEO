@@ -153,3 +153,12 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - Se mantienen las opciones independientes Satélite (imagen Esri) y Mapa de calles (OpenStreetMap).
 - El mapa abre en Satélite sin superposiciones.
 - No se modificaron las 30 evidencias, sus posiciones, el ajuste de marcadores a calles ni la geometría del recorrido original.
+
+
+## 21. Recuperación de tres segmentos transversales originales — versión 0.9.1.12
+
+- Se recuperaron exactamente los tres tramos transversales interiores desde la versión histórica de `datos/vias.json` que contenía el recorrido dibujado por el equipo.
+- Se mantuvo intacto el trazado exterior original de 27 coordenadas.
+- `dibujarRecorridoCampo` dibuja el perímetro como una línea y cada uno de los tres segmentos interiores como polilíneas independientes.
+- No se generan circuitos cerrados, diagonales, ramales ni rutas automáticas adicionales.
+- No se modificaron las 30 evidencias ni sus ubicaciones aproximadas.
