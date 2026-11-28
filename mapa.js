@@ -340,32 +340,49 @@ function dibujarRecorridoCampo(vias) {
   var recorrido = vias && vias.recorrido_campo;
   if (!recorrido) return;
 
-  // Se dibuja únicamente el trazado original definido por el equipo.
-  // No se agregan ramales interiores ni rutas alternativas automáticas.
-  var coordenadas = Array.isArray(recorrido.trazado) && recorrido.trazado.length >= 2
-    ? recorrido.trazado
-    : (Array.isArray(recorrido.hitos) ? recorrido.hitos.map(function (h) {
-        return h.coordenadas;
-      }) : []);
+  function validarCoordenadas(lista) {
+    return (Array.isArray(lista) ? lista : []).filter(function (p) {
+      return Array.isArray(p) && p.length >= 2 &&
+        Number.isFinite(Number(p[0])) && Number.isFinite(Number(p[1]));
+    });
+  }
 
-  coordenadas = coordenadas.filter(function (p) {
-    return Array.isArray(p) && p.length >= 2 &&
-      Number.isFinite(Number(p[0])) && Number.isFinite(Number(p[1]));
-  });
+  // 1) Único recorrido exterior original: acceso por Calle 29H y perímetro.
+  var coordenadas = validarCoordenadas(recorrido.trazado);
+  if (coordenadas.length >= 2) {
+    L.polyline(coordenadas, {
+      color: "#16a34a",
+      weight: 3.2,
+      opacity: 0.9,
+      lineCap: "round",
+      lineJoin: "round",
+      smoothFactor: 0.25
+    }).bindPopup(
+      "<strong>Recorrido original de campo</strong><br>" +
+      "Acceso por Calle 29H y circuito perimetral de Villa Marbella."
+    ).addTo(capaRecorridoCampo);
+  }
 
-  if (coordenadas.length < 2) return;
+  // 2) Solo los tres tramos transversales que aparecen en la referencia original.
+  // Se dibujan como segmentos independientes: no crean circuitos ni ramales nuevos.
+  (Array.isArray(recorrido.tramos_internos) ? recorrido.tramos_internos : [])
+    .slice(0, 3)
+    .forEach(function (tramo, indice) {
+      var puntos = validarCoordenadas(tramo.coordenadas);
+      if (puntos.length < 2) return;
 
-  L.polyline(coordenadas, {
-    color: "#16a34a",
-    weight: 3.2,
-    opacity: 0.9,
-    lineCap: "round",
-    lineJoin: "round",
-    smoothFactor: 0.25
-  }).bindPopup(
-    "<strong>Recorrido original de campo</strong><br>" +
-    "Tramo de acceso por Calle 29H y circuito perimetral de Villa Marbella."
-  ).addTo(capaRecorridoCampo);
+      L.polyline(puntos, {
+        color: "#16a34a",
+        weight: 3.0,
+        opacity: 0.88,
+        lineCap: "round",
+        lineJoin: "round",
+        smoothFactor: 0.25
+      }).bindPopup(
+        "<strong>" + (tramo.nombre || ("Tramo transversal " + (indice + 1))) + "</strong><br>" +
+        "Segmento de calle del recorrido original."
+      ).addTo(capaRecorridoCampo);
+    });
 
   capaRecorridoCampo.addTo(mapaRegistros);
 }
