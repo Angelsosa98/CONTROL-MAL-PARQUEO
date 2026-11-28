@@ -8,7 +8,7 @@ Aplicación web estática desarrollada con HTML, CSS, JavaScript y Leaflet para 
 
 - `datos/reportes.json` contiene actualmente **0 reportes precargados**.
 - `datos/evidencias_nuevas.json` contiene **30 fotografías** conservadas para revisión.
-- Las 30 fotografías se muestran con ubicación sectorial aproximada: 5 sobre Calle 29H y 25 en Carrera 21C, Calle 29J y Carrera 21D alrededor de Villa Marbella. No son coordenadas GPS individuales.
+- Las 30 fotografías se muestran con ubicación sectorial aproximada: 5 sobre Calle 29H y 25 distribuidas entre los bordes y tres tramos internos de Villa Marbella. Las separaciones son irregulares y se aplican ligeros desplazamientos laterales para evitar una fila geométrica. No son coordenadas GPS individuales.
 - Las coordenadas y puntajes sintéticos anteriores fueron retirados del archivo de evidencias.
 - Las fotografías se consultan en Evidencias y sus ubicaciones sectoriales aproximadas se muestran como 30 puntos y como mapa de calor. El calor resume la distribución aproximada de campo; no representa GPS exacto por vehículo ni puntajes de criticidad.
 - Los seis registros históricos del Mercado Público no forman parte del conjunto activo.
@@ -29,7 +29,7 @@ Aplicación web estática desarrollada con HTML, CSS, JavaScript y Leaflet para 
 
 ## Capas del mapa
 
-Los mapas de Captura y Registros permiten alternar entre el mapa de calles de OpenStreetMap y la imagen satelital de Esri. En la vista Registros también se puede mostrar u ocultar el recorrido de campo sin ocultar las evidencias. La capa satelital requiere conexión a internet y conserva la atribución del proveedor.
+Los mapas de Captura y Registros permiten alternar entre mapa de calles de OpenStreetMap, satélite sin rótulos y satélite con la capa transparente World Transportation de Esri, que agrega referencias de carreteras y nombres de vías. En Registros hay una casilla independiente para mostrar u ocultar únicamente la línea verde del recorrido. Las capas externas requieren conexión a internet y conservan sus atribuciones.
 
 ## Recorrido cartográfico\n\nEl circuito se dibuja directamente con la geometría manual reconstruida a partir de la referencia satelital del equipo. Incluye el recorrido exterior y tres tramos transversales interiores de Villa Marbella. No se usa enrutamiento automático para evitar que un servicio externo cambie el camino realizado por el equipo. La geometría es una referencia cartográfica aproximada, no un levantamiento GPS.\n\n## Criterios de criticidad
 
