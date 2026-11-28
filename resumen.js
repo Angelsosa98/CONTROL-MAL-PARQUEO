@@ -127,8 +127,12 @@ function generarResumenOperativo(listaReportes, vias, criterios) {
       var meta = infoCuadras[r.cuadra];
       agrupado[r.cuadra] = {
         cuadraId: r.cuadra,
-        nombreCuadra: meta ? meta.nombre : r.cuadra,
-        tipoVia: meta ? meta.tipo_via : "desconocida",
+        nombreCuadra: meta ? meta.nombre : (
+          r.ambito === "otros_sectores_santa_marta"
+            ? "Otros sectores de Santa Marta · " + (r.tipo_via_reporte === "arterial" ? "Vía arterial" : "Vía secundaria")
+            : r.cuadra
+        ),
+        tipoVia: meta ? meta.tipo_via : (r.tipo_via_reporte || "desconocida"),
         puntajeAcumulado: 0,
         totalReportes: 0,
         conteoNivel: { Alto: 0, Medio: 0, Bajo: 0 },
