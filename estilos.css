@@ -1349,3 +1349,25 @@ body.mapa-en-pantalla-completa {
     display: none;
   }
 }
+
+
+/* Registro fuera del área de estudio */
+.selector-ambito-reporte {
+  margin: 10px 0 12px;
+  padding: 10px;
+  border: 1px solid var(--color-borde);
+  border-radius: 9px;
+  background: #f8fafc;
+}
+.selector-ambito-reporte .etiqueta-control { margin-top: 0; }
+.selector-ambito-reporte .texto-suave { margin: 6px 0 0; }
+.panel-via-externa {
+  padding: 10px;
+  border: 1px solid #bfdbfe;
+  border-radius: 9px;
+  background: #eff6ff;
+}
+.panel-via-externa .ayuda-campo { margin-top: 0; }
+.panel-via-externa .etiqueta-control { display: block; margin-top: 10px; }
+.panel-via-externa .control-input,
+.panel-via-externa .control-select { width: 100%; }
