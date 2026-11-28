@@ -105,3 +105,8 @@ Se eliminó la opción combinada Satélite + calles y su tesela transparente de 
 ### Recuperación de las tres líneas intermedias originales — versión 0.9.1.12
 
 Se conservó sin cambios el trazado exterior original y se recuperaron únicamente los tres segmentos transversales interiores desde la geometría histórica del recorrido compartida por el equipo. Cada segmento se dibuja de forma independiente, sin cerrar circuitos ni crear ramales adicionales. No se modificaron las 30 evidencias.
+
+
+### Recorrido trazado desde las evidencias 0.9.1.7 — versión 0.9.1.13
+
+Las coordenadas de las 30 evidencias se mantienen intactas. La línea exterior se construye en el orden EVID-001 a EVID-009 y EVID-025 a EVID-030; las tres líneas interiores se construyen, por separado, con EVID-010 a EVID-014, EVID-015 a EVID-019 y EVID-020 a EVID-024. Así, cada línea verde sigue la misma secuencia de posiciones aproximadas que muestran los puntos morados. No se crean puntos nuevos ni se calculan rutas automáticas.
