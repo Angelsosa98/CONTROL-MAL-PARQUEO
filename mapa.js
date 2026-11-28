@@ -860,6 +860,60 @@ function obtenerCuadrasActivasParaBusqueda(vias) {
   });
 }
 
+function distanciaPuntoSegmentoBusquedaMetros(punto, inicio, fin) {
+  var latRad = punto[0] * Math.PI / 180;
+  var metrosLat = 111320;
+  var metrosLng = 111320 * Math.cos(latRad);
+  var px = (punto[1] - inicio[1]) * metrosLng;
+  var py = (punto[0] - inicio[0]) * metrosLat;
+  var bx = (fin[1] - inicio[1]) * metrosLng;
+  var by = (fin[0] - inicio[0]) * metrosLat;
+  var t = Math.max(0, Math.min(1, (px * bx + py * by) / (bx * bx + by * by || 1)));
+  return Math.hypot(px - bx * t, py - by * t);
+}
+
+function puntoCercaDeViaDesactivada(lat, lng, vias) {
+  var cuadras = vias && Array.isArray(vias.cuadras) ? vias.cuadras : [];
+  var punto = [Number(lat), Number(lng)];
+  var radio = Number(vias && vias.zona && vias.zona.radio_max_m) || 30;
+  for (var i = 0; i < cuadras.length; i++) {
+    var cuadra = cuadras[i];
+    if (!cuadra || cuadra.activa !== false || !Array.isArray(cuadra.extremos)) continue;
+    for (var j = 1; j < cuadra.extremos.length; j++) {
+      if (distanciaPuntoSegmentoBusquedaMetros(punto, cuadra.extremos[j - 1], cuadra.extremos[j]) <= radio) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function puntoMedioPolilineaBusqueda(extremos) {
+  if (!Array.isArray(extremos) || !extremos.length) return null;
+  if (extremos.length === 1) return extremos[0].slice();
+  var longitudes = [];
+  var total = 0;
+  for (var i = 1; i < extremos.length; i++) {
+    var metros = distanciaPuntoSegmentoBusquedaMetros(extremos[i], extremos[i - 1], extremos[i]);
+    longitudes.push(metros);
+    total += metros;
+  }
+  if (total === 0) return extremos[0].slice();
+  var objetivo = total / 2;
+  var acumulado = 0;
+  for (var j = 0; j < longitudes.length; j++) {
+    if (acumulado + longitudes[j] >= objetivo) {
+      var proporcion = longitudes[j] ? (objetivo - acumulado) / longitudes[j] : 0;
+      return [
+        Number((extremos[j][0] + (extremos[j + 1][0] - extremos[j][0]) * proporcion).toFixed(6)),
+        Number((extremos[j][1] + (extremos[j + 1][1] - extremos[j][1]) * proporcion).toFixed(6))
+      ];
+    }
+    acumulado += longitudes[j];
+  }
+  return extremos[extremos.length - 1].slice();
+}
+
 function buscarDireccionesMapa(textoConsulta, vias, ambito) {
   var q = String(textoConsulta || "").trim();
   if (q.length < 2) {
@@ -877,17 +931,13 @@ function buscarDireccionesMapa(textoConsulta, vias, ambito) {
 
       var textoCuadra = (String(c.nombre || "") + " " + String(c.id || "") + " " + String(c.tipo_via || "")).toLowerCase();
       if (textoCuadra.indexOf(qLower) !== -1) {
-        var sumaLat = 0;
-        var sumaLng = 0;
-        for (var j = 0; j < c.extremos.length; j++) {
-          sumaLat += Number(c.extremos[j][0]);
-          sumaLng += Number(c.extremos[j][1]);
-        }
+        var puntoMedio = puntoMedioPolilineaBusqueda(c.extremos);
+        if (!puntoMedio) continue;
         resultados.push({
           titulo: c.nombre + " (" + c.id + ")",
-          subtitulo: "Cuadra en zona · " + (c.tipo_via === "arterial" ? "Vía arterial" : "Vía secundaria"),
-          lat: Number((sumaLat / c.extremos.length).toFixed(6)),
-          lng: Number((sumaLng / c.extremos.length).toFixed(6)),
+          subtitulo: "Cuadra activa en el área de estudio · " + (c.tipo_via === "arterial" ? "Vía arterial" : "Vía secundaria"),
+          lat: puntoMedio[0],
+          lng: puntoMedio[1],
           origen: "local"
         });
       }
@@ -911,7 +961,9 @@ function buscarDireccionesMapa(textoConsulta, vias, ambito) {
     typeof lim.lng_max === "number" &&
     typeof lim.lat_max === "number"
   ) {
-    url += "&viewbox=" + lim.lng_min + "," + lim.lat_max + "," + lim.lng_max + "," + lim.lat_min;
+    // bounded=1 convierte el viewbox en límite real y evita sugerencias
+    // de calles que pertenecen a otros sectores de la ciudad.
+    url += "&viewbox=" + lim.lng_min + "," + lim.lat_max + "," + lim.lng_max + "," + lim.lat_min + "&bounded=1";
   }
 
   return fetch(url, {
@@ -930,6 +982,12 @@ function buscarDireccionesMapa(textoConsulta, vias, ambito) {
           var latNum = parseFloat(item.lat);
           var lngNum = parseFloat(item.lon);
           if (isNaN(latNum) || isNaN(lngNum)) continue;
+
+          // En el área de estudio no sugerir resultados del geocodificador
+          // que caigan sobre segmentos archivados/desactivados. En el modo
+          // externo sí se permite buscar en cualquier sector de Santa Marta.
+          if (ambito !== "otros_sectores_santa_marta" &&
+              puntoCercaDeViaDesactivada(latNum, lngNum, vias)) continue;
 
           var partes = String(item.display_name || "").split(",");
           var tituloExt = item.name || partes[0] || q;
