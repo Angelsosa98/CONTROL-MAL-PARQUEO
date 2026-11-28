@@ -21,6 +21,7 @@ function filtrarReportes(listaReportes, filtros, criterios) {
 
   var f = filtros || {};
   var cuadraFiltro = f.cuadra && f.cuadra !== "todas" ? String(f.cuadra) : "";
+  var ambitoFiltro = f.ambito && f.ambito !== "todas" ? String(f.ambito) : "";
   var franjaFiltro = f.franja && f.franja !== "todas" ? String(f.franja) : "";
   var categoriaFiltro = f.categoria && f.categoria !== "todas" ? String(f.categoria) : "";
   var actorFiltro = f.actor && f.actor !== "todas" ? String(f.actor) : "";
@@ -32,6 +33,11 @@ function filtrarReportes(listaReportes, filtros, criterios) {
     if (!r || typeof r !== "object") continue;
 
     if (cuadraFiltro && r.cuadra !== cuadraFiltro) {
+      continue;
+    }
+
+    var ambitoReporte = r.ambito || "area_estudio";
+    if (ambitoFiltro && ambitoReporte !== ambitoFiltro) {
       continue;
     }
 
