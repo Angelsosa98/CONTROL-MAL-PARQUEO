@@ -726,6 +726,7 @@ function eliminarReporte(id) {
 
 function leerFiltros() {
   return {
+    ambito: porId("filtro-ambito").value,
     cuadra: porId("filtro-cuadra").value,
     franja: porId("filtro-franja").value,
     categoria: porId("filtro-categoria").value,
@@ -1035,11 +1036,11 @@ function configurarEventos() {
   alPulsar("btn-guardar", guardarReporte);
   alPulsar("btn-registrar-otro", function () { porId("tarjeta-confirmacion").hidden = true; });
 
-  ["filtro-cuadra", "filtro-franja", "filtro-categoria", "filtro-actor"].forEach(function (id) {
+  ["filtro-ambito", "filtro-cuadra", "filtro-franja", "filtro-categoria", "filtro-actor"].forEach(function (id) {
     porId(id).addEventListener("change", aplicarFiltros);
   });
   alPulsar("btn-limpiar-filtros", function () {
-    ["filtro-cuadra", "filtro-franja", "filtro-categoria", "filtro-actor"].forEach(function (id) {
+    ["filtro-ambito", "filtro-cuadra", "filtro-franja", "filtro-categoria", "filtro-actor"].forEach(function (id) {
       porId(id).value = "todas";
     });
     aplicarFiltros();
