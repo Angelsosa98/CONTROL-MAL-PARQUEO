@@ -329,10 +329,10 @@ function validarReporteImportado(item, criterios, vias) {
   if (!item || typeof item !== "object") return { valido: false, motivo: "El elemento no es un objeto JSON válido." };
   if (!item.id || typeof item.id !== "string") return { valido: false, motivo: "Falta el campo obligatorio 'id'." };
   if (item.origen !== "campo" && item.origen !== "ciudadano") return { valido: false, motivo: "Origen inválido ('" + item.origen + "')." };
-  if (typeof item.fecha_hora !== "string" || !/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$/.test(item.fecha_hora)) {
+  if (typeof item.fecha_hora !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(item.fecha_hora)) {
     return { valido: false, motivo: "Fecha/hora inválida ('" + item.fecha_hora + "')." };
   }
-  var partesFecha = item.fecha_hora.match(/^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2})$/);
+  var partesFecha = item.fecha_hora.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
   var fechaPrueba = new Date(Number(partesFecha[1]), Number(partesFecha[2]) - 1, Number(partesFecha[3]), Number(partesFecha[4]), Number(partesFecha[5]));
   if (
     fechaPrueba.getFullYear() !== Number(partesFecha[1]) ||
