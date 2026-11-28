@@ -115,3 +115,8 @@ Las coordenadas de las 30 evidencias se mantienen intactas. La línea exterior s
 ### Texto neutral de evidencias — versión 0.9.1.14
 
 Se retiró de las 30 fichas el texto de pendiente de ubicación y clasificación. Cada ficha indica únicamente que es una fotografía de evidencia asociada al punto sectorial aproximado mostrado en el mapa. No se asignan todavía carreras ni niveles de clasificación; esos datos se completarán cuando el equipo confirme la correspondencia de cada punto.
+
+
+### Ajuste robusto de puntos a calles — versión 0.9.1.15
+
+Se amplió la consulta de geometría vial a tres servidores Overpass alternativos y se incluyeron más clases de vías urbanas. Cada punto del mapa se proyecta al segmento de calle más cercano hasta 80 m; se mantienen intactas las coordenadas sectoriales originales de las evidencias. Si todos los servicios fallan, la aplicación conserva los puntos originales y registra una advertencia en consola.
