@@ -150,6 +150,18 @@
         esperado: { puntaje: 5, nivel: "Medio", franja: "valle" }
       },
       {
+        titulo: "Caso 5: Reporte externo + vía arterial + hora pico",
+        calculoManual: "Doble fila (3) + vía arterial declarada (3) + hora pico (3) = 9 → Alto",
+        reporte: {
+          categoria: "doble_fila",
+          cuadra: "EXTERNA-SANTA-MARTA-ARTERIAL",
+          ambito: "otros_sectores_santa_marta",
+          tipo_via_reporte: "arterial",
+          fecha_hora: "2026-11-18T11:40"
+        },
+        esperado: { puntaje: 9, nivel: "Alto", franja: "pico" }
+      },
+      {
         titulo: "Caso 4 (Límite excluido): Doble fila + arterial + 14:00",
         calculoManual: "Categoría (doble_fila = 3) + Vía (arterial = 3) + Franja (14:00 es fin excluido de 11:30-14:00 → valle = 1) = 7 → Alto",
         reporte: {
@@ -215,7 +227,7 @@
 
     var filaErr = document.createElement("tr");
     filaErr.innerHTML =
-      "<td><strong>Caso 5 (Seguridad): Categoría desconocida</strong></td>" +
+      "<td><strong>Caso 6 (Seguridad): Categoría desconocida</strong></td>" +
       "<td>Debe lanzar un Error claro, nunca devolver 0 en silencio.</td>" +
       "<td>Lanza Error</td>" +
       "<td>" + (errorLanzado ? "Error lanzado: " + msgError : "No lanzó error") + "</td>" +
@@ -223,7 +235,32 @@
     tbody.appendChild(filaErr);
     if (errorLanzado) aprobados++;
 
-    var totalPruebas = casos.length + 1;
+    // Prueba de seguridad: un reporte externo no debe aceptar un tipo de vía inventado.
+    var tipoViaInvalidoRechazado = false;
+    var mensajeTipoVia = "";
+    try {
+      calcularCriticidad({
+        categoria: "doble_fila",
+        cuadra: "EXTERNA-SANTA-MARTA-PEATONAL",
+        ambito: "otros_sectores_santa_marta",
+        tipo_via_reporte: "peatonal",
+        fecha_hora: "2026-11-18T11:40"
+      }, criteriosPrueba, viasPrueba);
+    } catch (e) {
+      tipoViaInvalidoRechazado = true;
+      mensajeTipoVia = e.message;
+    }
+    var filaTipoVia = document.createElement("tr");
+    filaTipoVia.innerHTML =
+      "<td><strong>Caso 7 (Seguridad): Tipo de vía externa inválido</strong></td>" +
+      "<td>Debe rechazar un tipo de vía diferente de arterial o secundaria.</td>" +
+      "<td>Lanza Error</td>" +
+      "<td>" + (tipoViaInvalidoRechazado ? "Error lanzado: " + mensajeTipoVia : "No lanzó error") + "</td>" +
+      "<td>" + (tipoViaInvalidoRechazado ? '<span class="badge-pass">✔ PASA</span>' : '<span class="badge-fail">✘ FALLA</span>') + "</td>";
+    tbody.appendChild(filaTipoVia);
+    if (tipoViaInvalidoRechazado) aprobados++;
+
+    var totalPruebas = casos.length + 2;
     var banner = document.getElementById("banner-resumen");
     if (aprobados === totalPruebas) {
       banner.className = "resumen ok-global";
