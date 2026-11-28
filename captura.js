@@ -14,6 +14,7 @@ var AppEstado = {
   evidenciasFotograficas: [],
   ubicacion: null,          // { lat, lng }
   cuadraId: "",
+  ambitoCaptura: "area_estudio",
   categoria: "",
   actor: "",
   fechaManual: false,
@@ -182,6 +183,14 @@ function poblarSelectoresCuadras() {
       sel.appendChild(opcion);
     });
   });
+  [
+    { value: "EXTERNA-SANTA-MARTA-ARTERIAL", label: "Otros sectores de Santa Marta · Vía arterial" },
+    { value: "EXTERNA-SANTA-MARTA-SECUNDARIA", label: "Otros sectores de Santa Marta · Vía secundaria" }
+  ].forEach(function (item) {
+    var opcion = crear("option", "", item.label);
+    opcion.value = item.value;
+    selFiltro.appendChild(opcion);
+  });
 }
 
 function asignarCuadra(cuadraId) {
@@ -197,6 +206,38 @@ function asignarCuadra(cuadraId) {
   if (cuadra) mostrarTexto("error-cuadra", "");
 }
 
+function actualizarPanelAmbitoCaptura() {
+  var esExterno = AppEstado.ambitoCaptura === "otros_sectores_santa_marta";
+  var panelLocal = porId("panel-cuadra-estudio");
+  var panelExterno = porId("panel-via-externa");
+  if (panelLocal) panelLocal.hidden = esExterno;
+  if (panelExterno) panelExterno.hidden = !esExterno;
+  mostrarTexto("error-via-externa", "");
+  var ayuda = porId("ayuda-ambito-captura");
+  if (ayuda) {
+    ayuda.textContent = esExterno
+      ? "Marca un punto de Santa Marta y selecciona manualmente el tipo de vía."
+      : "En este modo se asigna automáticamente una de las cuatro vías del área de estudio.";
+  }
+  if (esExterno) {
+    asignarCuadra("");
+    mostrarTexto("aviso-fuera-zona", AppEstado.ubicacion
+      ? "El punto se registrará como ubicación externa al área de estudio. Verifica que corresponda a Santa Marta."
+      : "Usa GPS, busca una dirección o toca el mapa en el sector que vas a reportar.");
+  } else if (AppEstado.ubicacion) {
+    fijarUbicacion(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng);
+  } else {
+    mostrarTexto("aviso-fuera-zona", "");
+  }
+}
+
+function cambiarAmbitoCaptura(ambito) {
+  AppEstado.ambitoCaptura = ambito === "otros_sectores_santa_marta"
+    ? "otros_sectores_santa_marta" : "area_estudio";
+  actualizarPanelAmbitoCaptura();
+}
+
+
 /* ----------------------------- Ubicación ---------------------------------- */
 
 function marcarInicioCaptura() {
@@ -210,12 +251,18 @@ function fijarUbicacion(lat, lng, opciones) {
   porId("texto-coordenadas").textContent =
     "Lat: " + AppEstado.ubicacion.lat.toFixed(6) + ", Lng: " + AppEstado.ubicacion.lng.toFixed(6);
   mostrarTexto("error-ubicacion", "");
-  var dentroDeZona = estaDentroDeLimitesZona(lat, lng);
-  var cuadraCercana = encontrarCuadraMasCercana(lat, lng);
-  mostrarTexto("aviso-fuera-zona", !dentroDeZona
-    ? "Este punto está fuera del área de estudio. Desplaza el marcador hacia una de las vías incluidas."
-    : (!cuadraCercana ? "El punto no está suficientemente cerca de una cuadra del estudio. Ajusta el marcador a la vía." : ""));
 
+  var esExterno = AppEstado.ambitoCaptura === "otros_sectores_santa_marta";
+  var cuadraCercana = null;
+  if (esExterno) {
+    mostrarTexto("aviso-fuera-zona", "Ubicación para reporte en otros sectores de Santa Marta. Verifica que el punto marcado corresponda a la ciudad.");
+  } else {
+    var dentroDeZona = estaDentroDeLimitesZona(lat, lng);
+    cuadraCercana = encontrarCuadraMasCercana(lat, lng);
+    mostrarTexto("aviso-fuera-zona", !dentroDeZona
+      ? "Este punto está fuera del área de estudio. Cambia a “Otros sectores de Santa Marta” para registrarlo allí."
+      : (!cuadraCercana ? "El punto no está suficientemente cerca de una cuadra del estudio. Ajusta el marcador a la vía." : ""));
+  }
 
   actualizarMarcadorCaptura(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng, function (la, ln) {
     marcarInicioCaptura();
@@ -223,7 +270,7 @@ function fijarUbicacion(lat, lng, opciones) {
   });
 
   if (!opts.conservarCuadra) {
-    asignarCuadra(cuadraCercana ? cuadraCercana.id : "");
+    asignarCuadra(esExterno ? "" : (cuadraCercana ? cuadraCercana.id : ""));
   }
 }
 
@@ -261,6 +308,7 @@ function usarGPS() {
 
 /** Al elegir una cuadra a mano: se respeta; si no hay punto, usa su centro. */
 function seleccionarCuadraManual(cuadraId) {
+  if (AppEstado.ambitoCaptura !== "area_estudio") return;
   marcarInicioCaptura();
   asignarCuadra(cuadraId);
   var cuadra = obtenerCuadraPorId(cuadraId);
@@ -308,6 +356,10 @@ function configurarBuscador() {
           input.value = item.titulo;
           ocultar();
           marcarInicioCaptura();
+          if (AppEstado.ambitoCaptura === "otros_sectores_santa_marta") {
+            var referencia = [item.titulo, item.subtitulo].filter(Boolean).join(" · ");
+            porId("input-sector-externo").value = referencia.slice(0, 90);
+          }
           fijarUbicacion(item.lat, item.lng);
         });
         lista.appendChild(li);
@@ -526,6 +578,7 @@ function limpiarFormulario() {
   porId("contador-obs").textContent = "0 / 140";
   porId("input-buscar-direccion").value = "";
   porId("btn-limpiar-busqueda").hidden = true;
+  if (porId("input-sector-externo")) porId("input-sector-externo").value = "";
   porId("detalle-fecha-hora").open = false;
   porId("texto-coordenadas").textContent = "Sin ubicación marcada";
   ["estado-gps", "aviso-precision", "aviso-fuera-zona", "error-ubicacion",
@@ -548,19 +601,25 @@ function actualizarReloj() {
 
 /** Revisa los campos obligatorios y muestra el error junto a cada uno. */
 function validarFormulario() {
+  var esExterno = AppEstado.ambitoCaptura === "otros_sectores_santa_marta";
   var radioMaximo = Number(AppEstado.vias && AppEstado.vias.zona && AppEstado.vias.zona.radio_max_m) || 30;
   var mensajeUbicacion = "";
   if (!AppEstado.ubicacion) {
     mensajeUbicacion = "Marca el punto exacto en el mapa o usa el GPS.";
-  } else if (!estaDentroDeLimitesZona(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng) ||
+  } else if (!esExterno && (
+      !estaDentroDeLimitesZona(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng) ||
       !AppEstado.cuadraId ||
-      distanciaACuadraMetros(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng, obtenerCuadraPorId(AppEstado.cuadraId)) > radioMaximo) {
-    mensajeUbicacion = "Ajusta el marcador sobre la vía seleccionada. La tolerancia máxima respecto al eje vial de referencia es " + radioMaximo + " m.";
+      distanciaACuadraMetros(AppEstado.ubicacion.lat, AppEstado.ubicacion.lng, obtenerCuadraPorId(AppEstado.cuadraId)) > radioMaximo
+    )) {
+    mensajeUbicacion = "Ajusta el marcador sobre una de las vías del área de estudio. La tolerancia máxima es " + radioMaximo + " m.";
   }
 
+  var tipoViaExterna = porId("select-tipo-via-externa") ? porId("select-tipo-via-externa").value : "";
   var errores = [
     ["error-ubicacion", Boolean(mensajeUbicacion), mensajeUbicacion],
-    ["error-cuadra", !AppEstado.cuadraId, "Selecciona una cuadra."],
+    ["error-cuadra", !esExterno && !AppEstado.cuadraId, "Selecciona una cuadra."],
+    ["error-via-externa", esExterno && tipoViaExterna !== "arterial" && tipoViaExterna !== "secundaria",
+      "Selecciona si la vía es arterial o secundaria."],
     ["error-categoria", !AppEstado.categoria, "Selecciona una categoría."],
     ["error-actor", !AppEstado.actor, "Selecciona el tipo de actor."],
     ["error-foto", AppEstado.foto && !porId("check-privacidad-foto").checked,
@@ -598,7 +657,15 @@ function guardarReporte() {
     fecha_hora: porId("input-fecha-hora").value.slice(0, 16),
     lat: AppEstado.ubicacion.lat,
     lng: AppEstado.ubicacion.lng,
-    cuadra: AppEstado.cuadraId,
+    cuadra: AppEstado.ambitoCaptura === "otros_sectores_santa_marta"
+      ? (porId("select-tipo-via-externa").value === "arterial"
+        ? "EXTERNA-SANTA-MARTA-ARTERIAL" : "EXTERNA-SANTA-MARTA-SECUNDARIA")
+      : AppEstado.cuadraId,
+    ambito: AppEstado.ambitoCaptura,
+    tipo_via_reporte: AppEstado.ambitoCaptura === "otros_sectores_santa_marta"
+      ? porId("select-tipo-via-externa").value : null,
+    sector_referencia: AppEstado.ambitoCaptura === "otros_sectores_santa_marta"
+      ? porId("input-sector-externo").value.trim().slice(0, 90) : "",
     categoria: AppEstado.categoria,
     actor: AppEstado.actor,
     foto: foto,
@@ -797,6 +864,11 @@ function renderizarLista(filtrados) {
     return String(b.fecha_hora).localeCompare(String(a.fecha_hora));
   }).forEach(function (r) {
     var cuadra = obtenerCuadraPorId(r.cuadra);
+    var referenciaUbicacion = r.ambito === "otros_sectores_santa_marta"
+      ? "Otros sectores de Santa Marta" +
+        (r.sector_referencia ? " · " + r.sector_referencia : "") +
+        " · Vía " + (r.tipo_via_reporte === "arterial" ? "arterial" : "secundaria")
+      : (cuadra ? cuadra.nombre : r.cuadra);
     var tarjeta = crear("article", "tarjeta-registro");
 
     var cabecera = crear("div", "registro-cabecera");
@@ -811,7 +883,7 @@ function renderizarLista(filtrados) {
     var fecha = crear("div", "linea-detalle-reg", r.fecha_hora.replace("T", " "));
     fecha.appendChild(crear("span", "chip-franja", r._franja === "pico" ? "Hora pico" : "Hora valle"));
     det.appendChild(fecha);
-    det.appendChild(crear("div", "linea-detalle-reg", cuadra ? cuadra.nombre : r.cuadra));
+    det.appendChild(crear("div", "linea-detalle-reg", referenciaUbicacion));
     det.appendChild(crear("div", "linea-detalle-reg", etiquetaCategoria(r.categoria)));
     det.appendChild(crear("div", "linea-detalle-reg", etiquetaActor(r.actor)));
     if (r.observaciones) det.appendChild(crear("div", "obs-texto", r.observaciones));
@@ -941,6 +1013,10 @@ function configurarEventos() {
   alPulsar("btn-cerrar-modal-foto", function () { porId("modal-foto").hidden = true; });
 
   alPulsar("btn-usar-gps", usarGPS);
+  var selectorAmbito = porId("select-ambito-captura");
+  if (selectorAmbito) selectorAmbito.addEventListener("change", function () { cambiarAmbitoCaptura(this.value); });
+  var selectorViaExterna = porId("select-tipo-via-externa");
+  if (selectorViaExterna) selectorViaExterna.addEventListener("change", function () { mostrarTexto("error-via-externa", ""); });
   porId("select-cuadra").addEventListener("change", function () { seleccionarCuadraManual(this.value); });
   configurarBuscador();
   configurarOpciones("grupo-categoria", "categoria", "error-categoria");
