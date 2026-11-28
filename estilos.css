@@ -1204,3 +1204,43 @@ button {
 
 /* Versión 0.9.1: línea de recorrido fina para no ocultar la cartografía. */
 .linea-leyenda-recorrido { border-top-width: 2.5px; opacity: 0.62; }
+
+
+/* Control independiente para mostrar u ocultar el recorrido de campo. */
+.control-recorrido-barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin: 0 0 10px;
+  padding: 9px 12px;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  background: #f0fdf4;
+  color: #166534;
+}
+.control-recorrido-etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.control-recorrido-etiqueta input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: #16a34a;
+}
+.control-recorrido-barra small {
+  color: #475569;
+  font-size: 0.76rem;
+}
+@media (max-width: 520px) {
+  .control-recorrido-barra {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
