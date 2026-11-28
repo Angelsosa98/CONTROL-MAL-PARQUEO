@@ -79,3 +79,13 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - La geometría ajustada se almacena localmente durante un máximo de 30 días para reducir solicitudes repetidas.
 - El ajuste mejora la coincidencia visual con la cartografía vial, pero no convierte los puntos sectoriales en GPS reales ni acredita el recorrido exacto del trabajo de campo.
 - La disponibilidad y coincidencia visual del servicio externo deben verificarse en navegador al abrir la aplicación publicada.
+
+
+## 13. Reconstrucción según referencia satelital del equipo — versión 0.9.1.4
+
+- Se retiró el enrutamiento automático OSRM incorporado en la versión 0.9.1.3 porque podía sustituir el recorrido realizado por el equipo por una ruta vehicular distinta.
+- Se conservó la geometría manual del recorrido exterior, que coincide con el trazo perimetral marcado en la referencia satelital.
+- Se añadieron tres tramos transversales interiores de Villa Marbella como líneas independientes, para conservar su forma sin crear conexiones no verificadas.
+- Los tramos interiores se reconstruyeron visualmente tomando como referencia la imagen satelital y la geometría exterior existente; sus coordenadas son aproximadas y no GPS individual.
+- Las 30 evidencias, sus estados y su distribución sectorial se mantienen sin cambios.
+- La verificación visual final debe hacerse sobre el mapa publicado y compararse con la referencia satelital suministrada por el equipo.
