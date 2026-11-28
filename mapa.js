@@ -12,10 +12,6 @@ var capaReportesCaptura = null;
 var mapaRegistros = null;
 var capaMarcadoresRegistros = null;
 var capaCalorRegistros = null;
-var capaPuntosEvidencias = null;
-var capaCalorEvidencias = null;
-var ultimasEvidenciasMapa = [];
-var marcadoresEvidenciasMapa = [];
 var promesaGeometriasVialesOSM = null;
 var modoVisualizacionRegistros = "puntos"; // "ambos" | "calor" | "puntos"
 var ultimosReportesRegistros = [];
@@ -298,7 +294,6 @@ function iniciarMapaRegistros(idContenedor, vias) {
   var mapasBaseRegistros = crearCapasBaseMapa(mapaRegistros);
 
   capaMarcadoresRegistros = L.layerGroup().addTo(mapaRegistros);
-  capaPuntosEvidencias = L.layerGroup().addTo(mapaRegistros);
   dibujarRecorridoCampo(vias);
   agregarControlCapasMapa(mapaRegistros, mapasBaseRegistros, {});
   configurarControlRecorridoCampo();
@@ -315,7 +310,6 @@ function iniciarMapaRegistros(idContenedor, vias) {
     div.innerHTML =
       "<strong>Leyenda del mapa</strong>" +
       '<div><span class="linea-leyenda-recorrido"></span> Recorrido de campo</div>' +
-      '<div><span class="punto-leyenda" style="background:#7c3aed"></span> 30 evidencias (aprox.)</div>' +
       '<div><span class="punto-leyenda" style="background:#dc2626"></span> Reportes altos</div>' +
       '<div><span class="punto-leyenda" style="background:#d97706"></span> Reportes medios</div>' +
       '<div><span class="punto-leyenda" style="background:#16a34a"></span> Reportes bajos</div>';
@@ -661,7 +655,8 @@ function aplicarModoCapasRegistros() {
   var mostrarCalor = modoVisualizacionRegistros === "ambos" || modoVisualizacionRegistros === "calor";
   var mostrarPuntos = modoVisualizacionRegistros === "ambos" || modoVisualizacionRegistros === "puntos";
 
-  // El circuito permanece visible en los tres modos; los botones alternan puntos y calor de evidencias y reportes.
+  // El mapa alterna exclusivamente el calor y los marcadores de reportes
+  // que tienen una clasificación Alto, Medio o Bajo válida.
   if (capaCalorRegistros) {
     if (mostrarCalor && !mapaRegistros.hasLayer(capaCalorRegistros)) mapaRegistros.addLayer(capaCalorRegistros);
     if (!mostrarCalor && mapaRegistros.hasLayer(capaCalorRegistros)) mapaRegistros.removeLayer(capaCalorRegistros);
@@ -669,14 +664,6 @@ function aplicarModoCapasRegistros() {
   if (capaMarcadoresRegistros) {
     if (mostrarPuntos && !mapaRegistros.hasLayer(capaMarcadoresRegistros)) mapaRegistros.addLayer(capaMarcadoresRegistros);
     if (!mostrarPuntos && mapaRegistros.hasLayer(capaMarcadoresRegistros)) mapaRegistros.removeLayer(capaMarcadoresRegistros);
-  }
-  if (capaCalorEvidencias) {
-    if (mostrarCalor && !mapaRegistros.hasLayer(capaCalorEvidencias)) mapaRegistros.addLayer(capaCalorEvidencias);
-    if (!mostrarCalor && mapaRegistros.hasLayer(capaCalorEvidencias)) mapaRegistros.removeLayer(capaCalorEvidencias);
-  }
-  if (capaPuntosEvidencias) {
-    if (mostrarPuntos && !mapaRegistros.hasLayer(capaPuntosEvidencias)) mapaRegistros.addLayer(capaPuntosEvidencias);
-    if (!mostrarPuntos && mapaRegistros.hasLayer(capaPuntosEvidencias)) mapaRegistros.removeLayer(capaPuntosEvidencias);
   }
 }
 
@@ -702,65 +689,14 @@ function cambiarModoMapaRegistros(nuevoModo) {
  * de referencia. No se desplazan automáticamente a una vía distinta por cercanía.
  */
 
-function actualizarMarcadoresEvidencias(evidencias, vias) {
-  ultimasEvidenciasMapa = Array.isArray(evidencias) ? evidencias : [];
-  if (!leafletDisponible() || !mapaRegistros || !capaPuntosEvidencias) return;
-
-  capaPuntosEvidencias.clearLayers();
-  if (capaCalorEvidencias && mapaRegistros.hasLayer(capaCalorEvidencias)) {
-    mapaRegistros.removeLayer(capaCalorEvidencias);
-  }
-  capaCalorEvidencias = null;
-
-  var puntosCalor = [];
-  marcadoresEvidenciasMapa = [];
-  ultimasEvidenciasMapa.forEach(function (e) {
-    var u = e && e.ubicacion_aproximada;
-    if (!u || !Number.isFinite(Number(u.lat)) || !Number.isFinite(Number(u.lng))) return;
-    var lat = Number(u.lat), lng = Number(u.lng);
-    var lim = vias && vias.zona && vias.zona.limites;
-    if (lim && (lat < lim.lat_min || lat > lim.lat_max || lng < lim.lng_min || lng > lim.lng_max)) return;
-    puntosCalor.push([lat, lng, 1]);
-
-    var marcador = L.circleMarker([lat, lng], {
-      radius: 5,
-      fillColor: "#7c3aed",
-      color: "#ffffff",
-      weight: 1.5,
-      opacity: 1,
-      fillOpacity: 0.9
-    });
-    marcador.bindPopup(
-      "<strong>" + String(e.id || "Evidencia") + "</strong><br>" +
-      String(u.sector || "Recorrido de campo") + "<br>" +
-      "<em>Ubicación sectorial aproximada; no es GPS individual.</em>"
-    );
-    marcador.addTo(capaPuntosEvidencias);
-    marcadoresEvidenciasMapa.push({ marcador: marcador, evidencia: e });
-  });
-
-  // No crear Leaflet.heat mientras la pestaña Registros está oculta.
-  // En ese estado Leaflet informa 0x0 y heat.js puede llamar getImageData
-  // sobre un canvas de ancho/alto cero, interrumpiendo el arranque completo.
-  var tamMapa = mapaRegistros.getSize();
-  if (heatDisponible() && puntosCalor.length > 0 && tamMapa.x > 0 && tamMapa.y > 0) {
-    capaCalorEvidencias = L.heatLayer(puntosCalor, {
-      radius: 14,
-      blur: 10,
-      maxZoom: 19,
-      max: 1,
-      minOpacity: 0.16,
-      gradient: { 0.25: "#a78bfa", 0.55: "#f59e0b", 0.85: "#ef4444", 1: "#991b1b" }
-    });
-  }
-  aplicarModoCapasRegistros();
-}
-
-
 /**
- * Las evidencias se muestran en las posiciones georreferenciadas desde la referencia
- * visual del equipo. No se desplazan automáticamente a una calle cercana.
+ * Las fotografías se conservan en la galería, pero no son reportes clasificados.
+ * Por eso no generan marcadores morados ni puntos de calor en el mapa.
+ * Se mantiene esta función por compatibilidad con el controlador de captura.
  */
+function actualizarMarcadoresEvidencias(evidencias) {
+  return Array.isArray(evidencias) ? evidencias.length : 0;
+}
 
 function escaparTextoMapa(valor) {
   return String(valor == null ? "" : valor)
@@ -791,11 +727,19 @@ function actualizarMarcadoresRegistros(listaReportes, vias) {
     var r = ultimosReportesRegistros[i];
     if (!reporteDentroZonaMapa(r, ultimoViasRegistros)) continue;
 
-    var nivel = r.criticidad ? r.criticidad.nivel : "Bajo";
-    var puntaje = r.criticidad && typeof r.criticidad.puntaje === "number" ? r.criticidad.puntaje : 1;
+    // No representar registros incompletos como si fueran reportes de nivel Bajo.
+    var claveNivel = String(r.criticidad && r.criticidad.nivel || "").trim().toLowerCase();
+    var nivel = claveNivel === "alto" ? "Alto" :
+      (claveNivel === "medio" ? "Medio" : (claveNivel === "bajo" ? "Bajo" : ""));
+    if (!nivel) continue;
+
+    var puntaje = r.criticidad && Number.isFinite(Number(r.criticidad.puntaje))
+      ? Number(r.criticidad.puntaje) : null;
     var color = obtenerColorNivel(nivel);
 
-    var intensidad = Math.max(0.25, Math.min(1.0, puntaje / 9));
+    // Intensidad categórica: Alto=rojo, Medio=ámbar, Bajo=verde.
+    // El mapa de calor usa exclusivamente reportes clasificados.
+    var intensidad = claveNivel === "alto" ? 1 : (claveNivel === "medio" ? 0.65 : 0.30);
     puntosCalor.push([r.lat, r.lng, intensidad]);
 
     var marcador = L.circleMarker([r.lat, r.lng], {
@@ -816,7 +760,8 @@ function actualizarMarcadoresRegistros(listaReportes, vias) {
       "<strong>" + escaparTextoMapa(r.id) + "</strong> (" + escaparTextoMapa(r.origen) + ")<br>" +
       "Fecha: " + escaparTextoMapa(String(r.fecha_hora || "").replace("T", " ")) + "<br>" +
       referenciaReporte + "<br>" +
-      "Nivel: <strong>" + escaparTextoMapa(nivel) + " (" + puntaje + " pts)</strong>"
+      "Nivel: <strong>" + escaparTextoMapa(nivel) +
+      (puntaje === null ? "" : " (" + puntaje + " pts)") + "</strong>"
     );
 
     marcador.addTo(capaMarcadoresRegistros);
@@ -833,7 +778,7 @@ function actualizarMarcadoresRegistros(listaReportes, vias) {
       minOpacity: 0.45,
       gradient: {
         0.30: "#16a34a",
-        0.65: "#f59e0b",
+        0.65: "#d97706",
         1.00: "#dc2626"
       }
     });
@@ -845,22 +790,20 @@ function actualizarMarcadoresRegistros(listaReportes, vias) {
     var limites = L.latLngBounds(coordenadas);
     mapaRegistros.fitBounds(limites, { padding: [26, 26], maxZoom: 17 });
   } else {
-    var puntosEvidencia = ultimasEvidenciasMapa.map(function (e) {
-      return e && e.ubicacion_aproximada
-        ? [Number(e.ubicacion_aproximada.lat), Number(e.ubicacion_aproximada.lng)] : null;
-    }).filter(function (p) { return p && isFinite(p[0]) && isFinite(p[1]); });
-    if (puntosEvidencia.length > 0) {
-      mapaRegistros.fitBounds(L.latLngBounds(puntosEvidencia), { padding: [32, 32], maxZoom: 17 });
+    // Sin reportes válidos, el mapa encuadra el recorrido; no usa las
+    // coordenadas sectoriales de las fotografías como marcadores o calor.
+    var puntosRecorrido = obtenerSegmentosRecorridoActual(ultimoViasRegistros)
+      .reduce(function (acumulado, segmento) {
+        return acumulado.concat(segmento);
+      }, []);
+    if (puntosRecorrido.length > 1) {
+      mapaRegistros.fitBounds(L.latLngBounds(puntosRecorrido), { padding: [32, 32], maxZoom: 17 });
     } else if (ultimoViasRegistros && ultimoViasRegistros.zona && ultimoViasRegistros.zona.centro) {
       mapaRegistros.setView(ultimoViasRegistros.zona.centro, ultimoViasRegistros.zona.zoom || 15);
     }
   }
 }
 
-/**
- * Recalcula el tamaño del mapa de registros cuando se abre la pestaña Registros
- * y reconstruye la capa de calor para evitar el lienzo 0x0 al estar oculto.
- */
 function redimensionarMapaRegistros() {
   if (leafletDisponible() && mapaRegistros) {
     setTimeout(function () {
@@ -868,7 +811,6 @@ function redimensionarMapaRegistros() {
       // Leaflet se inicializa mientras la vista Registros está oculta.
       // Volver a dibujar asegura que la línea y sus puntos aparezcan al abrir la pestaña.
       dibujarRecorridoCampo(ultimoViasRegistros);
-      actualizarMarcadoresEvidencias(ultimasEvidenciasMapa, ultimoViasRegistros);
       actualizarMarcadoresRegistros(ultimosReportesRegistros, ultimoViasRegistros);
     }, 120);
   }
