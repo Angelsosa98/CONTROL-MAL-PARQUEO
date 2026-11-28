@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="app-build" content="0.9.1.34" />
-  <meta name="app-version" content="0.9.1.34" />
+  <meta name="app-build" content="0.9.1.35" />
+  <meta name="app-version" content="0.9.1.35" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Control de Mal Parqueo - Santa Marta</title>
   <!-- CSS de Leaflet (CDN exacto obligatorio) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="estilos.css?v=0.9.1.34" />
+  <link rel="stylesheet" href="estilos.css?v=0.9.1.35" />
 </head>
 <body>
   <!-- Encabezado compacto -->
@@ -19,7 +19,7 @@
     <div>
       <h1 class="titulo-app">Control Vial Santa Marta</h1>
       <p id="nombre-zona-header" class="subtitulo-zona">Cargando zona de estudio...</p>
-      <span class="insignia-version">Versión 0.9.1.34 · En desarrollo</span>
+      <span class="insignia-version">Versión 0.9.1.35 · En desarrollo</span>
     </div>
     <button type="button" id="btn-abrir-ajustes" class="btn-ajustes" aria-label="Ajustes del integrante">
       ⚙️ <span id="indicador-iniciales">Configurar</span>
@@ -71,6 +71,15 @@
       </div>
       <p class="ayuda-campo">Toca el mapa o arrastra el marcador azul hasta el punto exacto.</p>
 
+      <div class="selector-ambito-reporte">
+        <label for="select-ambito-captura" class="etiqueta-control">Dónde estás registrando:</label>
+        <select id="select-ambito-captura" class="control-select">
+          <option value="area_estudio">Área de estudio · Universidad del Magdalena y Villa Marbella</option>
+          <option value="otros_sectores_santa_marta">Otros sectores de Santa Marta</option>
+        </select>
+        <p id="ayuda-ambito-captura" class="texto-suave">En este modo se asigna automáticamente una de las cuatro vías del área de estudio.</p>
+      </div>
+
             <div class="buscador-direccion">
         <label for="input-buscar-direccion" class="etiqueta-control">Buscar calle, carrera o punto en Santa Marta</label>
         <div class="fila-buscador">
@@ -104,16 +113,30 @@
       <h2>2. Cuadra asignada</h2>
       <div id="aviso-fuera-zona" class="aviso-alerta" hidden></div>
 
-      <div class="caja-cuadra-lectura">
-        <div id="cuadra-nombre-lectura" class="nombre-cuadra">Marca un punto en el mapa</div>
-        <span id="cuadra-tipo-lectura" class="etiqueta-via">Tipo de vía: —</span>
+      <div id="panel-cuadra-estudio">
+        <div class="caja-cuadra-lectura">
+          <div id="cuadra-nombre-lectura" class="nombre-cuadra">Marca un punto en el mapa</div>
+          <span id="cuadra-tipo-lectura" class="etiqueta-via">Tipo de vía: —</span>
+        </div>
+        <label for="select-cuadra" class="etiqueta-control">Cuadra del área de estudio:</label>
+        <select id="select-cuadra" class="control-select">
+          <option value="">-- Selecciona una cuadra --</option>
+        </select>
+        <div id="error-cuadra" class="error-campo" hidden></div>
       </div>
 
-      <label for="select-cuadra" class="etiqueta-control">Cuadra de la zona de estudio (automática al tocar el mapa o elegir aquí):</label>
-      <select id="select-cuadra" class="control-select">
-        <option value="">-- Selecciona una cuadra --</option>
-      </select>
-      <div id="error-cuadra" class="error-campo" hidden></div>
+      <div id="panel-via-externa" class="panel-via-externa" hidden>
+        <p class="ayuda-campo">El punto se guardará como un reporte de otro sector de Santa Marta, sin asignarlo a las cuatro cuadras del estudio.</p>
+        <label for="select-tipo-via-externa" class="etiqueta-control">Tipo de vía:</label>
+        <select id="select-tipo-via-externa" class="control-select">
+          <option value="">-- Selecciona el tipo de vía --</option>
+          <option value="arterial">Vía arterial</option>
+          <option value="secundaria">Vía secundaria</option>
+        </select>
+        <label for="input-sector-externo" class="etiqueta-control">Barrio, sector o referencia (opcional):</label>
+        <input id="input-sector-externo" class="control-input" type="text" maxlength="90" placeholder="Ej. El Prado, Centro, Bavaria..." />
+        <div id="error-via-externa" class="error-campo" hidden></div>
+      </div>
     </section>
 
     <!-- c) Categoría (3 botones grandes, selección única) -->
@@ -455,18 +478,18 @@
     <button type="button" id="tab-registros" class="btn-nav">
       🖼️ Evidencias (<span id="badge-total-registros">0</span>)
     </button>
-    <span class="version-nav" aria-label="Versión de la aplicación">v0.9.1.34</span>
+    <span class="version-nav" aria-label="Versión de la aplicación">v0.9.1.35</span>
   </nav>
 
   <!-- Scripts en el orden estricto indicado (clásicos, sin módulos ES) -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="criticidad.js?v=0.9.1.34"></script>
-  <script src="almacenamiento.js?v=0.9.1.34"></script>
-  <script src="filtros.js?v=0.9.1.34"></script>
-  <script src="resumen.js?v=0.9.1.34"></script>
-  <script src="mapa.js?v=0.9.1.34"></script>
-  <script src="captura.js?v=0.9.1.34"></script>
+  <script src="criticidad.js?v=0.9.1.35"></script>
+  <script src="almacenamiento.js?v=0.9.1.35"></script>
+  <script src="filtros.js?v=0.9.1.35"></script>
+  <script src="resumen.js?v=0.9.1.35"></script>
+  <script src="mapa.js?v=0.9.1.35"></script>
+  <script src="captura.js?v=0.9.1.35"></script>
 </body>
 </html>
