@@ -249,6 +249,9 @@ function exportarReportesJSON(reportesLocales, iniciales, incluirFotos) {
       lat: r.lat,
       lng: r.lng,
       cuadra: r.cuadra,
+      ambito: r.ambito || "area_estudio",
+      tipo_via_reporte: r.tipo_via_reporte || null,
+      sector_referencia: r.sector_referencia || "",
       categoria: r.categoria,
       actor: r.actor,
       foto: incluirFotos ? (r.foto || null) : null,
@@ -296,6 +299,9 @@ function exportarPaqueteZIP(reportesLocales, iniciales) {
       lat: r.lat,
       lng: r.lng,
       cuadra: r.cuadra,
+      ambito: r.ambito || "area_estudio",
+      tipo_via_reporte: r.tipo_via_reporte || null,
+      sector_referencia: r.sector_referencia || "",
       categoria: r.categoria,
       actor: r.actor,
       foto: rutaFoto,
@@ -320,19 +326,13 @@ function exportarPaqueteZIP(reportesLocales, iniciales) {
  * Valida la estructura y valores de un objeto de reporte antes de importarlo.
  */
 function validarReporteImportado(item, criterios, vias) {
-  if (!item || typeof item !== "object") {
-    return { valido: false, motivo: "El elemento no es un objeto JSON válido." };
-  }
-  if (!item.id || typeof item.id !== "string") {
-    return { valido: false, motivo: "Falta el campo obligatorio 'id'." };
-  }
-  if (item.origen !== "campo" && item.origen !== "ciudadano") {
-    return { valido: false, motivo: "Origen inválido ('" + item.origen + "')." };
-  }
-  if (typeof item.fecha_hora !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(item.fecha_hora)) {
+  if (!item || typeof item !== "object") return { valido: false, motivo: "El elemento no es un objeto JSON válido." };
+  if (!item.id || typeof item.id !== "string") return { valido: false, motivo: "Falta el campo obligatorio 'id'." };
+  if (item.origen !== "campo" && item.origen !== "ciudadano") return { valido: false, motivo: "Origen inválido ('" + item.origen + "')." };
+  if (typeof item.fecha_hora !== "string" || !/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$/.test(item.fecha_hora)) {
     return { valido: false, motivo: "Fecha/hora inválida ('" + item.fecha_hora + "')." };
   }
-  var partesFecha = item.fecha_hora.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
+  var partesFecha = item.fecha_hora.match(/^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2})$/);
   var fechaPrueba = new Date(Number(partesFecha[1]), Number(partesFecha[2]) - 1, Number(partesFecha[3]), Number(partesFecha[4]), Number(partesFecha[5]));
   if (
     fechaPrueba.getFullYear() !== Number(partesFecha[1]) ||
@@ -340,74 +340,74 @@ function validarReporteImportado(item, criterios, vias) {
     fechaPrueba.getDate() !== Number(partesFecha[3]) ||
     fechaPrueba.getHours() !== Number(partesFecha[4]) ||
     fechaPrueba.getMinutes() !== Number(partesFecha[5])
-  ) {
-    return { valido: false, motivo: "Fecha/hora fuera de calendario o de rango válido." };
-  }
-  if (typeof item.lat !== "number" || typeof item.lng !== "number" || !isFinite(item.lat) || !isFinite(item.lng)) {
-    return { valido: false, motivo: "Coordenadas lat/lng no numéricas." };
+  ) return { valido: false, motivo: "Fecha/hora fuera de calendario o de rango válido." };
+
+  if (typeof item.lat !== "number" || typeof item.lng !== "number" ||
+      !isFinite(item.lat) || !isFinite(item.lng) ||
+      item.lat < -90 || item.lat > 90 || item.lng < -180 || item.lng > 180) {
+    return { valido: false, motivo: "Coordenadas lat/lng no válidas." };
   }
 
-  // Verificar límites geográficos de Santa Marta según vias.json
-  var lim = vias && vias.zona && vias.zona.limites;
-  if (lim) {
-    if (item.lat < lim.lat_min || item.lat > lim.lat_max || item.lng < lim.lng_min || item.lng > lim.lng_max) {
-      return {
-        valido: false,
-        motivo: "Coordenadas (" + item.lat + ", " + item.lng + ") fuera de zona.limites."
-      };
+  var esExterno = item.ambito === "otros_sectores_santa_marta";
+  if (esExterno) {
+    var tipoEsperado = item.tipo_via_reporte;
+    if (tipoEsperado !== "arterial" && tipoEsperado !== "secundaria") {
+      return { valido: false, motivo: "El reporte externo debe indicar vía arterial o secundaria." };
     }
-  }
+    var cuadraEsperada = tipoEsperado === "arterial"
+      ? "EXTERNA-SANTA-MARTA-ARTERIAL"
+      : "EXTERNA-SANTA-MARTA-SECUNDARIA";
+    if (item.cuadra !== cuadraEsperada) {
+      return { valido: false, motivo: "La referencia externa no coincide con el tipo de vía indicado." };
+    }
+    if (item.sector_referencia != null &&
+        (typeof item.sector_referencia !== "string" || item.sector_referencia.length > 90)) {
+      return { valido: false, motivo: "El sector o referencia externa debe tener máximo 90 caracteres." };
+    }
+  } else {
+    var lim = vias && vias.zona && vias.zona.limites;
+    if (lim && (item.lat < lim.lat_min || item.lat > lim.lat_max || item.lng < lim.lng_min || item.lng > lim.lng_max)) {
+      return { valido: false, motivo: "Coordenadas (" + item.lat + ", " + item.lng + ") fuera del área de estudio." };
+    }
 
-  // Verificar que la cuadra exista en vias.json
-  var cuadraEncontrada = null;
-  if (vias && Array.isArray(vias.cuadras)) {
-    for (var i = 0; i < vias.cuadras.length; i++) {
-      if (vias.cuadras[i].id === item.cuadra && vias.cuadras[i].activa !== false) {
-        cuadraEncontrada = vias.cuadras[i];
-        break;
+    var cuadraEncontrada = null;
+    if (vias && Array.isArray(vias.cuadras)) {
+      for (var i = 0; i < vias.cuadras.length; i++) {
+        if (vias.cuadras[i].id === item.cuadra && vias.cuadras[i].activa !== false) {
+          cuadraEncontrada = vias.cuadras[i];
+          break;
+        }
       }
     }
-  }
-  if (!cuadraEncontrada) {
-    return { valido: false, motivo: "Cuadra inexistente en vias.json ('" + item.cuadra + "')." };
+    if (!cuadraEncontrada) return { valido: false, motivo: "Cuadra inexistente en vias.json ('" + item.cuadra + "')." };
+
+    var radioMaximo = Number(vias && vias.zona && vias.zona.radio_max_m) || 90;
+    var latRad = item.lat * Math.PI / 180;
+    var metrosLat = 111320;
+    var metrosLng = 111320 * Math.cos(latRad);
+    var distanciaMinima = Infinity;
+    var extremos = cuadraEncontrada.extremos || [];
+    for (var j = 0; j < extremos.length - 1; j++) {
+      var p1 = extremos[j], p2 = extremos[j + 1];
+      var px = (item.lng - p1[1]) * metrosLng;
+      var py = (item.lat - p1[0]) * metrosLat;
+      var bx = (p2[1] - p1[1]) * metrosLng;
+      var by = (p2[0] - p1[0]) * metrosLat;
+      var t = Math.max(0, Math.min(1, (px * bx + py * by) / (bx * bx + by * by || 1)));
+      distanciaMinima = Math.min(distanciaMinima, Math.hypot(px - bx * t, py - by * t));
+    }
+    if (distanciaMinima > radioMaximo) return { valido: false, motivo: "El punto está a más de " + radioMaximo + " m de la cuadra indicada." };
   }
 
-  // Evitar importar puntos asignados a una cuadra lejana o ajena al recorrido.
-  var radioMaximo = Number(vias && vias.zona && vias.zona.radio_max_m) || 90;
-  var latRad = item.lat * Math.PI / 180;
-  var metrosLat = 111320;
-  var metrosLng = 111320 * Math.cos(latRad);
-  var distanciaMinima = Infinity;
-  var extremos = cuadraEncontrada.extremos || [];
-  for (var j = 0; j < extremos.length - 1; j++) {
-    var p1 = extremos[j], p2 = extremos[j + 1];
-    var px = (item.lng - p1[1]) * metrosLng;
-    var py = (item.lat - p1[0]) * metrosLat;
-    var bx = (p2[1] - p1[1]) * metrosLng;
-    var by = (p2[0] - p1[0]) * metrosLat;
-    var t = Math.max(0, Math.min(1, (px * bx + py * by) / (bx * bx + by * by || 1)));
-    distanciaMinima = Math.min(distanciaMinima, Math.hypot(px - bx * t, py - by * t));
-  }
-  if (distanciaMinima > radioMaximo) {
-    return { valido: false, motivo: "El punto está a más de " + radioMaximo + " m de la cuadra indicada." };
-  }
-
-  // Verificar categoría y actor permitidos
   if (CATEGORIAS_PERMITIDAS.indexOf(item.categoria) === -1 ||
       !criterios || !criterios.categoria ||
       !Object.prototype.hasOwnProperty.call(criterios.categoria, item.categoria)) {
     return { valido: false, motivo: "Categoría no permitida ('" + item.categoria + "')." };
   }
-  if (ACTORES_PERMITIDOS.indexOf(item.actor) === -1) {
-    return { valido: false, motivo: "Actor no permitido ('" + item.actor + "')." };
-  }
-
+  if (ACTORES_PERMITIDOS.indexOf(item.actor) === -1) return { valido: false, motivo: "Actor no permitido ('" + item.actor + "')." };
   return { valido: true };
 }
 
-/**
- * Compara si dos reportes con el mismo ID tienen exactamente los mismos datos esenciales.
- */
 function sonReportesIdenticos(a, b) {
   return (
     a.origen === b.origen &&
@@ -415,6 +415,9 @@ function sonReportesIdenticos(a, b) {
     Number(a.lat) === Number(b.lat) &&
     Number(a.lng) === Number(b.lng) &&
     a.cuadra === b.cuadra &&
+    (a.ambito || "area_estudio") === (b.ambito || "area_estudio") &&
+    (a.tipo_via_reporte || "") === (b.tipo_via_reporte || "") &&
+    (a.sector_referencia || "") === (b.sector_referencia || "") &&
     a.categoria === b.categoria &&
     a.actor === b.actor &&
     (a.observaciones || "") === (b.observaciones || "")
@@ -501,6 +504,7 @@ function importarReportesDesdeTexto(textoJson, reportesPrecargados, criterios, v
       });
       continue;
     }
+    var reporteEsExterno = item.ambito === "otros_sectores_santa_marta";
     var reporteNormalizado = {
       id: item.id,
       origen: item.origen,
@@ -508,6 +512,9 @@ function importarReportesDesdeTexto(textoJson, reportesPrecargados, criterios, v
       lat: Number(Number(item.lat).toFixed(6)),
       lng: Number(Number(item.lng).toFixed(6)),
       cuadra: item.cuadra,
+      ambito: reporteEsExterno ? "otros_sectores_santa_marta" : "area_estudio",
+      tipo_via_reporte: reporteEsExterno ? item.tipo_via_reporte : null,
+      sector_referencia: reporteEsExterno ? String(item.sector_referencia || "").trim().slice(0, 90) : "",
       categoria: item.categoria,
       actor: item.actor,
       foto: typeof item.foto === "string" ? item.foto : null,
