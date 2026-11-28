@@ -120,3 +120,8 @@ Se retiró de las 30 fichas el texto de pendiente de ubicación y clasificación
 ### Ajuste robusto de puntos a calles — versión 0.9.1.15
 
 Se amplió la consulta de geometría vial a tres servidores Overpass alternativos y se incluyeron más clases de vías urbanas. Cada punto del mapa se proyecta al segmento de calle más cercano hasta 80 m; se mantienen intactas las coordenadas sectoriales originales de las evidencias. Si todos los servicios fallan, la aplicación conserva los puntos originales y registra una advertencia en consola.
+
+
+## Zonificación y validación geográfica del trabajo de campo
+
+La zonificación preliminar se divide en tres áreas: Z1, corredor de acceso; Z2, Parque Villa Marbella y entorno; y Z3, vías circundantes. Según el equipo de campo, la mayor concentración de vehículos mal estacionados se observó en Z2, tanto en las calles perimetrales como en las vías interiores. Este hallazgo es cualitativo: no se asignan cantidades por zona ni zonas individuales a los registros EVID hasta verificar cada ubicación. Los 30 puntos representan ubicaciones aproximadas de vehículos observados, no posiciones de toma fotográfica. El recorrido del equipo se mantiene como geometría independiente.
