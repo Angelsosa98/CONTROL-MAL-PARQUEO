@@ -95,3 +95,8 @@ La línea verde se ajusta a la red vial mediante geometrías de OSRM, conservand
 ### Restauración de posiciones de evidencias — versión 0.9.1.10
 
 Se recuperan las 30 posiciones sectoriales que estaban en la configuración de evidencias de la versión 0.9.1.7. Se conserva el ajuste cartográfico de marcadores a las calzadas de OpenStreetMap y la capa satelital con calles. La visualización de la línea verde sigue limitada al trazado original exterior; no se dibujan los tramos interiores adicionales ni se calcula una ruta alternativa.
+
+
+### Retiro de la capa Satélite + calles — versión 0.9.1.11
+
+Se eliminó la opción combinada Satélite + calles y su tesela transparente de referencia, que no se visualizaba correctamente. Se mantienen únicamente las capas independientes Satélite y Mapa de calles. El mapa abre en Satélite sin superposiciones.
