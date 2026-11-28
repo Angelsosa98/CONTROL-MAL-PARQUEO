@@ -1,41 +1,55 @@
 # Control Vial Santa Marta — Detección y Criticidad de Mal Parqueo
 
-Aplicación web estática desarrollada con HTML, CSS, JavaScript y Leaflet para registrar reportes de mal parqueo, georreferenciarlos y calcular su criticidad en el entorno de la Universidad del Magdalena, Villa Marbella y Cañaveral, Santa Marta, Colombia.
+Aplicación web estática con HTML, CSS, JavaScript y Leaflet para registrar reportes de mal parqueo, ubicarlos en el mapa y calcular su criticidad en Santa Marta, Colombia.
 
-**Publicación:** GitHub Pages se administra desde la configuración de este repositorio. La dirección activa debe consultarse en `Settings → Pages`.
+**Versión actual:** 0.9.1.40  
+**Publicación:** GitHub Pages. La dirección activa y el estado de despliegue se consultan en la configuración y en Actions del repositorio.
 
-## Estado real de los datos
+## Estado actual de los datos
 
-- `datos/reportes.json` contiene actualmente **0 reportes precargados**.
-- `datos/evidencias_nuevas.json` contiene **30 fotografías** conservadas para revisión.
-- Las 30 fotografías se conservan en la galería y sus puntos sectoriales aproximados se muestran en el mapa con niveles visuales preliminares Alto, Medio o Bajo. Las coordenadas no son GPS individuales. La clasificación visual no equivale al índice formal de criticidad porque las fichas no incluyen fecha/hora.
-- Las coordenadas y puntajes sintéticos anteriores fueron retirados del archivo de evidencias.
-- Las fotografías se consultan en la galería Evidencias y sus 30 ubicaciones sectoriales aproximadas se muestran como marcadores clasificados visualmente. El mapa de calor combina esas evidencias preliminares con reportes que tienen criticidad formal válida. Los dos orígenes se distinguen en los mensajes emergentes y las evidencias no se agregan a las estadísticas ni al ranking de reportes.
+- `datos/reportes.json` contiene 0 reportes precargados. Los reportes nuevos se guardan en el almacenamiento local del navegador.
+- `datos/evidencias_nuevas.json` contiene 30 fichas fotográficas: **9 en la calle de la Universidad del Magdalena y 21 en Villa Marbella**.
+- Las fichas tienen ubicaciones sectoriales aproximadas, no coordenadas GPS individuales ni fecha/hora verificada.
+- Cada fotografía tiene una valoración visual preliminar: **9 Alto, 16 Medio y 5 Bajo**. No es el índice formal de criticidad porque no se cuenta con franja horaria.
+- El mapa muestra los puntos de vehículos y, por separado, el recorrido verde del equipo. El recorrido indica por dónde caminaron los observadores; los puntos indican dónde se observaron vehículos. No se deben mover los puntos para hacerlos coincidir con la ruta.
+- El mapa de calor combina evidencias con valoración visual y reportes formales clasificados. Los popups identifican el origen de cada punto. Las fotografías no se incorporan a estadísticas ni al Top 5 de reportes.
+- `datos/vias.json` contiene 14 vías: cuatro activas para la captura y diez registros históricos desactivados. Las vías desactivadas no aparecen en el buscador local.
 - Los seis registros históricos del Mercado Público no forman parte del conjunto activo.
-
-**Importante:** la configuración de 10 cuadras en `datos/vias.json` utiliza segmentos de referencia aproximados. El límite de 30 m comprueba distancia a esos segmentos, no demuestra que el punto esté sobre la calzada. Antes de usar los registros como evidencia espacial del estudio, deben verificarse las geometrías viales y los puntos con cartografía y trabajo de campo.
 
 ## Funcionalidades
 
-- Captura de reportes mediante selección en mapa o GPS.
-- Asignación de cuadra por proximidad a segmentos configurados.
-- Validación de límites del área y distancia máxima al segmento asignado.
-- Clasificación de criticidad según categoría, tipo de vía y franja horaria.
+- Captura por GPS, toque en mapa o búsqueda de dirección.
+- Dos ámbitos de captura: área de estudio y otros sectores de Santa Marta.
+- Asignación automática de cuadra y validación de proximidad a segmentos de referencia en el área de estudio.
+- Cálculo formal de criticidad según categoría, tipo de vía y franja horaria para reportes completos.
 - Evidencia fotográfica opcional y herramienta de pixelado.
-- Almacenamiento local, exportación e importación JSON y paquete ZIP.
-- Mapa de puntos y mapa de calor basados en evidencias con clasificación visual preliminar y reportes con criticidad formal válida; las dos fuentes se identifican por separado.
-- Línea verde del circuito aproximado del equipo. Con conexión, intenta ajustar la geometría a la red vial de OpenStreetMap mediante OSRM; si el servicio no responde o no logra un ajuste cercano, conserva el trazado manual.
-- Galería independiente de evidencias fotográficas.
+- Almacenamiento local, exportación JSON/ZIP e importación JSON/ZIP.
+- Mapa de puntos y mapa de calor con evidencias visuales preliminares y reportes formales, identificados en sus ventanas emergentes.
+- Recorrido verde manual: trazado exterior y tres tramos interiores, independiente de las ubicaciones de vehículos.
+- Galería independiente de las 30 fotografías.
 
-## Capas del mapa
-
-Los mapas de Captura y Registros permiten alternar entre mapa de calles de OpenStreetMap, satélite sin rótulos y satélite con la capa transparente World Transportation de Esri, que agrega referencias de carreteras y nombres de vías. En Registros hay una casilla independiente para mostrar u ocultar únicamente la línea verde del recorrido. Las capas externas requieren conexión a internet y conservan sus atribuciones.
-
-## Recorrido cartográfico\n\nEl circuito se dibuja directamente con la geometría manual reconstruida a partir de la referencia satelital del equipo. Incluye el recorrido exterior y tres tramos transversales interiores de Villa Marbella. No se usa enrutamiento automático para evitar que un servicio externo cambie el camino realizado por el equipo. La geometría es una referencia cartográfica aproximada, no un levantamiento GPS.\n\n## Criterios de criticidad
+## Criterios y límites metodológicos
 
 `Puntaje = Peso(Categoría) + Peso(Tipo de vía) + Peso(Franja horaria)`
 
-Los rangos configurados son Bajo (0–4), Medio (5–6) y Alto (7–9). Los pesos y las franjas pico se administran en `datos/criterios.json`. Estos criterios solo se aplican a reportes con sus datos completos; no se asignan a fotografías sin clasificación verificada.
+Los rangos son Bajo (0–4), Medio (5–6) y Alto (7–9), según `datos/criterios.json`. El cálculo formal requiere categoría, tipo de vía y fecha/hora. Las fotografías solo tienen niveles visuales preliminares y no se convierten en reportes formales.
+
+Los segmentos de `datos/vias.json` son referencias aproximadas. La tolerancia de 30 m comprueba distancia a un segmento, pero no demuestra por sí sola que el punto esté dentro de la calzada. El modo externo tampoco tiene todavía un polígono municipal oficial de Santa Marta; el operador debe comprobar que el punto pertenece a la ciudad.
+
+## Mapa y capas
+
+Captura y Registros permiten alternar calles de OpenStreetMap y satélite Esri. En Registros hay una casilla independiente para mostrar u ocultar el recorrido verde. Las capas externas requieren conexión a internet y conservan sus atribuciones.
+
+## Intercambio de datos
+
+La aplicación guarda los reportes en el navegador local. No hay sincronización central automática entre dispositivos. Para reunir información de varios equipos, exporta JSON o ZIP e importa esos archivos en el otro equipo. El ZIP debe ser un paquete exportado por esta aplicación con `reportes.json` y su carpeta `fotos/`.
+
+## Pruebas
+
+- `pruebas.html`: siete casos del motor de criticidad.
+- `pruebas-integracion.html`: siete casos de búsqueda de vías activas e importación ZIP.
+
+Abrir las pruebas desde GitHub Pages o un servidor HTTP local. Las pruebas automatizadas no sustituyen una comprobación manual de GPS, mapas y almacenamiento en navegador.
 
 ## Estructura
 
@@ -50,6 +64,7 @@ CONTROL-MAL-PARQUEO/
 ├── filtros.js
 ├── resumen.js
 ├── pruebas.html
+├── pruebas-integracion.html
 ├── datos/
 │   ├── criterios.json
 │   ├── vias.json
@@ -59,15 +74,17 @@ CONTROL-MAL-PARQUEO/
 └── documentos/
     ├── anexo-campo.md
     ├── arquitectura.md
-    └── bitacora-ingenieria.md
+    ├── bitacora-ingenieria.md
+    └── registro-incidencias.md
 ```
 
-## Ejecución y pruebas
+## Documentación y privacidad
 
-Abrir desde un servidor HTTP local (por ejemplo, Live Server en VS Code) o GitHub Pages, porque la aplicación carga archivos JSON mediante `fetch`.
+La bitácora técnica está en `documentos/bitacora-ingenieria.md`; las incidencias y limitaciones conocidas, en `documentos/registro-incidencias.md`. El inventario CSV de fotografías se sincroniza con `datos/evidencias_nuevas.json`.
 
-Para revisar el motor de criticidad, abrir `pruebas.html` y verificar los casos de prueba. La validación visual integral de mapas, filtros y captura debe realizarse también en navegador.
+El repositorio es público. Algunas fotografías muestran placas legibles; las imágenes originales no se modificaron durante esta depuración. Antes de una difusión externa, anonimiza las placas y revisa los rostros identificables.
 
+---
 
 ### Ajuste de puntos y mapa satelital — versión 0.9.1.7
 
