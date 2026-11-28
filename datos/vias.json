@@ -354,116 +354,120 @@
   ],
   "recorrido_campo": {
     "tipo": "reconstruccion_cartografica_aproximada",
-    "descripcion": "Recorrido original de campo: tramo de acceso por Calle 29H, circuito perimetral de Villa Marbella y tres calles transversales interiores visibles en la referencia del equipo. No se agregan ramales ni rutas alternativas.",
-    "nota": "Las fotografías se representan desde posiciones aproximadas sobre el recorrido original, ya que los vehículos fueron observados a distancia. Los marcadores no indican la ubicación exacta de cada vehículo ni son coordenadas GPS individuales. Las tres líneas transversales interiores representan los tramos de calle recorridos; las fotografías se tomaron desde posiciones aproximadas y a distancia.",
+    "descripcion": "Recorrido de campo corregido según la referencia satelital anotada por el equipo: acceso por Calle 29H, circuito perimetral y tres tramos interiores. La geometría verde sigue las líneas rojas indicadas en la referencia.",
+    "nota": "La línea representa el recorrido señalado en rojo por el equipo. Los puntos morados representan ubicaciones aproximadas de vehículos mal estacionados y son independientes del recorrido.",
     "trazado": [
       [
-        11.226312,
-        -74.189063
+        11.2260462,
+        -74.1892044
       ],
       [
-        11.226133,
-        -74.189412
+        11.2259445,
+        -74.1893775
       ],
       [
-        11.225955,
-        -74.189698
+        11.2258234,
+        -74.1895504
       ],
       [
-        11.225781,
-        -74.189965
+        11.2256975,
+        -74.1897233
       ],
       [
-        11.225592,
-        -74.190207
+        11.2255716,
+        -74.1898962
       ],
       [
-        11.225418,
-        -74.190436
+        11.2254409,
+        -74.190069
       ],
       [
-        11.225212,
-        -74.190702
+        11.2253102,
+        -74.1902419
       ],
       [
-        11.225023,
-        -74.190931
+        11.2251818,
+        -74.1903106
       ],
       [
-        11.224855,
-        -74.191109
+        11.2250414,
+        -74.1904834
       ],
       [
-        11.224741,
-        -74.191236
+        11.2249011,
+        -74.1906562
       ],
       [
-        11.224638,
-        -74.191198
+        11.2247752,
+        -74.1908291
       ],
       [
-        11.224421,
-        -74.191097
+        11.2246927,
+        -74.1910022
       ],
       [
-        11.224188,
-        -74.19095
+        11.2246238,
+        -74.1911407
       ],
       [
-        11.223982,
-        -74.190779
+        11.2244775,
+        -74.1910704
       ],
       [
-        11.22382,
-        -74.190601
+        11.2242821,
+        -74.1909651
       ],
       [
-        11.223733,
-        -74.190486
+        11.2240617,
+        -74.1908248
       ],
       [
-        11.223782,
-        -74.190366
+        11.2238895,
+        -74.1906849
       ],
       [
-        11.223863,
-        -74.190226
+        11.2237416,
+        -74.190552
       ],
       [
-        11.22396,
-        -74.190086
+        11.2238428,
+        -74.1903547
       ],
       [
-        11.224085,
-        -74.189959
+        11.223949,
+        -74.1901643
       ],
       [
-        11.224269,
-        -74.189984
+        11.2240319,
+        -74.1900085
       ],
       [
-        11.224459,
-        -74.190054
+        11.2240872,
+        -74.1899047
       ],
       [
-        11.224665,
-        -74.190124
+        11.2242564,
+        -74.1899231
       ],
       [
-        11.224876,
-        -74.190175
+        11.2244501,
+        -74.1899589
       ],
       [
-        11.225082,
-        -74.190239
+        11.2246442,
+        -74.1900122
       ],
       [
-        11.225277,
-        -74.190302
+        11.2248383,
+        -74.1900654
       ],
       [
-        11.225369,
-        -74.190372
+        11.2250329,
+        -74.1901361
+      ],
+      [
+        11.2251801,
+        -74.1902411
       ]
     ],
     "hitos": [
@@ -512,7 +516,7 @@
       "corredor_universidad": 5,
       "recorrido_perimetral_villa_marbella": 25,
       "total": 30,
-      "criterio": "5 posiciones aproximadas sobre el tramo de acceso por Calle 29H y 25 posiciones aproximadas sobre el circuito perimetral original de Villa Marbella. No se agregan puntos ni líneas en las calles interiores."
+      "criterio": "Los 30 puntos morados son ubicaciones aproximadas de vehículos observados alrededor y dentro del sector; no se utilizan para construir la línea del recorrido."
     },
     "referencias": [
       {
@@ -543,84 +547,108 @@
     "tramos_internos": [
       {
         "id": "INTERNO-1",
-        "nombre": "Tramo transversal interior norte de Villa Marbella",
+        "nombre": "Tramo transversal norte de Villa Marbella",
         "coordenadas": [
           [
-            11.224595,
-            -74.191093
+            11.2246238,
+            -74.1911407
           ],
           [
-            11.224694,
-            -74.190915
+            11.224716,
+            -74.1909676
           ],
           [
-            11.224799,
-            -74.190725
+            11.2248081,
+            -74.1907945
           ],
           [
-            11.224908,
-            -74.190521
+            11.2249002,
+            -74.1906215
           ],
           [
-            11.225029,
-            -74.190292
+            11.2249924,
+            -74.1904484
+          ],
+          [
+            11.2250845,
+            -74.1902753
+          ],
+          [
+            11.2251766,
+            -74.1901022
+          ],
+          [
+            11.2251745,
+            -74.1900153
           ]
         ],
-        "metodo": "Geometría sectorial reconstruida visualmente a partir del trazo verde de la referencia satelital del equipo; no es GPS individual."
+        "metodo": "Trazado aproximado digitalizado visualmente siguiendo las líneas rojas dibujadas por el equipo en la imagen de referencia; no corresponde a GPS de cada punto."
       },
       {
         "id": "INTERNO-2",
-        "nombre": "Tramo transversal interior central de Villa Marbella",
+        "nombre": "Tramo transversal central de Villa Marbella",
         "coordenadas": [
           [
-            11.224348,
-            -74.190973
+            11.2243794,
+            -74.1910004
           ],
           [
-            11.224452,
-            -74.190788
+            11.2244956,
+            -74.1908274
           ],
           [
-            11.224568,
-            -74.190597
+            11.2246118,
+            -74.1906545
           ],
           [
-            11.224683,
-            -74.1904
+            11.224704,
+            -74.1904814
           ],
           [
-            11.224777,
-            -74.190203
+            11.2248202,
+            -74.1903084
+          ],
+          [
+            11.2249123,
+            -74.1901353
+          ],
+          [
+            11.224958,
+            -74.1900314
           ]
         ],
-        "metodo": "Geometría sectorial reconstruida visualmente a partir del trazo verde de la referencia satelital del equipo; no es GPS individual."
+        "metodo": "Trazado aproximado digitalizado visualmente siguiendo las líneas rojas dibujadas por el equipo en la imagen de referencia; no corresponde a GPS de cada punto."
       },
       {
         "id": "INTERNO-3",
-        "nombre": "Tramo transversal interior sur de Villa Marbella",
+        "nombre": "Tramo transversal sur de Villa Marbella",
         "coordenadas": [
           [
-            11.224095,
-            -74.190833
+            11.2240854,
+            -74.1908076
           ],
           [
-            11.224211,
-            -74.190623
+            11.2242021,
+            -74.190652
           ],
           [
-            11.22431,
-            -74.190432
+            11.2243183,
+            -74.1904791
           ],
           [
-            11.224408,
-            -74.190235
+            11.2244345,
+            -74.1903061
           ],
           [
-            11.224474,
-            -74.190038
+            11.2245508,
+            -74.1901332
+          ],
+          [
+            11.2246442,
+            -74.1900122
           ]
         ],
-        "metodo": "Geometría sectorial reconstruida visualmente a partir del trazo verde de la referencia satelital del equipo; no es GPS individual."
+        "metodo": "Trazado aproximado digitalizado visualmente siguiendo las líneas rojas dibujadas por el equipo en la imagen de referencia; no corresponde a GPS de cada punto."
       }
     ]
   },
