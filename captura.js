@@ -1015,7 +1015,12 @@ function configurarEventos() {
 
   alPulsar("btn-usar-gps", usarGPS);
   var selectorAmbito = porId("select-ambito-captura");
-  if (selectorAmbito) selectorAmbito.addEventListener("change", function () { cambiarAmbitoCaptura(this.value); });
+  if (selectorAmbito) {
+    AppEstado.ambitoCaptura = selectorAmbito.value === "otros_sectores_santa_marta"
+      ? "otros_sectores_santa_marta" : "area_estudio";
+    actualizarPanelAmbitoCaptura();
+    selectorAmbito.addEventListener("change", function () { cambiarAmbitoCaptura(this.value); });
+  }
   var selectorViaExterna = porId("select-tipo-via-externa");
   if (selectorViaExterna) selectorViaExterna.addEventListener("change", function () { mostrarTexto("error-via-externa", ""); });
   porId("select-cuadra").addEventListener("change", function () { seleccionarCuadraManual(this.value); });
