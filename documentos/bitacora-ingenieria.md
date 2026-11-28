@@ -136,3 +136,12 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - La línea verde representa solo el acceso por Calle 29H y el circuito perimetral original alrededor de Villa Marbella.
 - Se reubicaron las 30 evidencias como posiciones aproximadas desde donde se tomaron las fotografías: 5 en el tramo de acceso y 25 sobre el circuito perimetral. Las fotografías pueden mostrar vehículos observados a distancia, por lo que el marcador no pretende representar la ubicación exacta del vehículo.
 - Se mantienen las evidencias originales y su carácter aproximado; no se inventan GPS individuales.
+
+
+## 19. Recuperación de posiciones de evidencias de 0.9.1.7 — versión 0.9.1.10
+
+- Se restauró el archivo de 30 evidencias desde el commit de la configuración 0.9.1.7, recuperando las posiciones sectoriales que la usuaria identificó como correctas.
+- Se conservó el ajuste cartográfico a calzadas OSM y la capa satelital con calles.
+- La función de dibujo de recorrido se mantiene limitada a `recorrido_campo.trazado`, sin dibujar `tramos_internos` ni solicitar rutas OSRM.
+- No se modificó la geometría original exterior del recorrido.
+- Las posiciones siguen siendo aproximadas; no se presentan como GPS individuales.
