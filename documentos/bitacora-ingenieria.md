@@ -207,3 +207,18 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - Se guardan en memoria de ejecución la distancia del ajuste y el ID del segmento OSM para revisión; no se presentan como coordenadas GPS validadas.
 - Si falla la consulta de calles, se mantienen visibles las ubicaciones aproximadas originales y se informa en consola.
 - No se modificaron las 30 evidencias, la zonificación ni el recorrido del equipo.
+
+## 27. Captura en el área de estudio y en otros sectores de Santa Marta — versión 0.9.1.36
+
+- Se incorporó un selector de ámbito en la captura. El modo predeterminado sigue siendo **Área de estudio (Universidad del Magdalena y Villa Marbella)**; el segundo modo es **Otros sectores de Santa Marta**.
+- El modo del área de estudio conserva la validación existente: límites geográficos configurados, asignación a una de las cuadras incluidas y tolerancia de 30 m respecto al segmento de referencia.
+- El modo de otros sectores permite elegir la ubicación por GPS, búsqueda de dirección o toque en el mapa, sin aplicar el rectángulo ni la distancia de las cuatro vías del estudio.
+- Para los reportes externos, el operador debe seleccionar explícitamente **vía arterial** o **vía secundaria**. El barrio, sector o referencia es opcional (máximo 90 caracteres). La aplicación no infiere la categoría vial ni afirma que el punto corresponda a una vía oficial concreta.
+- Los reportes externos se almacenan con los campos ambito, tipo_via_reporte y sector_referencia, y usan identificadores técnicos diferenciados para arterial y secundaria. El cálculo de criticidad usa el peso de vía seleccionado y mantiene los pesos de categoría y franja horaria existentes.
+- Los reportes externos se dibujan en los mapas de Captura y Registros, aparecen en la lista y pueden filtrarse por ámbito. Las exportaciones JSON y ZIP y la importación conservan los campos del nuevo modo.
+- Se corrigió el buscador para que, en el modo externo, no limite sus resultados al pequeño rectángulo del área de estudio. Al limpiar un formulario o cambiar a modo externo, se borra el tipo de vía anterior para evitar heredarlo accidentalmente en el siguiente reporte.
+- Se agregó el filtro de ámbito: todos, área de estudio u otros sectores. En el resumen Top 5, los reportes externos se agrupan por clase de vía (arterial/secundaria); no constituyen un ranking separado por barrio.
+- No se modificaron datos/vias.json, datos/evidencias_nuevas.json, las 30 fotografías, los puntos morados ni la geometría del recorrido verde durante esta implementación.
+- La aplicación sigue siendo estática y guarda reportes localmente en el navegador. Para trasladarlos a otro equipo se requiere exportar e importar JSON/ZIP; no existe sincronización central automática.
+- Se amplió pruebas.html con un caso de criticidad para reporte externo y un caso de rechazo de tipo de vía inválido. Se ejecutaron validaciones de sintaxis y pruebas programáticas de cálculo, importación, exportación de campos, filtros, aparición en mapas y agrupación; todos los casos comprobados pasaron.
+- **Limitación pendiente:** no se ha incorporado un polígono oficial de Santa Marta. El modo externo valida coordenadas dentro de los rangos globales de latitud/longitud y exige declarar el tipo de vía, pero corresponde al operador verificar que el punto sí esté dentro del municipio y sea correcto.
