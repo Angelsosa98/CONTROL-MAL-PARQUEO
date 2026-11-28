@@ -14,18 +14,18 @@ Aplicación cliente estática modular, sin backend, desplegable en GitHub Pages.
 1. **`index.html` y `estilos.css`:** dos vistas conmutables: captura y registros/evidencias.
 2. **`captura.js`:** ciclo de vida, GPS, selección de ubicación, validación de formulario, galería y actualización de indicadores.
 3. **`criticidad.js`:** deducción de franja horaria y cálculo de criticidad a partir de reportes completos.
-4. **`mapa.js`:** mapas Leaflet, línea azul y paradas numeradas para el circuito aproximado de campo, marcadores de reportes y mapa de calor. Las fotografías no se dibujan como puntos.
+4. **`mapa.js`:** mapas Leaflet, recorrido verde independiente, puntos de evidencias fotográficas con valoración visual preliminar, puntos de reportes con criticidad formal y mapa de calor ponderado. Los popups identifican el origen de cada punto.
 5. **`filtros.js` y `resumen.js`:** filtros, estadísticas y ranking operativo calculados sobre reportes, no sobre fotografías aisladas.
 6. **`almacenamiento.js`:** persistencia local, importación/exportación JSON y validación estructural y geográfica.
 
 ## 3. Estado de los datos al actualizar esta documentación
 
 - `datos/reportes.json`: 0 reportes precargados.
-- `datos/evidencias_nuevas.json`: 30 evidencias con ubicaciones sectoriales aproximadas (5 Calle 29H y 25 en Carrera 21C, Calle 29J y Carrera 21D).
-- `datos/vias.json`: 10 cuadras configuradas mediante segmentos de referencia aproximados.
+- `datos/evidencias_nuevas.json`: 30 evidencias con ubicación sectorial aproximada (9 en la calle de la Universidad del Magdalena y 21 en Villa Marbella), valoración visual preliminar y sin GPS individual ni fecha/hora verificados.
+- `datos/vias.json`: 14 vías registradas, cuatro activas para captura y diez deshabilitadas como referencias históricas; los segmentos son aproximados.
 - `datos/criterios.json`: pesos y franjas horarias del motor de criticidad.
 
-Las ubicaciones sintéticas y los puntajes simulados se retiraron de los registros fotográficos. Las fotografías permanecen en la galería, pero no se utilizan para generar marcadores, mapa de calor, estadísticas o ranking.
+Las ubicaciones sectoriales y valoraciones visuales preliminares se conservan separadas del índice formal. Las fotografías se muestran en galería y como puntos en el mapa y aportan intensidad visual al calor, pero no se incorporan a reportes, estadísticas ni Top 5.
 
 ## 4. Alcance y limitaciones geográficas
 
@@ -42,21 +42,22 @@ La aplicación es estática y conserva reportes en el almacenamiento local del n
 
 ## 5. Pruebas y alcance de verificación
 
-La suite pruebas.html incluye los cuatro casos originales del motor de criticidad, un caso de cálculo en otros sectores y dos casos de seguridad (categoría desconocida y tipo de vía externo inválido). También se realizaron pruebas programáticas de importación/exportación, filtros, representación cartográfica y agrupación de reportes externos. Estas comprobaciones no sustituyen una prueba funcional integral en navegador de GPS, mapas, filtros, persistencia e intercambio de archivos sobre la versión publicada.
+La suite `pruebas.html` cubre siete casos del motor de criticidad. `pruebas-integracion.html` cubre siete casos de vías activas e importación ZIP. Se revisan también sintaxis, referencias DOM, estructura de datos, IDs de evidencias y coherencia CSV/JSON. Estas pruebas no sustituyen una comprobación manual de GPS, mapas y almacenamiento en navegador.
 
 
-## 6. Separación cartográfica de fotografías y reportes — versión 0.9.1.37
+## 6. Capas cartográficas y procedencia de datos — versión 0.9.1.40
 
-Las fotografías (30 registros de `datos/evidencias_nuevas.json`) se muestran únicamente en la galería. Aunque conservan metadatos sectoriales aproximados, no se dibujan como marcadores cartográficos ni generan intensidad térmica, porque no tienen clasificación de criticidad individual.
+- **Recorrido verde:** representa el camino realizado por el equipo; incluye un trazado exterior y tres tramos interiores.
+- **Puntos de evidencias:** representan ubicaciones aproximadas de vehículos observados. Hay 30 fichas: 9 de la calle de la Universidad del Magdalena y 21 de Villa Marbella. Los puntos no tienen que coincidir con el recorrido del equipo.
+- **Valoración visual preliminar:** cada fotografía tiene nivel Alto, Medio o Bajo y una observación. Como no hay fecha/hora verificada, no se calcula la franja ni el puntaje formal.
+- **Reportes formales:** se capturan con categoría, vía y fecha/hora; el motor calcula su criticidad y estos registros alimentan estadísticas y Top 5.
+- **Mapa de calor:** combina evidencias con nivel visual preliminar y reportes formales con criticidad válida. Las ventanas emergentes distinguen la procedencia.
+- **Buscador:** solo ofrece como sugerencias locales las vías que no tengan `activa:false`. Los diez registros históricos desactivados permanecen en `vias.json`, pero no se ofrecen para asignar ubicación.
 
-En el mapa de Registros, los marcadores individuales y la capa de calor se construyen exclusivamente con reportes que tengan `criticidad.nivel` igual a Alto, Medio o Bajo. La intensidad de calor es categórica: Alto 1.00, Medio 0.65 y Bajo 0.30. Los reportes sin nivel válido se omiten del mapa, en lugar de asignarles Bajo por defecto.
+El calor combinado es una visualización exploratoria. Los análisis formales deben separar las evidencias fotográficas de los reportes capturados.
 
-Cuando no existen reportes clasificados, no se crea una capa de calor y el mapa encuadra el recorrido de campo. La leyenda conserva el recorrido y las tres categorías de reportes. La galería, archivos de fotos, geometría verde y datos sectoriales de las evidencias no se modifican.
+## 7. Captura e intercambio de reportes
 
-## 7. Puntos y calor de evidencias con clasificación visual preliminar — versión 0.9.1.39
+La captura dispone de dos ámbitos: área de estudio (cuatro vías activas) y otros sectores de Santa Marta. La aplicación conserva los reportes en el navegador local. La exportación e importación admite JSON y paquetes ZIP exportados por la aplicación. El lector ZIP exige `reportes.json`, convierte las imágenes contenidas en la carpeta `fotos/` y aplica límites de tamaño y rutas permitidas.
 
-Las 30 fichas de `datos/evidencias_nuevas.json` vuelven a mostrarse como puntos en el mapa utilizando exactamente sus coordenadas sectoriales existentes. Cada ficha incluye `clasificacion_visual_preliminar`: nivel visual Alto/Medio/Bajo, tipo de obstrucción observado, confianza y observación breve. La distribución actual es 9 Alto, 16 Medio y 5 Bajo.
-
-Estos niveles son una valoración visual de la obstrucción que aparece en cada fotografía, no un resultado del algoritmo `calcularCriticidad`. Las 30 fichas tienen `fecha_hora: null`, así que no se puede deducir su franja pico/valle ni el puntaje formal. Cada popup aclara esa limitación y distingue una evidencia fotográfica de un reporte capturado.
-
-Los marcadores de evidencias y los reportes formales se dibujan en la capa de puntos del mapa. La capa de calor pondera ambos orígenes con Alto 1.00, Medio 0.65 y Bajo 0.30. Las evidencias no se añaden a la lista de reportes, estadísticas, filtros de reportes ni Top 5. La galería y el recorrido verde se mantienen sin modificaciones.
+Todavía no existe sincronización central entre dispositivos ni un polígono oficial municipal para validar automáticamente otros sectores.
