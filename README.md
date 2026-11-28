@@ -67,3 +67,13 @@ CONTROL-MAL-PARQUEO/
 Abrir desde un servidor HTTP local (por ejemplo, Live Server en VS Code) o GitHub Pages, porque la aplicación carga archivos JSON mediante `fetch`.
 
 Para revisar el motor de criticidad, abrir `pruebas.html` y verificar los casos de prueba. La validación visual integral de mapas, filtros y captura debe realizarse también en navegador.
+
+
+### Ajuste de puntos y mapa satelital — versión 0.9.1.7
+
+- El mapa inicia en la vista "Puntos" para evitar que el mapa de calor oculte los marcadores y las calzadas.
+- La capa transparente de calles y rótulos de Esri se sirve desde `server.arcgisonline.com`.
+- Al cargar evidencias, el navegador consulta geometrías viales de OpenStreetMap mediante Overpass y proyecta cada punto al segmento vial más cercano si está a 35 m o menos.
+- Si la consulta falla o no hay una vía próxima dentro del umbral, se conserva la coordenada sectorial aproximada original.
+- Se eliminó el texto informativo duplicado que aparecía debajo del mapa.
+- Las coordenadas ajustadas son referencias cartográficas aproximadas y no GPS individuales de las fotografías.
