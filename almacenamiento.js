@@ -348,6 +348,11 @@ function validarReporteImportado(item, criterios, vias) {
     return { valido: false, motivo: "Coordenadas lat/lng no válidas." };
   }
 
+  if (item.ambito != null &&
+      item.ambito !== "area_estudio" &&
+      item.ambito !== "otros_sectores_santa_marta") {
+    return { valido: false, motivo: "Ámbito de reporte desconocido ('" + item.ambito + "')." };
+  }
   var esExterno = item.ambito === "otros_sectores_santa_marta";
   if (esExterno) {
     var tipoEsperado = item.tipo_via_reporte;
