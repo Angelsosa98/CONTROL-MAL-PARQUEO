@@ -83,3 +83,11 @@ La suite de navegador pruebas.html se amplió para incluir un caso de criticidad
 - Inventario CSV: 30 filas; sectores y valoraciones coinciden con el JSON.
 - Importación ZIP: siete pruebas de integración pasan, incluyendo fotos ausentes, rutas inseguras, falta de `reportes.json` y tamaño excesivo.
 - El recorrido representa la trayectoria del equipo y no se usa como regla de validación de las ubicaciones de vehículos. EVID-030 y el resto de puntos no se mueven por distancia al recorrido.
+
+
+## Limitaciones conocidas añadidas en versión 0.9.1.40
+
+| ID | Tema | Estado actual | Acción pendiente |
+|---|---|---|---|
+| LIM-007 | Privacidad de fotografías en repositorio público | El repositorio es público y algunas imágenes muestran placas legibles. No se alteraron las fotos originales durante esta depuración para preservar los archivos de evidencia. | Antes de difusión externa, usar copias anonimizadas o restringir la visibilidad del repositorio; comprobar placas y rostros de las 30 imágenes. |
+| LIM-008 | Calor combinado de dos fuentes | El mapa de calor combina evidencias con valoración visual preliminar y reportes con criticidad formal. Los popups separan el origen, pero no hay un control para mostrar cada fuente de calor por separado. | Para análisis comparativos formales, incorporar una selección de fuente o generar capas de calor separadas. No interpretar el calor combinado como una sola muestra homogénea. |
