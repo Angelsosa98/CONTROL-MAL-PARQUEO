@@ -575,5 +575,38 @@
         "metodo": "Trazado construido siguiendo el orden de las cinco evidencias sectoriales correspondientes al tramo; no es GPS individual."
       }
     ]
+  },
+  "zonificacion": {
+    "criterio": "La zonificación se basa en la observación de campo reportada por el equipo. Los 30 registros representan ubicaciones aproximadas de vehículos mal estacionados, no posiciones de cámaras ni paradas del equipo.",
+    "zonas": [
+      {
+        "id": "Z1",
+        "nombre": "Corredor de acceso",
+        "descripcion": "Tramo de acceso y vías próximas donde se identificaron vehículos durante el desplazamiento.",
+        "estado": "delimitacion_vial_pendiente"
+      },
+      {
+        "id": "Z2",
+        "nombre": "Parque Villa Marbella y entorno",
+        "descripcion": "Zona prioritaria de mayor concentración observada por el equipo, tanto en las calles que rodean el parque como en las vías interiores del sector.",
+        "prioridad_analitica": "alta_por_observacion_de_campo",
+        "estado": "delimitacion_vial_pendiente"
+      },
+      {
+        "id": "Z3",
+        "nombre": "Vías circundantes",
+        "descripcion": "Otros segmentos de calles y carreras incluidos en el recorrido de campo, fuera del entorno inmediato del parque.",
+        "estado": "delimitacion_vial_pendiente"
+      }
+    ],
+    "reglas_validacion": [
+      "Cada punto representa la ubicación aproximada de un vehículo mal estacionado identificado por el equipo.",
+      "No confundir la ubicación del vehículo con la posición desde donde se tomó la fotografía.",
+      "No asignar una zona, calle o carrera a un EVID individual hasta contrastar su coordenada y referencia de campo.",
+      "La mayor concentración en Z2 es un hallazgo cualitativo informado por el equipo; no asignar cantidades por zona sin verificar los 30 registros.",
+      "Conservar las coordenadas originales y almacenar por separado cualquier posición cartográfica ajustada.",
+      "Ajustar cada punto únicamente al segmento vial identificado como correspondiente; no usar automáticamente la vía geométricamente más cercana si puede ser otra calle.",
+      "El recorrido del equipo es una geometría independiente de las ubicaciones de los vehículos."
+    ]
   }
 }
