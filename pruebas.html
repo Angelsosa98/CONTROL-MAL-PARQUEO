@@ -117,7 +117,7 @@
       ]
     };
 
-    // 2. Definición de los 4 casos obligatorios + 1 caso de manejo de error
+    // 2. Definición de cinco casos de cálculo + dos casos de seguridad.
     var casos = [
       {
         titulo: "Caso 1 (Ejemplo PDF): Invasión de andén + arterial + 11:40",
@@ -150,7 +150,7 @@
         esperado: { puntaje: 5, nivel: "Medio", franja: "valle" }
       },
       {
-        titulo: "Caso 5: Reporte externo + vía arterial + hora pico",
+        titulo: "Caso 4: Reporte externo + vía arterial + hora pico",
         calculoManual: "Doble fila (3) + vía arterial declarada (3) + hora pico (3) = 9 → Alto",
         reporte: {
           categoria: "doble_fila",
@@ -162,7 +162,7 @@
         esperado: { puntaje: 9, nivel: "Alto", franja: "pico" }
       },
       {
-        titulo: "Caso 4 (Límite excluido): Doble fila + arterial + 14:00",
+        titulo: "Caso 5 (Límite excluido): Doble fila + arterial + 14:00",
         calculoManual: "Categoría (doble_fila = 3) + Vía (arterial = 3) + Franja (14:00 es fin excluido de 11:30-14:00 → valle = 1) = 7 → Alto",
         reporte: {
           categoria: "doble_fila",
