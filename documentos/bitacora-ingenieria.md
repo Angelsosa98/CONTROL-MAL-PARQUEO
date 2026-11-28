@@ -170,3 +170,11 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - Se reconstruyó la geometría de la línea exterior usando, en orden, EVID-001 a EVID-009 y EVID-025 a EVID-030.
 - Se reconstruyeron los tres segmentos interiores como polilíneas independientes: EVID-010 a EVID-014, EVID-015 a EVID-019 y EVID-020 a EVID-024.
 - No se agregaron ni movieron puntos, no se usó enrutamiento automático y las coordenadas continúan siendo aproximadas.
+
+
+## 23. Limpieza de texto de fichas de evidencia — versión 0.9.1.14
+
+- Se actualizaron las descripciones de las 30 evidencias para retirar el mensaje de pendiente de ubicación y clasificación.
+- El nuevo texto solo indica que la fotografía está asociada al punto sectorial aproximado representado en el mapa.
+- No se modificaron coordenadas, puntos, vías ni recorrido.
+- No se asignaron carreras ni niveles de clasificación sin validación de la usuaria.
