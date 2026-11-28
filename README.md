@@ -77,3 +77,8 @@ Para revisar el motor de criticidad, abrir `pruebas.html` y verificar los casos 
 - Si la consulta falla o no hay una vía próxima dentro del umbral, se conserva la coordenada sectorial aproximada original.
 - Se eliminó el texto informativo duplicado que aparecía debajo del mapa.
 - Las coordenadas ajustadas son referencias cartográficas aproximadas y no GPS individuales de las fotografías.
+
+
+### Geometría vial del recorrido — versión 0.9.1.8
+
+La línea verde se ajusta a la red vial mediante geometrías de OSRM, conservando el orden de los puntos de control del recorrido manual. El circuito exterior y cada ramal interior se procesan por separado para evitar conexiones inventadas entre tramos. La línea manual aparece primero y se conserva como respaldo si el servicio no está disponible. Este ajuste afecta exclusivamente a la visualización del recorrido, no a los 30 puntos de evidencias.
