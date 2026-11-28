@@ -62,6 +62,68 @@
         registrar("Buscador: vías desactivadas", "Solo ACTIVA y SIN_FLAG", activas.length === 2 && activas.every(function (x) { return x.id !== "ANTIGUA"; }));
         registrar("Buscador: conserva vías sin campo activa", "Una vía sin activa se considera habilitada", activas.some(function (x) { return x.id === "SIN_FLAG"; }));
 
+        var viasBusqueda = {
+          zona: { radio_max_m: 30, limites: { lat_min: 11.19, lat_max: 11.31, lng_min: -74.31, lng_max: -74.19 } },
+          cuadras: [
+            { id: "ACTIVA", nombre: "Calle activa", tipo_via: "arterial", activa: true, extremos: [[11.2, -74.2], [11.2, -74.201]] },
+            { id: "ANTIGUA", nombre: "Carrera 32 antigua", tipo_via: "arterial", activa: false, extremos: [[11.3, -74.3], [11.3, -74.301]] }
+          ]
+        };
+        var fetchOriginal = window.fetch;
+        var urlCapturada = "";
+        window.fetch = function (url) {
+          urlCapturada = String(url);
+          return Promise.resolve({
+            ok: true,
+            json: function () {
+              return Promise.resolve([
+                { lat: "11.2", lon: "-74.2005", name: "Calle activa", display_name: "Calle activa, Santa Marta" },
+                { lat: "11.3", lon: "-74.3005", name: "Carrera 32 antigua", display_name: "Carrera 32, Santa Marta" }
+              ]);
+            }
+          });
+        };
+        var resultadosArea = [];
+        var urlArea = "";
+        try {
+          resultadosArea = await buscarDireccionesMapa("Carrera 32", viasBusqueda, "area_estudio");
+          urlArea = urlCapturada;
+        } finally {
+          window.fetch = fetchOriginal;
+        }
+        registrar(
+          "Buscador: limita el área de estudio",
+          "Usa bounded=1 y descarta resultados sobre vías desactivadas",
+          urlArea.indexOf("bounded=1") !== -1 &&
+            !resultadosArea.some(function (x) { return x.titulo.indexOf("Carrera 32") !== -1; })
+        );
+
+        window.fetch = function (url) {
+          urlCapturada = String(url);
+          return Promise.resolve({
+            ok: true,
+            json: function () {
+              return Promise.resolve([
+                { lat: "11.3", lon: "-74.3005", name: "Carrera 32 antigua", display_name: "Carrera 32, Santa Marta" }
+              ]);
+            }
+          });
+        };
+        var resultadosExternos = [];
+        var urlExterna = "";
+        try {
+          resultadosExternos = await buscarDireccionesMapa("Carrera 32", viasBusqueda, "otros_sectores_santa_marta");
+          urlExterna = urlCapturada;
+        } finally {
+          window.fetch = fetchOriginal;
+        }
+        registrar(
+          "Buscador: otros sectores de Santa Marta",
+          "Permite búsqueda global sin límites del área de estudio",
+          urlExterna.indexOf("bounded=1") === -1 &&
+            resultadosExternos.some(function (x) { return x.titulo === "Carrera 32 antigua"; })
+        );
+
         var paquete = {
           loadAsync: function () {
             return Promise.resolve({
@@ -108,6 +170,62 @@
         try { await extraerJSONDePaqueteZIP({ size: 51 * 1024 * 1024 }, paquete); }
         catch (e) { exceso = /50 MB/.test(e.message); }
         registrar("ZIP: límite de archivo", "Rechaza paquetes mayores de 50 MB", exceso);
+
+        var respuestaEvidencias = await fetch("datos/evidencias_nuevas.json");
+        var respuestaCSV = await fetch("datos/fotos/indice_evidencias.csv");
+        var inventarioCoincide = false;
+        var distribucionCorrecta = false;
+        if (respuestaEvidencias.ok && respuestaCSV.ok) {
+          var evidencias = await respuestaEvidencias.json();
+          var textoCSV = await respuestaCSV.text();
+          function parsearCSV(texto) {
+            var filas = [], fila = [], campo = "", entreComillas = false;
+            for (var z = 0; z < texto.length; z++) {
+              var caracter = texto[z];
+              if (entreComillas) {
+                if (caracter === '"' && texto[z + 1] === '"') { campo += '"'; z++; }
+                else if (caracter === '"') entreComillas = false;
+                else campo += caracter;
+              } else if (caracter === '"') entreComillas = true;
+              else if (caracter === ',') { fila.push(campo); campo = ""; }
+              else if (caracter === '\n') { fila.push(campo); filas.push(fila); fila = []; campo = ""; }
+              else if (caracter !== '\r') campo += caracter;
+            }
+            if (campo.length || fila.length) { fila.push(campo); filas.push(fila); }
+            var encabezados = filas.shift() || [];
+            return filas.filter(function (f) { return f.some(function (x) { return x !== ""; }); })
+              .map(function (f) {
+                var registro = {};
+                encabezados.forEach(function (encabezado, k) { registro[encabezado] = f[k] || ""; });
+                return registro;
+              });
+          }
+          var filasCSV = parsearCSV(textoCSV);
+          var porId = Object.create(null);
+          evidencias.forEach(function (e) { porId[e.id] = e; });
+          inventarioCoincide = evidencias.length === 30 && filasCSV.length === 30 &&
+            filasCSV.every(function (fila) {
+              var e = porId[fila.codigo_evidencia];
+              if (!e) return false;
+              var u = e.ubicacion_aproximada || {};
+              var c = e.clasificacion_visual_preliminar || {};
+              return fila.archivo_nuevo === e.foto &&
+                fila.coordenadas_gps === "No disponibles" &&
+                fila.ubicacion_sectorial_aproximada.indexOf(u.sector || "") !== -1 &&
+                fila.ubicacion_sectorial_aproximada.indexOf(u.via_aproximada || "") !== -1 &&
+                fila.valoracion_visual_preliminar.indexOf("Nivel visual " + c.nivel) !== -1 &&
+                fila.valoracion_visual_preliminar.indexOf(c.tipo_observado || "") !== -1;
+            });
+          var conteoSectores = evidencias.reduce(function (acc, e) {
+            var sector = e.ubicacion_aproximada && e.ubicacion_aproximada.sector;
+            acc[sector] = (acc[sector] || 0) + 1;
+            return acc;
+          }, {});
+          distribucionCorrecta = conteoSectores["Calle de la Universidad del Magdalena"] === 9 &&
+            conteoSectores["Villa Marbella"] === 21;
+        }
+        registrar("Inventario CSV y JSON", "30 filas coinciden en foto, sector, vía y valoración visual", inventarioCoincide);
+        registrar("Distribución sectorial", "9 Universidad del Magdalena y 21 Villa Marbella", distribucionCorrecta);
       } catch (err) {
         registrar("Ejecución de pruebas", "Sin errores inesperados", false, err.message);
       }
