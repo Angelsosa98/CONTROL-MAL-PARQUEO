@@ -43,3 +43,12 @@ La aplicación es estática y conserva reportes en el almacenamiento local del n
 ## 5. Pruebas y alcance de verificación
 
 La suite pruebas.html incluye los cuatro casos originales del motor de criticidad, un caso de cálculo en otros sectores y dos casos de seguridad (categoría desconocida y tipo de vía externo inválido). También se realizaron pruebas programáticas de importación/exportación, filtros, representación cartográfica y agrupación de reportes externos. Estas comprobaciones no sustituyen una prueba funcional integral en navegador de GPS, mapas, filtros, persistencia e intercambio de archivos sobre la versión publicada.
+
+
+## 6. Separación cartográfica de fotografías y reportes — versión 0.9.1.37
+
+Las fotografías (30 registros de `datos/evidencias_nuevas.json`) se muestran únicamente en la galería. Aunque conservan metadatos sectoriales aproximados, no se dibujan como marcadores cartográficos ni generan intensidad térmica, porque no tienen clasificación de criticidad individual.
+
+En el mapa de Registros, los marcadores individuales y la capa de calor se construyen exclusivamente con reportes que tengan `criticidad.nivel` igual a Alto, Medio o Bajo. La intensidad de calor es categórica: Alto 1.00, Medio 0.65 y Bajo 0.30. Los reportes sin nivel válido se omiten del mapa, en lugar de asignarles Bajo por defecto.
+
+Cuando no existen reportes clasificados, no se crea una capa de calor y el mapa encuadra el recorrido de campo. La leyenda conserva el recorrido y las tres categorías de reportes. La galería, archivos de fotos, geometría verde y datos sectoriales de las evidencias no se modifican.
