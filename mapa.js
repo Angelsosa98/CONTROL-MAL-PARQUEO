@@ -21,6 +21,12 @@ var modoVisualizacionRegistros = "puntos"; // "ambos" | "calor" | "puntos"
 var ultimosReportesRegistros = [];
 var ultimoViasRegistros = null;
 var capaRecorridoCampo = null;
+var claveAlmacenamientoRecorridoLocal = "control-vial-santa-marta.recorrido.v1";
+var segmentosRecorridoGuardadosLocal = null;
+var segmentosRecorridoEnEdicion = [];
+var puntosTramoRecorridoEnEdicion = [];
+var modoEdicionRecorridoActivo = false;
+var capaVistaPreviaEdicionRecorrido = null;
 
 /**
  * Devuelve true si la librería Leaflet (L) está cargada en el navegador.
@@ -271,6 +277,7 @@ function iniciarMapaRegistros(idContenedor, vias) {
   }
 
   ultimoViasRegistros = vias;
+  cargarRecorridoLocalGuardado(vias);
   var centro = (vias && vias.zona && vias.zona.centro) ? vias.zona.centro : [11.2335, -74.1972];
   var zoom = (vias && vias.zona && vias.zona.zoom) ? vias.zona.zoom : 15;
 
@@ -285,6 +292,7 @@ function iniciarMapaRegistros(idContenedor, vias) {
   dibujarRecorridoCampo(vias);
   agregarControlCapasMapa(mapaRegistros, mapasBaseRegistros, {});
   configurarControlRecorridoCampo();
+  mapaRegistros.on("click", agregarPuntoAlRecorrido);
 
   var avisoCalor = document.getElementById("aviso-sin-calor");
   if (avisoCalor && !heatDisponible()) {
@@ -332,59 +340,307 @@ function iniciarMapaRegistros(idContenedor, vias) {
  * visible el trazo manual original. No cambia las ubicaciones de las evidencias.
  */
 
+function obtenerSegmentosRecorridoBase(vias) {
+  var recorrido = vias && vias.recorrido_campo;
+  if (!recorrido) return [];
+  var segmentos = [];
+  function validar(lista) {
+    return (Array.isArray(lista) ? lista : []).filter(function (p) {
+      return Array.isArray(p) && p.length >= 2 &&
+        Number.isFinite(Number(p[0])) && Number.isFinite(Number(p[1]));
+    }).map(function (p) { return [Number(p[0]), Number(p[1])]; });
+  }
+  var principal = validar(recorrido.trazado);
+  if (principal.length >= 2) segmentos.push(principal);
+  (Array.isArray(recorrido.tramos_internos) ? recorrido.tramos_internos : []).forEach(function (tramo) {
+    var puntos = validar(tramo.coordenadas);
+    if (puntos.length >= 2) segmentos.push(puntos);
+  });
+  return segmentos;
+}
+
+function validarSegmentosRecorrido(lista) {
+  if (!Array.isArray(lista)) return [];
+  return lista.map(function (segmento) {
+    if (!Array.isArray(segmento)) return [];
+    return segmento.filter(function (p) {
+      return Array.isArray(p) && p.length >= 2 &&
+        Number.isFinite(Number(p[0])) && Number.isFinite(Number(p[1])) &&
+        Number(p[0]) >= -90 && Number(p[0]) <= 90 &&
+        Number(p[1]) >= -180 && Number(p[1]) <= 180;
+    }).map(function (p) { return [Number(p[0]), Number(p[1])]; });
+  }).filter(function (segmento) { return segmento.length >= 2; });
+}
+
+function cargarRecorridoLocalGuardado(vias) {
+  segmentosRecorridoGuardadosLocal = null;
+  try {
+    var contenido = localStorage.getItem(claveAlmacenamientoRecorridoLocal);
+    if (!contenido) {
+      actualizarEstadoEditorRecorrido("Usando el recorrido inicial. Puedes dibujar uno nuevo y guardarlo en este navegador.");
+      return;
+    }
+    var guardado = JSON.parse(contenido);
+    var segmentos = validarSegmentosRecorrido(guardado && guardado.segmentos);
+    if (segmentos.length) {
+      segmentosRecorridoGuardadosLocal = segmentos;
+      actualizarEstadoEditorRecorrido("Recorrido guardado cargado desde este navegador · " + segmentos.length + " tramos.");
+    } else {
+      actualizarEstadoEditorRecorrido("No se pudo leer el recorrido guardado. Se muestra el recorrido inicial.");
+    }
+  } catch (error) {
+    actualizarEstadoEditorRecorrido("El navegador no permitió leer el recorrido guardado. Puedes dibujar y descargar una copia.");
+  }
+}
+
+function obtenerSegmentosRecorridoActual(vias) {
+  if (Array.isArray(segmentosRecorridoGuardadosLocal) && segmentosRecorridoGuardadosLocal.length) {
+    return segmentosRecorridoGuardadosLocal;
+  }
+  return obtenerSegmentosRecorridoBase(vias || ultimoViasRegistros);
+}
+
+function actualizarEstadoEditorRecorrido(mensaje) {
+  var estado = document.getElementById("estado-editor-recorrido");
+  if (estado && mensaje) estado.textContent = mensaje;
+  actualizarControlesEditorRecorrido();
+}
+
+function actualizarControlesEditorRecorrido() {
+  var puntos = puntosTramoRecorridoEnEdicion.length;
+  var tramos = segmentosRecorridoEnEdicion.length;
+  var activo = modoEdicionRecorridoActivo;
+  var boton = function (id) { return document.getElementById(id); };
+  var iniciar = boton("btn-iniciar-dibujo-recorrido");
+  var terminar = boton("btn-terminar-tramo-recorrido");
+  var deshacer = boton("btn-deshacer-punto-recorrido");
+  var eliminar = boton("btn-eliminar-tramo-recorrido");
+  var guardar = boton("btn-guardar-recorrido-local");
+  var cancelar = boton("btn-cancelar-edicion-recorrido");
+  var restaurar = boton("btn-restaurar-recorrido-inicial");
+  var descargar = boton("btn-descargar-copia-recorrido");
+  if (iniciar) iniciar.disabled = activo;
+  if (terminar) terminar.disabled = !activo || puntos < 2;
+  if (deshacer) deshacer.disabled = !activo || (!puntos && !tramos);
+  if (eliminar) eliminar.disabled = !activo || !tramos;
+  if (guardar) guardar.disabled = !activo || (!tramos && puntos < 2);
+  if (cancelar) cancelar.disabled = !activo;
+  if (restaurar) restaurar.disabled = !Array.isArray(segmentosRecorridoGuardadosLocal);
+  if (descargar) descargar.disabled = !obtenerSegmentosRecorridoActual(ultimoViasRegistros).length;
+}
+
 function dibujarRecorridoCampo(vias) {
   if (!leafletDisponible() || !mapaRegistros) return;
   if (capaRecorridoCampo) mapaRegistros.removeLayer(capaRecorridoCampo);
 
   capaRecorridoCampo = L.layerGroup();
-  var recorrido = vias && vias.recorrido_campo;
-  if (!recorrido) return;
-
-  function validarCoordenadas(lista) {
-    return (Array.isArray(lista) ? lista : []).filter(function (p) {
-      return Array.isArray(p) && p.length >= 2 &&
-        Number.isFinite(Number(p[0])) && Number.isFinite(Number(p[1]));
-    });
-  }
-
-  // 1) Único recorrido exterior original: acceso por Calle 29H y perímetro.
-  var coordenadas = validarCoordenadas(recorrido.trazado);
-  if (coordenadas.length >= 2) {
+  var segmentos = obtenerSegmentosRecorridoActual(vias);
+  segmentos.forEach(function (coordenadas, indice) {
+    if (!Array.isArray(coordenadas) || coordenadas.length < 2) return;
     L.polyline(coordenadas, {
       color: "#16a34a",
-      weight: 3,
-      opacity: 0.95,
-      lineCap: "butt",
+      weight: 4,
+      opacity: 0.96,
+      lineCap: "round",
       lineJoin: "round",
       smoothFactor: 0
-    }).bindPopup(
-      "<strong>Recorrido original de campo</strong><br>" +
-      "Acceso por Calle 29H y circuito perimetral de Villa Marbella."
-    ).addTo(capaRecorridoCampo);
-  }
-
-  // 2) Solo los tres tramos transversales que aparecen en la referencia original.
-  // Se dibujan como segmentos independientes: no crean circuitos ni ramales nuevos.
-  (Array.isArray(recorrido.tramos_internos) ? recorrido.tramos_internos : [])
-    .slice(0, 3)
-    .forEach(function (tramo, indice) {
-      var puntos = validarCoordenadas(tramo.coordenadas);
-      if (puntos.length < 2) return;
-
-      L.polyline(puntos, {
-        color: "#16a34a",
-        weight: 2.8,
-        opacity: 0.95,
-        lineCap: "butt",
-        lineJoin: "miter",
-        smoothFactor: 0
-      }).bindPopup(
-        "<strong>" + (tramo.nombre || ("Tramo transversal " + (indice + 1))) + "</strong><br>" +
-        "Segmento de calle del recorrido original."
-      ).addTo(capaRecorridoCampo);
-    });
-
+    }).bindPopup("<strong>Recorrido de campo · Tramo " + (indice + 1) + "</strong>").addTo(capaRecorridoCampo);
+  });
   capaRecorridoCampo.addTo(mapaRegistros);
+  actualizarControlesEditorRecorrido();
+}
+
+function renderizarVistaPreviaEdicionRecorrido() {
+  if (!mapaRegistros || !leafletDisponible()) return;
+  if (capaVistaPreviaEdicionRecorrido) mapaRegistros.removeLayer(capaVistaPreviaEdicionRecorrido);
+  capaVistaPreviaEdicionRecorrido = L.layerGroup();
+
+  segmentosRecorridoEnEdicion.forEach(function (segmento) {
+    if (segmento.length >= 2) {
+      L.polyline(segmento, {
+        color: "#2563eb", weight: 4, opacity: 0.95,
+        dashArray: "7,6", lineCap: "round", lineJoin: "round"
+      }).addTo(capaVistaPreviaEdicionRecorrido);
+    }
+  });
+  if (puntosTramoRecorridoEnEdicion.length >= 2) {
+    L.polyline(puntosTramoRecorridoEnEdicion, {
+      color: "#2563eb", weight: 4, opacity: 1,
+      dashArray: "7,6", lineCap: "round", lineJoin: "round"
+    }).addTo(capaVistaPreviaEdicionRecorrido);
+  }
+  puntosTramoRecorridoEnEdicion.forEach(function (punto, indice) {
+    L.circleMarker(punto, {
+      radius: indice === puntosTramoRecorridoEnEdicion.length - 1 ? 7 : 5,
+      color: "#ffffff", weight: 2,
+      fillColor: "#2563eb", fillOpacity: 1
+    }).addTo(capaVistaPreviaEdicionRecorrido);
+  });
+  capaVistaPreviaEdicionRecorrido.addTo(mapaRegistros);
+}
+
+function iniciarEdicionRecorrido() {
+  if (!mapaRegistros) {
+    actualizarEstadoEditorRecorrido("El mapa todavía no está disponible.");
+    return;
+  }
+  modoEdicionRecorridoActivo = true;
+  segmentosRecorridoEnEdicion = [];
+  puntosTramoRecorridoEnEdicion = [];
+  if (mapaRegistros.doubleClickZoom) mapaRegistros.doubleClickZoom.disable();
+  renderizarVistaPreviaEdicionRecorrido();
+  actualizarEstadoEditorRecorrido("Dibujo activo: haz clic sobre la calle para marcar los puntos del primer tramo.");
+}
+
+function agregarPuntoAlRecorrido(e) {
+  if (!modoEdicionRecorridoActivo || !e || !e.latlng) return;
+  puntosTramoRecorridoEnEdicion.push([
+    Number(e.latlng.lat.toFixed(7)),
+    Number(e.latlng.lng.toFixed(7))
+  ]);
+  renderizarVistaPreviaEdicionRecorrido();
+  actualizarEstadoEditorRecorrido("Puntos del tramo actual: " + puntosTramoRecorridoEnEdicion.length +
+    " · Tramos terminados: " + segmentosRecorridoEnEdicion.length +
+    ". Haz clic siguiendo la calle; pulsa “Terminar tramo” al llegar al final.");
+}
+
+function terminarTramoRecorrido() {
+  if (!modoEdicionRecorridoActivo) return;
+  if (puntosTramoRecorridoEnEdicion.length < 2) {
+    actualizarEstadoEditorRecorrido("Marca al menos dos puntos sobre la calle para terminar un tramo.");
+    return;
+  }
+  segmentosRecorridoEnEdicion.push(puntosTramoRecorridoEnEdicion.slice());
+  puntosTramoRecorridoEnEdicion = [];
+  renderizarVistaPreviaEdicionRecorrido();
+  actualizarEstadoEditorRecorrido("Tramo añadido. Puedes empezar a dibujar el siguiente tramo de calle.");
+}
+
+function deshacerPuntoRecorrido() {
+  if (!modoEdicionRecorridoActivo) return;
+  if (puntosTramoRecorridoEnEdicion.length) {
+    puntosTramoRecorridoEnEdicion.pop();
+  } else if (segmentosRecorridoEnEdicion.length) {
+    var ultimo = segmentosRecorridoEnEdicion.pop();
+    ultimo.pop();
+    if (ultimo.length >= 2) {
+      segmentosRecorridoEnEdicion.push(ultimo);
+    } else {
+      puntosTramoRecorridoEnEdicion = ultimo;
+    }
+  }
+  renderizarVistaPreviaEdicionRecorrido();
+  actualizarEstadoEditorRecorrido("Punto deshecho. Continúa dibujando sobre la calle.");
+}
+
+function eliminarUltimoTramoRecorrido() {
+  if (!modoEdicionRecorridoActivo || !segmentosRecorridoEnEdicion.length) return;
+  segmentosRecorridoEnEdicion.pop();
+  renderizarVistaPreviaEdicionRecorrido();
+  actualizarEstadoEditorRecorrido("Se eliminó el último tramo del borrador. El recorrido guardado sigue intacto.");
+}
+
+function guardarRecorridoLocal() {
+  if (!modoEdicionRecorridoActivo) return;
+  if (puntosTramoRecorridoEnEdicion.length === 1) {
+    actualizarEstadoEditorRecorrido("El tramo actual tiene un solo punto. Añade otro o deshaz ese punto antes de guardar.");
+    return;
+  }
+  if (puntosTramoRecorridoEnEdicion.length >= 2) {
+    segmentosRecorridoEnEdicion.push(puntosTramoRecorridoEnEdicion.slice());
+  }
+  var segmentos = validarSegmentosRecorrido(segmentosRecorridoEnEdicion);
+  if (!segmentos.length) {
+    actualizarEstadoEditorRecorrido("No hay líneas para guardar. Dibuja al menos un tramo de dos puntos.");
+    return;
+  }
+  try {
+    localStorage.setItem(claveAlmacenamientoRecorridoLocal, JSON.stringify({
+      formato: "control-vial-santa-marta-recorrido",
+      version: 1,
+      guardado: new Date().toISOString(),
+      segmentos: segmentos
+    }));
+  } catch (error) {
+    actualizarEstadoEditorRecorrido("No se pudo guardar en este navegador. Descarga una copia del recorrido.");
+    return;
+  }
+  segmentosRecorridoGuardadosLocal = segmentos;
+  modoEdicionRecorridoActivo = false;
+  segmentosRecorridoEnEdicion = [];
+  puntosTramoRecorridoEnEdicion = [];
+  if (mapaRegistros.doubleClickZoom) mapaRegistros.doubleClickZoom.enable();
+  if (capaVistaPreviaEdicionRecorrido) {
+    mapaRegistros.removeLayer(capaVistaPreviaEdicionRecorrido);
+    capaVistaPreviaEdicionRecorrido = null;
+  }
+  dibujarRecorridoCampo(ultimoViasRegistros);
+  configurarControlRecorridoCampo();
+  actualizarEstadoEditorRecorrido("¡Recorrido guardado en este navegador! Se conservará al cerrar y volver a abrir esta página.");
+}
+
+function cancelarEdicionRecorrido() {
+  if (!modoEdicionRecorridoActivo) return;
+  modoEdicionRecorridoActivo = false;
+  segmentosRecorridoEnEdicion = [];
+  puntosTramoRecorridoEnEdicion = [];
+  if (mapaRegistros.doubleClickZoom) mapaRegistros.doubleClickZoom.enable();
+  if (capaVistaPreviaEdicionRecorrido) {
+    mapaRegistros.removeLayer(capaVistaPreviaEdicionRecorrido);
+    capaVistaPreviaEdicionRecorrido = null;
+  }
+  actualizarEstadoEditorRecorrido("Edición cancelada. Se conserva el último recorrido guardado.");
+}
+
+function restaurarRecorridoInicial() {
+  if (!Array.isArray(segmentosRecorridoGuardadosLocal)) return;
+  if (!window.confirm("¿Restaurar el recorrido inicial? Se eliminará la copia guardada en este navegador.")) return;
+  try { localStorage.removeItem(claveAlmacenamientoRecorridoLocal); } catch (error) {}
+  segmentosRecorridoGuardadosLocal = null;
+  cancelarEdicionRecorrido();
+  dibujarRecorridoCampo(ultimoViasRegistros);
+  actualizarEstadoEditorRecorrido("Se restauró el recorrido inicial del proyecto.");
+}
+
+function descargarCopiaRecorrido() {
+  var segmentos = obtenerSegmentosRecorridoActual(ultimoViasRegistros);
+  if (!segmentos.length) return;
+  var copia = {
+    formato: "control-vial-santa-marta-recorrido",
+    version: 1,
+    segmentos: segmentos
+  };
+  var blob = new Blob([JSON.stringify(copia, null, 2)], { type: "application/json" });
+  var url = URL.createObjectURL(blob);
+  var enlace = document.createElement("a");
+  enlace.href = url;
+  enlace.download = "recorrido-control-vial-santa-marta.json";
+  document.body.appendChild(enlace);
+  enlace.click();
+  document.body.removeChild(enlace);
+  URL.revokeObjectURL(url);
+  actualizarEstadoEditorRecorrido("Copia del recorrido descargada.");
+}
+
+function importarCopiaRecorrido(contenido) {
+  try {
+    var copia = JSON.parse(contenido);
+    if (!copia || copia.formato !== "control-vial-santa-marta-recorrido" || copia.version !== 1) {
+      throw new Error("El archivo no es una copia válida del recorrido.");
+    }
+    var segmentos = validarSegmentosRecorrido(copia.segmentos);
+    if (!segmentos.length) throw new Error("El archivo no contiene tramos válidos.");
+    localStorage.setItem(claveAlmacenamientoRecorridoLocal, JSON.stringify(copia));
+    segmentosRecorridoGuardadosLocal = segmentos;
+    cancelarEdicionRecorrido();
+    dibujarRecorridoCampo(ultimoViasRegistros);
+    configurarControlRecorridoCampo();
+    actualizarEstadoEditorRecorrido("Copia cargada y guardada en este navegador · " + segmentos.length + " tramos.");
+    return true;
+  } catch (error) {
+    actualizarEstadoEditorRecorrido(error.message || "No se pudo importar la copia.");
+    return false;
+  }
 }
 
 function redimensionarMapaRegistros() {
