@@ -130,3 +130,18 @@ La zonificación preliminar se divide en tres áreas: Z1, corredor de acceso; Z2
 ### Ajuste visual de marcadores a calzadas — versión 0.9.1.16
 
 Los marcadores de evidencias se proyectan visualmente al segmento de vía OpenStreetMap geométricamente más cercano, sin modificar ni sobrescribir las coordenadas originales de los registros. Se conserva temporalmente la distancia del ajuste y el identificador de la vía OSM para revisión. El mapa de calor utiliza la posición visual ajustada. Este procedimiento mejora la presentación cartográfica, pero no valida por sí solo que la vía elegida sea la correcta; la asignación de calle/carrera requiere revisión de campo.
+
+## Captura en otros sectores de Santa Marta — versión 0.9.1.36
+
+La captura tiene dos ámbitos seleccionables:
+
+- **Área de estudio:** conserva la asignación a las cuadras configuradas, el rectángulo geográfico y la tolerancia de 30 m respecto a los segmentos de referencia.
+- **Otros sectores de Santa Marta:** permite ubicar el reporte mediante GPS, buscador o toque en el mapa, sin exigir que pertenezca al rectángulo de Universidad del Magdalena y Villa Marbella. El operador debe seleccionar vía arterial o secundaria y puede indicar un barrio o referencia.
+
+Los reportes externos se guardan con el ámbito, el tipo de vía y la referencia opcional. Se incluyen en los mapas, lista, filtros, cálculo de criticidad y exportaciones/importaciones JSON y ZIP. El filtro de análisis permite separar ambos ámbitos. El Top 5 agrupa los reportes externos por tipo de vía, no por barrio.
+
+**Limitaciones:** todavía no existe un polígono oficial de Santa Marta para validar automáticamente el límite municipal. El tipo de vía externo se declara manualmente. Los reportes se guardan localmente en el navegador y no se sincronizan automáticamente entre dispositivos; usa exportación/importación para compartirlos.
+
+## Registro de incidencias
+
+Los problemas detectados durante el desarrollo y su estado se documentan en [documentos/registro-incidencias.md](documentos/registro-incidencias.md). La bitácora técnica de cambios se encuentra en [documentos/bitacora-ingenieria.md](documentos/bitacora-ingenieria.md).
