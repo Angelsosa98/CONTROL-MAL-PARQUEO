@@ -354,8 +354,8 @@
   ],
   "recorrido_campo": {
     "tipo": "reconstruccion_cartografica_aproximada",
-    "descripcion": "Recorrido original de campo: tramo de acceso por Calle 29H y circuito perimetral alrededor de Villa Marbella. Se conserva únicamente el trazado original, sin ramales ni recorridos interiores adicionales.",
-    "nota": "Las fotografías se representan desde posiciones aproximadas sobre el recorrido original, ya que los vehículos fueron observados a distancia. Los marcadores no indican la ubicación exacta de cada vehículo ni son coordenadas GPS individuales.",
+    "descripcion": "Recorrido original de campo: tramo de acceso por Calle 29H, circuito perimetral de Villa Marbella y tres calles transversales interiores visibles en la referencia del equipo. No se agregan ramales ni rutas alternativas.",
+    "nota": "Las fotografías se representan desde posiciones aproximadas sobre el recorrido original, ya que los vehículos fueron observados a distancia. Los marcadores no indican la ubicación exacta de cada vehículo ni son coordenadas GPS individuales. Las tres líneas transversales interiores representan los tramos de calle recorridos; las fotografías se tomaron desde posiciones aproximadas y a distancia.",
     "trazado": [
       [
         11.226312,
@@ -538,6 +538,89 @@
         "lat": 11.223957,
         "lng": -74.191079,
         "uso": "Parque Villa Marbella"
+      }
+    ],
+    "tramos_internos": [
+      {
+        "id": "INTERNO-1",
+        "nombre": "Tramo transversal interior norte de Villa Marbella",
+        "coordenadas": [
+          [
+            11.224595,
+            -74.191093
+          ],
+          [
+            11.224694,
+            -74.190915
+          ],
+          [
+            11.224799,
+            -74.190725
+          ],
+          [
+            11.224908,
+            -74.190521
+          ],
+          [
+            11.225029,
+            -74.190292
+          ]
+        ],
+        "metodo": "Geometría sectorial reconstruida visualmente a partir del trazo verde de la referencia satelital del equipo; no es GPS individual."
+      },
+      {
+        "id": "INTERNO-2",
+        "nombre": "Tramo transversal interior central de Villa Marbella",
+        "coordenadas": [
+          [
+            11.224348,
+            -74.190973
+          ],
+          [
+            11.224452,
+            -74.190788
+          ],
+          [
+            11.224568,
+            -74.190597
+          ],
+          [
+            11.224683,
+            -74.1904
+          ],
+          [
+            11.224777,
+            -74.190203
+          ]
+        ],
+        "metodo": "Geometría sectorial reconstruida visualmente a partir del trazo verde de la referencia satelital del equipo; no es GPS individual."
+      },
+      {
+        "id": "INTERNO-3",
+        "nombre": "Tramo transversal interior sur de Villa Marbella",
+        "coordenadas": [
+          [
+            11.224095,
+            -74.190833
+          ],
+          [
+            11.224211,
+            -74.190623
+          ],
+          [
+            11.22431,
+            -74.190432
+          ],
+          [
+            11.224408,
+            -74.190235
+          ],
+          [
+            11.224474,
+            -74.190038
+          ]
+        ],
+        "metodo": "Geometría sectorial reconstruida visualmente a partir del trazo verde de la referencia satelital del equipo; no es GPS individual."
       }
     ]
   }
