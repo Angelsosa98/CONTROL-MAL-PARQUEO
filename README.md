@@ -90,3 +90,8 @@ La línea verde se ajusta a la red vial mediante geometrías de OSRM, conservand
 - Se eliminaron los tres tramos internos y el ajuste automático OSRM del recorrido.
 - Las 30 evidencias se ubican como posiciones aproximadas desde donde se tomaron las fotografías: 5 en el tramo de acceso y 25 sobre el recorrido perimetral. No representan la ubicación exacta de los vehículos observados a distancia ni GPS individuales.
 - No se agregan líneas ni marcadores adicionales en las calles interiores.
+
+
+### Restauración de posiciones de evidencias — versión 0.9.1.10
+
+Se recuperan las 30 posiciones sectoriales que estaban en la configuración de evidencias de la versión 0.9.1.7. Se conserva el ajuste cartográfico de marcadores a las calzadas de OpenStreetMap y la capa satelital con calles. La visualización de la línea verde sigue limitada al trazado original exterior; no se dibujan los tramos interiores adicionales ni se calcula una ruta alternativa.
