@@ -340,6 +340,43 @@ function iniciarMapaRegistros(idContenedor, vias) {
  * equipo. No solicita rutas automáticas: el orden, las curvas y los ramales
  * se conservan exactamente según la geometría manual de datos/vias.json.
  */
+/**
+ * Ajusta una línea manual a la red vial siguiendo sus puntos de control en orden.
+ * OSRM devuelve la geometría de las calles entre esos puntos; si falla, queda
+ * visible el trazo manual original. No cambia las ubicaciones de las evidencias.
+ */
+function obtenerRecorridoAjustadoAViasOSRM(coordenadas) {
+  if (typeof fetch !== "function" || !Array.isArray(coordenadas) || coordenadas.length < 2) {
+    return Promise.reject(new Error("No hay puntos suficientes para ajustar el recorrido."));
+  }
+
+  var lista = coordenadas.map(function (p) {
+    return Number(p[1]) + "," + Number(p[0]);
+  }).join(";");
+  var radios = coordenadas.map(function () { return "35"; }).join(";");
+  var url = "https://router.project-osrm.org/route/v1/driving/" + lista +
+    "?overview=full&geometries=geojson&steps=false&continue_straight=true&radiuses=" + radios;
+
+  return fetch(url, { method: "GET", mode: "cors" }).then(function (respuesta) {
+    if (!respuesta.ok) throw new Error("El servicio de geometría vial no respondió.");
+    return respuesta.json();
+  }).then(function (datos) {
+    if (!datos || datos.code !== "Ok" || !datos.routes || !datos.routes.length ||
+        !datos.routes[0].geometry || !Array.isArray(datos.routes[0].geometry.coordinates)) {
+      throw new Error("No se obtuvo una geometría vial válida.");
+    }
+    var puntos = datos.routes[0].geometry.coordinates.map(function (p) {
+      return [Number(p[1]), Number(p[0])];
+    }).filter(function (p) {
+      return Number.isFinite(p[0]) && Number.isFinite(p[1]);
+    });
+    if (puntos.length < coordenadas.length) {
+      throw new Error("La geometría vial devuelta no tiene suficiente detalle.");
+    }
+    return puntos;
+  });
+}
+
 function dibujarRecorridoCampo(vias) {
   if (!leafletDisponible() || !mapaRegistros) return;
   if (capaRecorridoCampo) mapaRegistros.removeLayer(capaRecorridoCampo);
@@ -355,14 +392,10 @@ function dibujarRecorridoCampo(vias) {
 
   var tramos = [];
   if (puntos.length >= 2) {
-    tramos.push({
-      nombre: "Recorrido exterior de campo",
-      coordenadas: puntos
-    });
+    tramos.push({ nombre: "Recorrido exterior de campo", coordenadas: puntos });
   }
 
-  var interiores = Array.isArray(recorrido.tramos_internos)
-    ? recorrido.tramos_internos : [];
+  var interiores = Array.isArray(recorrido.tramos_internos) ? recorrido.tramos_internos : [];
   interiores.forEach(function (tramo) {
     if (tramo && Array.isArray(tramo.coordenadas) && tramo.coordenadas.length >= 2) {
       tramos.push(tramo);
@@ -376,17 +409,27 @@ function dibujarRecorridoCampo(vias) {
     });
     if (coordenadas.length < 2) return;
 
-    L.polyline(coordenadas, {
+    // La línea manual se pinta inmediatamente para que nunca desaparezca.
+    var linea = L.polyline(coordenadas, {
       color: "#16a34a",
       weight: 3.2,
       opacity: 0.88,
       lineCap: "round",
       lineJoin: "round",
-      smoothFactor: 0.6
+      smoothFactor: 0.35
     }).bindPopup(
       "<strong>" + (tramo.nombre || "Recorrido de campo") + "</strong><br>" +
-      "Trazado aproximado reconstruido a partir de la referencia satelital del equipo."
+      "Geometría ajustada a las calles siguiendo los puntos de control del recorrido."
     ).addTo(capaRecorridoCampo);
+
+    // Cada tramo se ajusta por separado: no se conectan ramales independientes.
+    obtenerRecorridoAjustadoAViasOSRM(coordenadas).then(function (ajustado) {
+      linea.setLatLngs(ajustado);
+    }).catch(function (error) {
+      if (typeof console !== "undefined" && console.info) {
+        console.info("Se conserva el trazado manual del recorrido:", error.message);
+      }
+    });
   });
 
   if (tramos.length) capaRecorridoCampo.addTo(mapaRegistros);
