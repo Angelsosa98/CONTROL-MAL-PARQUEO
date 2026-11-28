@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="app-build" content="0.9.1.27" />
-  <meta name="app-version" content="0.9.1.27" />
+  <meta name="app-build" content="0.9.1.28" />
+  <meta name="app-version" content="0.9.1.28" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Control de Mal Parqueo - Santa Marta</title>
   <!-- CSS de Leaflet (CDN exacto obligatorio) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="estilos.css?v=0.9.1.27" />
+  <link rel="stylesheet" href="estilos.css?v=0.9.1.28" />
 </head>
 <body>
   <!-- Encabezado compacto -->
@@ -19,7 +19,7 @@
     <div>
       <h1 class="titulo-app">Control Vial Santa Marta</h1>
       <p id="nombre-zona-header" class="subtitulo-zona">Cargando zona de estudio...</p>
-      <span class="insignia-version">Versión 0.9.1.27 · En desarrollo</span>
+      <span class="insignia-version">Versión 0.9.1.28 · En desarrollo</span>
     </div>
     <button type="button" id="btn-abrir-ajustes" class="btn-ajustes" aria-label="Ajustes del integrante">
       ⚙️ <span id="indicador-iniciales">Configurar</span>
@@ -348,6 +348,26 @@
         </label>
         <small>Activa o desactiva únicamente las líneas verdes del recorrido.</small>
       </div>
+
+      <div id="herramientas-edicion-recorrido" class="herramientas-edicion-recorrido" aria-label="Herramienta para dibujar el recorrido">
+        <p class="ayuda-campo">Pulsa “Dibujar” y marca la calle con clics sobre el mapa. Termina cada calle por separado y guarda al finalizar.</p>
+        <div class="barra-editor-recorrido">
+          <button type="button" id="btn-iniciar-dibujo-recorrido" class="btn-secundario">✏️ Dibujar recorrido</button>
+          <button type="button" id="btn-terminar-tramo-recorrido" class="btn-secundario" disabled>Terminar tramo</button>
+          <button type="button" id="btn-deshacer-punto-recorrido" class="btn-secundario" disabled>Deshacer punto</button>
+          <button type="button" id="btn-eliminar-tramo-recorrido" class="btn-secundario" disabled>Eliminar último tramo</button>
+          <button type="button" id="btn-guardar-recorrido-local" class="btn-primario" disabled>💾 Guardar recorrido</button>
+          <button type="button" id="btn-cancelar-edicion-recorrido" class="btn-secundario" disabled>Cancelar</button>
+        </div>
+        <div class="barra-copias-recorrido">
+          <button type="button" id="btn-descargar-copia-recorrido" class="btn-secundario">Descargar copia</button>
+          <button type="button" id="btn-importar-copia-recorrido" class="btn-secundario">Cargar copia</button>
+          <button type="button" id="btn-restaurar-recorrido-inicial" class="btn-secundario" disabled>Restaurar recorrido inicial</button>
+          <input type="file" id="input-importar-copia-recorrido" accept="application/json,.json" hidden />
+        </div>
+        <p id="estado-editor-recorrido" class="estado-editor-recorrido" role="status" aria-live="polite">Se cargará el recorrido guardado en este navegador, si existe.</p>
+      </div>
+
       <div id="mapa-registros" class="caja-mapa caja-mapa-registros"></div>
     </section>
 
@@ -435,18 +455,18 @@
     <button type="button" id="tab-registros" class="btn-nav">
       🖼️ Evidencias (<span id="badge-total-registros">0</span>)
     </button>
-    <span class="version-nav" aria-label="Versión de la aplicación">v0.9.1.27</span>
+    <span class="version-nav" aria-label="Versión de la aplicación">v0.9.1.28</span>
   </nav>
 
   <!-- Scripts en el orden estricto indicado (clásicos, sin módulos ES) -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="criticidad.js?v=0.9.1.27"></script>
-  <script src="almacenamiento.js?v=0.9.1.27"></script>
-  <script src="filtros.js?v=0.9.1.27"></script>
-  <script src="resumen.js?v=0.9.1.27"></script>
-  <script src="mapa.js?v=0.9.1.27"></script>
-  <script src="captura.js?v=0.9.1.27"></script>
+  <script src="criticidad.js?v=0.9.1.28"></script>
+  <script src="almacenamiento.js?v=0.9.1.28"></script>
+  <script src="filtros.js?v=0.9.1.28"></script>
+  <script src="resumen.js?v=0.9.1.28"></script>
+  <script src="mapa.js?v=0.9.1.28"></script>
+  <script src="captura.js?v=0.9.1.28"></script>
 </body>
 </html>
