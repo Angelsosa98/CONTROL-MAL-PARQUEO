@@ -970,6 +970,30 @@ function configurarEventos() {
   });
 
 
+  alPulsar("btn-iniciar-dibujo-recorrido", iniciarEdicionRecorrido);
+  alPulsar("btn-terminar-tramo-recorrido", terminarTramoRecorrido);
+  alPulsar("btn-deshacer-punto-recorrido", deshacerPuntoRecorrido);
+  alPulsar("btn-eliminar-tramo-recorrido", eliminarUltimoTramoRecorrido);
+  alPulsar("btn-guardar-recorrido-local", guardarRecorridoLocal);
+  alPulsar("btn-cancelar-edicion-recorrido", cancelarEdicionRecorrido);
+  alPulsar("btn-descargar-copia-recorrido", descargarCopiaRecorrido);
+  alPulsar("btn-restaurar-recorrido-inicial", restaurarRecorridoInicial);
+  alPulsar("btn-importar-copia-recorrido", function () {
+    porId("input-importar-copia-recorrido").click();
+  });
+  var inputCopiaRecorrido = porId("input-importar-copia-recorrido");
+  if (inputCopiaRecorrido) {
+    inputCopiaRecorrido.addEventListener("change", function () {
+      var archivo = this.files && this.files[0];
+      if (!archivo) return;
+      var lector = new FileReader();
+      lector.onload = function () { importarCopiaRecorrido(String(lector.result || "")); };
+      lector.onerror = function () { actualizarEstadoEditorRecorrido("No se pudo leer el archivo seleccionado."); };
+      lector.readAsText(archivo);
+      this.value = "";
+    });
+  }
+
   alPulsar("btn-pantalla-completa-mapa", function () {
     var seccion = porId("seccion-mapa-recorrido");
     var boton = porId("btn-pantalla-completa-mapa");
