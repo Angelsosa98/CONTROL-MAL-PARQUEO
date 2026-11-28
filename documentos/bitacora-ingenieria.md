@@ -233,3 +233,15 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - Se conservan los modos de visualización: Puntos, Mapa de calor y Ambos; ahora alternan únicamente marcadores y calor de reportes.
 - Se verificó sintaxis de `mapa.js` y `captura.js`; prueba programática con datos simulados confirmó que las 30 evidencias no crean marcadores, los tres niveles producen sus colores e intensidades, registros sin clasificación se omiten, los modos de capas funcionan y una lista vacía no crea calor.
 - Se confirmó que la galería de 30 fotografías, el recorrido exterior y los tres tramos interiores permanecen presentes. No se modificó `datos/vias.json` ni `datos/evidencias_nuevas.json`.
+
+## 29. Recuperación de puntos y clasificación visual de evidencias — versión 0.9.1.39
+
+- Se revisó que las 30 fichas fotográficas conservaban sus coordenadas aproximadas pero el mapa dejó de dibujarlas en 0.9.1.37. La ausencia era consecuencia de haber retirado completamente su capa de marcadores.
+- Se inspeccionaron las 30 imágenes originales. Se añadió el objeto `clasificacion_visual_preliminar` a cada evidencia, incluyendo nivel, tipo de obstrucción observado, confianza y observación.
+- Clasificación orientativa resultante: 9 Alto, 16 Medio y 5 Bajo. El nivel se basa en la obstrucción visible (por ejemplo, ocupación del andén, borde/calzada o infraestructura ciclista) y no constituye una determinación legal ni el cálculo formal de criticidad.
+- Se confirmó que las 30 fichas no tienen fecha/hora. No se inventó la franja horaria ni se rellenó `fecha_hora`; los niveles visuales se guardan en un campo separado de `criticidad`.
+- Se recuperaron los 30 marcadores usando `ubicacion_aproximada` sin recalcular, desplazar ni sobrescribir latitud/longitud. Los puntos se incorporan a la capa de marcadores y al calor con intensidades Alto 1.00, Medio 0.65 y Bajo 0.30.
+- Los popups identifican el origen fotográfico y advierten que el nivel es preliminar. Los reportes reales conservan su criticidad formal; las evidencias no se incorporan a la lista de reportes, estadísticas ni Top 5.
+- Se simplificó la leyenda a Recorrido de campo, Alto, Medio y Bajo.
+- Prueba programática con Leaflet simulado: se dibujan 30 marcadores únicos y 30 puntos térmicos; se verificaron los conteos 9/16/5, colores e intensidades; se comprobó que las coordenadas coinciden exactamente con el JSON; Puntos/Calor alternan correctamente y la galería sigue disponible.
+- No se modificaron la geometría del recorrido en `datos/vias.json`, ni la galería, los nombres de archivo o los identificadores de las fotos.
