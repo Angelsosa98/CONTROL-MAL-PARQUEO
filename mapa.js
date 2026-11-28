@@ -428,134 +428,9 @@ function cambiarModoMapaRegistros(nuevoModo) {
  * No son coordenadas GPS originales ni ubicaciones exactas de cada fotografía.
  */
 /**
- * Obtiene geometrías de calles del sector desde Overpass/OpenStreetMap.
- * Se consultan vías, no rutas calculadas; los marcadores se proyectan al eje vial.
+ * Las evidencias conservan sus posiciones sectoriales reconstruidas sobre las calles
+ * de referencia. No se desplazan automáticamente a una vía distinta por cercanía.
  */
-function obtenerGeometriasVialesOSM(vias) {
-  if (promesaGeometriasVialesOSM) return promesaGeometriasVialesOSM;
-  var limites = vias && vias.zona && vias.zona.limites;
-  if (!limites) return Promise.reject(new Error("No hay límites geográficos para consultar calles."));
-  var sur = Number(limites.lat_min) - 0.0002;
-  var norte = Number(limites.lat_max) + 0.0002;
-  var oeste = Number(limites.lng_min) - 0.0002;
-  var este = Number(limites.lng_max) + 0.0002;
-  var consulta = '[out:json][timeout:25];way["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|service|road|pedestrian)$"](' +
-    sur + "," + oeste + "," + norte + "," + este + ');out geom;';
-  var servidores = [
-    "https://overpass-api.de/api/interpreter?data=",
-    "https://overpass.kumi.systems/api/interpreter?data=",
-    "https://overpass.nchc.org.tw/api/interpreter?data="
-  ];
-  var urlDatos = encodeURIComponent(consulta);
-
-  function consultarServidor(indice, errores) {
-    if (indice >= servidores.length) {
-      throw new Error("No fue posible obtener calles de los servidores cartográficos: " + errores.join(" | "));
-    }
-    var controlador = typeof AbortController !== "undefined" ? new AbortController() : null;
-    var temporizador = controlador ? setTimeout(function () { controlador.abort(); }, 18000) : null;
-    return fetch(servidores[indice] + urlDatos, {
-      method: "GET",
-      mode: "cors",
-      signal: controlador ? controlador.signal : undefined,
-      cache: "no-store"
-    }).then(function (respuesta) {
-      if (!respuesta.ok) throw new Error("Servidor " + (indice + 1) + ": HTTP " + respuesta.status);
-      return respuesta.json();
-    }).then(function (datos) {
-      var calles = (datos.elements || []).filter(function (elemento) {
-        return elemento.type === "way" && Array.isArray(elemento.geometry) && elemento.geometry.length >= 2;
-      });
-      if (!calles.length) throw new Error("Servidor " + (indice + 1) + ": no devolvió calles.");
-      return calles;
-    }).catch(function (error) {
-      errores.push(error && error.message ? error.message : String(error));
-      return consultarServidor(indice + 1, errores);
-    }).then(function (calles) {
-      if (temporizador) clearTimeout(temporizador);
-      return calles;
-    }, function (error) {
-      if (temporizador) clearTimeout(temporizador);
-      throw error;
-    });
-  }
-
-  promesaGeometriasVialesOSM = consultarServidor(0, []).catch(function (error) {
-    promesaGeometriasVialesOSM = null;
-    throw error;
-  });
-  return promesaGeometriasVialesOSM;
-}
-
-/** Proyecta una coordenada al segmento vial más cercano y calcula distancia métrica. */
-function puntoMasCercanoSegmentoVial(punto, a, b) {
-  var lat0 = Number(punto[0]);
-  var escalaX = 111320 * Math.cos(lat0 * Math.PI / 180);
-  var escalaY = 110540;
-  var ax = (Number(a.lon) - Number(punto[1])) * escalaX;
-  var ay = (Number(a.lat) - lat0) * escalaY;
-  var bx = (Number(b.lon) - Number(punto[1])) * escalaX;
-  var by = (Number(b.lat) - lat0) * escalaY;
-  var dx = bx - ax, dy = by - ay;
-  var den = dx * dx + dy * dy;
-  var t = den ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / den)) : 0;
-  var x = ax + t * dx, y = ay + t * dy;
-  return {
-    lat: lat0 + y / escalaY,
-    lng: Number(punto[1]) + x / escalaX,
-    distancia: Math.sqrt(x * x + y * y)
-  };
-}
-
-/**
- * Ajusta SOLO la representación visual del marcador al segmento vial OSM más cercano.
- * Las coordenadas originales del registro nunca se modifican ni se guardan como GPS.
- * La distancia de ajuste se conserva como metadato temporal para revisión.
- */
-function ajustarMarcadoresEvidenciasAViasOSM(registros, puntosCalor, vias) {
-  if (!registros || !registros.length) return;
-  obtenerGeometriasVialesOSM(vias).then(function (calles) {
-    registros.forEach(function (registro, indice) {
-      var u = registro.evidencia && registro.evidencia.ubicacion_aproximada;
-      if (!u) return;
-      var origen = [Number(u.lat), Number(u.lng)];
-      var mejor = null;
-      calles.forEach(function (calle) {
-        var geometria = calle.geometry || [];
-        for (var i = 0; i < geometria.length - 1; i++) {
-          var candidato = puntoMasCercanoSegmentoVial(origen, geometria[i], geometria[i + 1]);
-          if (!mejor || candidato.distancia < mejor.distancia) {
-            mejor = {
-              lat: candidato.lat,
-              lng: candidato.lng,
-              distancia: candidato.distancia,
-              via: (calle.tags && (calle.tags.name || calle.tags.ref)) || null,
-              osmWayId: calle.id || null
-            };
-          }
-        }
-      });
-
-      // Se representa sobre el eje vial más cercano, sin alterar ubicacion_aproximada.
-      if (mejor && Number.isFinite(mejor.lat) && Number.isFinite(mejor.lng)) {
-        registro.posicionVisualVial = [mejor.lat, mejor.lng];
-        registro.distanciaAjusteVisualM = mejor.distancia;
-        registro.segmentoVisualOSM = mejor.osmWayId;
-        registro.marcador.setLatLng(registro.posicionVisualVial);
-        if (puntosCalor[indice]) {
-          puntosCalor[indice] = [mejor.lat, mejor.lng, 1];
-        }
-      }
-    });
-    if (capaCalorEvidencias && typeof capaCalorEvidencias.setLatLngs === "function") {
-      capaCalorEvidencias.setLatLngs(puntosCalor);
-    }
-  }).catch(function (error) {
-    if (typeof console !== "undefined" && console.warn) {
-      console.warn("No se pudieron cargar las geometrías viales; se muestran las ubicaciones aproximadas originales:", error.message);
-    }
-  });
-}
 
 function actualizarMarcadoresEvidencias(evidencias, vias) {
   ultimasEvidenciasMapa = Array.isArray(evidencias) ? evidencias : [];
@@ -609,7 +484,6 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
     });
   }
   aplicarModoCapasRegistros();
-  ajustarMarcadoresEvidenciasAViasOSM(marcadoresEvidenciasMapa, puntosCalor, vias);
 }
 
 function actualizarMarcadoresRegistros(listaReportes, vias) {
