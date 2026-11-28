@@ -257,3 +257,15 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - Se creó `pruebas-integracion.html` con siete pruebas: exclusión de vías desactivadas, conservación de vías sin bandera, lectura de foto ZIP, tratamiento de fotos ausentes, bloqueo de rutas inseguras, estructura obligatoria y límite de tamaño.
 - Verificaciones de integración: 7/7 pruebas de `pruebas-integracion.html`; 7/7 pruebas de `pruebas.html`; sintaxis de los módulos JavaScript; 30 evidencias y 30 fotos referenciadas; 9/21 por sector; cuatro vías activas y diez desactivadas; CSV de 30 filas coincidente con el JSON.
 - No se modificó la geometría de las vías ni las coordenadas de evidencias; el recorrido verde y los puntos de vehículos permanecen independientes.
+
+
+## 31. Depuración de buscador e inventario — versión 0.9.1.41
+
+- La distribución sectorial se comprobó directamente desde `datos/evidencias_nuevas.json`: 9 evidencias en la calle de la Universidad del Magdalena y 21 en Villa Marbella. El indicador de captura ya calcula este conteo dinámicamente; no se asignaron ni desplazaron coordenadas.
+- El inventario `datos/fotos/indice_evidencias.csv` ya estaba actualizado. Se verificaron las 30 filas frente al JSON, cotejando código, archivo, sector, vía aproximada, nivel visual y tipo observado. No fue necesario sobrescribir el CSV.
+- Se confirmó la estructura de vías: 14 registradas, cuatro activas y diez históricas desactivadas. La sugerencia local ya filtraba vías desactivadas; se reforzó el geocodificador Nominatim con `bounded=1` en el área de estudio y se filtraron resultados que caen cerca de segmentos desactivados. El modo externo permanece sin límites del área.
+- Las sugerencias de vías locales ahora se ubican en el punto medio por longitud de la polilínea, no en el promedio aritmético de vértices.
+- Se amplió `pruebas-integracion.html` de siete a once pruebas: límites y exclusión de vías desactivadas en búsqueda, búsqueda sin límites en modo externo, sincronización CSV/JSON y distribución 9/21, además de las siete comprobaciones previas de vías y ZIP.
+- Ejecución de pruebas en entorno simulado: 11/11 pruebas de integración y 7/7 pruebas de criticidad. También se verificó sintaxis JavaScript y consistencia de los 30 registros.
+- No se modificaron `datos/vias.json`, `datos/evidencias_nuevas.json`, el CSV ya coincidente, la galería, las 30 coordenadas, el recorrido verde ni sus tres tramos interiores.
+- Se aclaró en el anexo que existen 14 vías registradas: cuatro activas y diez históricas desactivadas.
