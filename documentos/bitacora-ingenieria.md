@@ -118,3 +118,12 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - Si el servicio no responde o no hay geometría vial dentro del umbral, se conserva la ubicación sectorial aproximada de origen.
 - Se eliminó el texto informativo duplicado que aparecía debajo del mapa.
 - Las ubicaciones continúan siendo aproximadas y no se consideran GPS individuales de las fotografías.
+
+
+## 18. Ajuste de línea del recorrido a la red vial — versión 0.9.1.8
+
+- Se modificó únicamente la geometría visual de la línea verde del recorrido.
+- Cada tramo utiliza sus puntos de control manuales en el orden definido y solicita al servicio OSRM la geometría vial entre ellos.
+- El circuito exterior y los tres ramales interiores se procesan por separado, sin conectar segmentos independientes.
+- La línea manual se dibuja de inmediato y permanece como respaldo si el servicio no responde o no encuentra una ruta válida.
+- No se modificaron las 30 evidencias, sus coordenadas sectoriales, ni el ajuste de marcadores a las calzadas.
