@@ -739,10 +739,27 @@ function leerFiltros() {
 }
 
 function renderizarAvance() {
-  var totalEvidencias = AppEstado.evidenciasFotograficas.length;
+  var evidencias = Array.isArray(AppEstado.evidenciasFotograficas)
+    ? AppEstado.evidenciasFotograficas : [];
+  var totalEvidencias = evidencias.length;
+  var conteoUnimag = 0;
+  var conteoVilla = 0;
+  evidencias.forEach(function (e) {
+    var sector = String(e.ubicacion_aproximada && e.ubicacion_aproximada.sector || "").toLowerCase();
+    if (sector.indexOf("universidad") !== -1 || sector.indexOf("unimag") !== -1) {
+      conteoUnimag++;
+    } else if (sector.indexOf("villa marbella") !== -1) {
+      conteoVilla++;
+    }
+  });
+
   porId("contador-meta-30").textContent = totalEvidencias + " de 30";
-  porId("desglose-franjas").textContent = totalEvidencias + " evidencias de vehículos mal parqueados.";
-  porId("desglose-cuadras").textContent = "Distribución aproximada: 5 puntos sobre Calle 29H y 25 en Carrera 21C, Calle 29J y Carrera 21D, alrededor del Parque Villa Marbella.";
+  porId("desglose-franjas").textContent =
+    totalEvidencias + " fotografías con valoración visual preliminar; no son reportes formales de criticidad.";
+  porId("desglose-cuadras").textContent =
+    "Distribución sectorial aproximada: " + conteoUnimag +
+    " evidencias en la calle de la Universidad del Magdalena y " +
+    conteoVilla + " en Villa Marbella. Las ubicaciones de vehículos son independientes del recorrido del equipo.";
   porId("uso-almacenamiento").textContent = "Reportes: " + AppEstado.reportesUnificados.length;
   porId("badge-total-registros").textContent = totalEvidencias;
   var hayReportes = AppEstado.reportesUnificados.length > 0;
