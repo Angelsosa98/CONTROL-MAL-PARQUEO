@@ -144,8 +144,8 @@
     "ubicacion_aproximada": {
       "lat": 11.2247727,
       "lng": -74.1908767,
-      "sector": "Villa Marbella",
-      "via_aproximada": "Carrera 21C — borde occidental de Villa Marbella",
+      "sector": "Calle de la Universidad del Magdalena",
+      "via_aproximada": "Calle de la Universidad del Magdalena",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
@@ -163,8 +163,8 @@
     "ubicacion_aproximada": {
       "lat": 11.2246833,
       "lng": -74.1910065,
-      "sector": "Villa Marbella",
-      "via_aproximada": "Carrera 21C — borde occidental de Villa Marbella",
+      "sector": "Calle de la Universidad del Magdalena",
+      "via_aproximada": "Calle de la Universidad del Magdalena",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
