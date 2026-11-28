@@ -52,3 +52,17 @@ La suite de navegador pruebas.html se amplió para incluir un caso de criticidad
 - Los modos Puntos, Calor y Ambos actúan solo sobre reportes.
 - Con una lista vacía no se crea capa térmica y el mapa encuadra el recorrido.
 - La galería fotográfica, los 30 registros de evidencia y las cuatro geometrías del recorrido permanecen intactos.
+
+## Incidencia corregida — versión 0.9.1.39
+
+| ID | Incidencia | Causa / efecto | Corrección | Estado |
+|---|---|---|---|---|
+| INC-005 | Desaparecieron los 30 puntos luego de retirar las evidencias del mapa de calor | La corrección 0.9.1.37 eliminó por completo los marcadores fotográficos, aunque las 30 coordenadas seguían guardadas. | Se restauraron los puntos desde `ubicacion_aproximada` y se agregó una valoración visual preliminar Alto/Medio/Bajo. El calor usa pesos por nivel; los popups aclaran que no es criticidad formal. | **Resuelta en código; falta comprobación en GitHub Pages** |
+
+### Verificaciones de INC-005
+
+- Se encontraron 30 evidencias y 30 clasificaciones visuales preliminares: 9 Alto, 16 Medio y 5 Bajo.
+- El mapa crea 30 marcadores únicos y 30 aportes al mapa de calor.
+- Se verificó que las 30 coordenadas mostradas coinciden exactamente con las almacenadas antes de la clasificación.
+- La capa de galería permanece activa y no se agregan las evidencias a los reportes, estadísticas o Top 5.
+- Las fichas no tienen fecha/hora: los niveles son visuales preliminares y no incluyen cálculo formal de franja/puntaje.
