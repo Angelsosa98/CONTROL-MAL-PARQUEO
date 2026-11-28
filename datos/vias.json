@@ -354,8 +354,8 @@
   ],
   "recorrido_campo": {
     "tipo": "reconstruccion_cartografica_aproximada",
-    "descripcion": "Recorrido exterior y tres tramos interiores digitalizados siguiendo las líneas rojas de corrección del equipo.",
-    "nota": "Geometría aproximada trasladada de la imagen de referencia; las líneas verdes representan el recorrido y siguen el eje de las calles, sin ramales adicionales.",
+    "descripcion": "Recorrido exterior abierto y tres líneas interiores simplificadas, sin cierre diagonal duplicado ni quiebres innecesarios.",
+    "nota": "La línea verde representa una sola vez cada calle del recorrido. Los tramos interiores son líneas independientes, rectas y sin superposición del corredor de acceso.",
     "trazado": [
       [
         11.226037,
@@ -416,10 +416,6 @@
       [
         11.225206,
         -74.1902367
-      ],
-      [
-        11.226037,
-        -74.1891642
       ]
     ],
     "hitos": [
@@ -506,27 +502,11 @@
             -74.1910465
           ],
           [
-            11.224617,
-            -74.1908695
-          ],
-          [
-            11.2247222,
-            -74.1906818
-          ],
-          [
-            11.2248169,
-            -74.1904941
-          ],
-          [
-            11.2249116,
-            -74.1903063
-          ],
-          [
             11.2250063,
             -74.1901186
           ]
         ],
-        "metodo": "Digitalizado sobre el trazo rojo de corrección de la imagen cartográfica proporcionada por el equipo."
+        "metodo": "Tramo interior simplificado como una sola línea continua entre sus dos extremos, siguiendo el eje visual de la calle de referencia."
       },
       {
         "id": "INTERNO-2",
@@ -537,27 +517,11 @@
             -74.1909766
           ],
           [
-            11.2243384,
-            -74.1907889
-          ],
-          [
-            11.2244436,
-            -74.1906011
-          ],
-          [
-            11.2245488,
-            -74.1904134
-          ],
-          [
-            11.2246487,
-            -74.1902257
-          ],
-          [
             11.2247592,
             -74.1900272
           ]
         ],
-        "metodo": "Digitalizado sobre el trazo rojo de corrección de la imagen cartográfica proporcionada por el equipo."
+        "metodo": "Tramo interior simplificado como una sola línea continua entre sus dos extremos, siguiendo el eje visual de la calle de referencia."
       },
       {
         "id": "INTERNO-3",
@@ -568,23 +532,11 @@
             -74.1906867
           ],
           [
-            11.2239861,
-            -74.1905043
-          ],
-          [
-            11.2240913,
-            -74.1903219
-          ],
-          [
-            11.2241965,
-            -74.190145
-          ],
-          [
             11.2243017,
             -74.1899626
           ]
         ],
-        "metodo": "Digitalizado sobre el trazo rojo de corrección de la imagen cartográfica proporcionada por el equipo."
+        "metodo": "Tramo interior simplificado como una sola línea continua entre sus dos extremos, siguiendo el eje visual de la calle de referencia."
       }
     ]
   },
