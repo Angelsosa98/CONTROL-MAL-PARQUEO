@@ -676,23 +676,8 @@ function cambiarModoMapaRegistros(nuevoModo) {
 }
 
 /**
- * Actualiza tanto la capa de calor (Leaflet.heat ponderada por criticidad.puntaje)
- * como los marcadores individuales en el mapa de Registros.
- */
-/**
- * Dibuja las evidencias usando ubicaciones sectoriales aproximadas acordadas
- * con el equipo (5 corredor universitario, 25 parque y alrededores).
- * No son coordenadas GPS originales ni ubicaciones exactas de cada fotografía.
- */
-/**
- * Las evidencias conservan sus posiciones sectoriales reconstruidas sobre las calles
- * de referencia. No se desplazan automáticamente a una vía distinta por cercanía.
- */
-
-/**
- * Las fotografías se conservan en la galería, pero no son reportes clasificados.
- * Por eso no generan marcadores morados ni puntos de calor en el mapa.
- * Se mantiene esta función por compatibilidad con el controlador de captura.
+ * Actualiza el mapa usando exclusivamente reportes con criticidad válida.
+ * Las fotografías permanecen en la galería y no crean puntos ni calor.
  */
 function actualizarMarcadoresEvidencias(evidencias) {
   return Array.isArray(evidencias) ? evidencias.length : 0;
