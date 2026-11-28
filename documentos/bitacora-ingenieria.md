@@ -245,3 +245,15 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - Se simplificó la leyenda a Recorrido de campo, Alto, Medio y Bajo.
 - Prueba programática con Leaflet simulado: se dibujan 30 marcadores únicos y 30 puntos térmicos; se verificaron los conteos 9/16/5, colores e intensidades; se comprobó que las coordenadas coinciden exactamente con el JSON; Puntos/Calor alternan correctamente y la galería sigue disponible.
 - No se modificaron la geometría del recorrido en `datos/vias.json`, ni la galería, los nombres de archivo o los identificadores de las fotos.
+
+## 30. Depuración general de distribución, buscador, inventario e importación — versión 0.9.1.40
+
+- Se reemplazó el texto fijo 5/25 por un conteo dinámico basado en `ubicacion_aproximada.sector`. Resultado verificado: 9 evidencias en la calle de la Universidad del Magdalena y 21 en Villa Marbella.
+- Se corrigió la búsqueda local de calles: `obtenerCuadrasActivasParaBusqueda(vias)` excluye vías con `activa:false`; las vías antiguas siguen en `datos/vias.json` como referencia histórica, pero no aparecen como sugerencias.
+- Se actualizó `datos/fotos/indice_evidencias.csv` desde `datos/evidencias_nuevas.json`: se sincronizaron sector, vía aproximada y valoración visual preliminar. Se conservó `coordenadas_gps = No disponibles` y la fecha sugerida por nombre sigue marcada como no verificada.
+- Se confirmó que el recorrido verde representa el camino del equipo y los puntos morados la ubicación aproximada de vehículos. No se desplazó EVID-030 ni ninguna otra evidencia por distancia al recorrido.
+- Se conectó la importación ZIP al botón de importación. El lector exige `reportes.json`, convierte imágenes permitidas a data URLs, limita a 500 reportes, 50 MB de paquete, 12 MB por foto y 45 MB acumulados cuando JSZip expone el tamaño descomprimido, y rechaza rutas fuera de `fotos/`.
+- La selección de archivos ahora acepta JSON y ZIP. El flujo reutiliza la validación existente de reportes, duplicados y conflictos.
+- Se creó `pruebas-integracion.html` con siete pruebas: exclusión de vías desactivadas, conservación de vías sin bandera, lectura de foto ZIP, tratamiento de fotos ausentes, bloqueo de rutas inseguras, estructura obligatoria y límite de tamaño.
+- Verificaciones de integración: 7/7 pruebas de `pruebas-integracion.html`; 7/7 pruebas de `pruebas.html`; sintaxis de los módulos JavaScript; 30 evidencias y 30 fotos referenciadas; 9/21 por sector; cuatro vías activas y diez desactivadas; CSV de 30 filas coincidente con el JSON.
+- No se modificó la geometría de las vías ni las coordenadas de evidencias; el recorrido verde y los puntos de vehículos permanecen independientes.
