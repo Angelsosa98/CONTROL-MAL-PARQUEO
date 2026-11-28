@@ -433,6 +433,89 @@ function sonReportesIdenticos(a, b) {
  * Importa un archivo JSON de reportes externos sin duplicar ni sobrescribir conflictos.
  * Salida: { ok, nuevos, repetidos, invalidos, detallesInvalidos, conflictos, detallesConflictos }
  */
+/**
+ * Lee un paquete ZIP exportado por esta aplicación y transforma las fotos
+ * incluidas en data URLs para que el importador JSON pueda validarlas y guardarlas.
+ * No extrae archivos al sistema: solo lee rutas controladas dentro del ZIP.
+ */
+function extraerJSONDePaqueteZIP(archivo, bibliotecaZIP) {
+  var zipLib = bibliotecaZIP || (typeof JSZip !== "undefined" ? JSZip : null);
+  if (!zipLib || typeof zipLib.loadAsync !== "function") {
+    return Promise.reject(new Error("La librería ZIP no está disponible. Comprueba tu conexión e inténtalo de nuevo."));
+  }
+  if (!archivo || (typeof archivo.size === "number" && archivo.size > 50 * 1024 * 1024)) {
+    return Promise.reject(new Error("El paquete ZIP supera el tamaño máximo permitido de 50 MB."));
+  }
+
+  return zipLib.loadAsync(archivo, { checkCRC32: true }).then(function (zip) {
+    var entradaJSON = zip.file("reportes.json");
+    if (!entradaJSON) {
+      throw new Error("El ZIP no contiene reportes.json en su carpeta principal.");
+    }
+    return entradaJSON.async("string").then(function (texto) {
+      var reportes;
+      try {
+        reportes = JSON.parse(texto);
+      } catch (errJSON) {
+        throw new Error("reportes.json no contiene un JSON válido: " + errJSON.message);
+      }
+      if (!Array.isArray(reportes)) {
+        throw new Error("reportes.json debe contener una lista de reportes.");
+      }
+      if (reportes.length > 500) {
+        throw new Error("El paquete supera el máximo de 500 reportes por importación.");
+      }
+
+      var bytesImagenes = 0;
+      return Promise.all(reportes.map(function (reporte) {
+        if (!reporte || typeof reporte !== "object" ||
+            typeof reporte.foto !== "string" ||
+            reporte.foto.indexOf("data:image/") === 0) {
+          return reporte;
+        }
+
+        var ruta = reporte.foto.replace(/\\/g, "/").replace(/^\.\//, "");
+        if (!/^fotos\/[A-Za-z0-9_-]+\.(?:jpe?g|png|webp)$/i.test(ruta)) {
+          reporte.foto = null;
+          return reporte;
+        }
+
+        var entradaFoto = zip.file(ruta);
+        if (!entradaFoto) {
+          reporte.foto = null;
+          return reporte;
+        }
+
+        // JSZip expone el tamaño descomprimido en _data. Si está disponible,
+        // se limita cada foto a 12 MB y el total a 45 MB para reducir ZIP bombs.
+        var tamano = entradaFoto._data && Number(entradaFoto._data.uncompressedSize);
+        if (Number.isFinite(tamano) && tamano > 12 * 1024 * 1024) {
+          throw new Error("La foto " + ruta + " supera el límite de 12 MB.");
+        }
+        if (Number.isFinite(tamano)) {
+          bytesImagenes += tamano;
+          if (bytesImagenes > 45 * 1024 * 1024) {
+            throw new Error("Las fotografías del ZIP superan el límite total de 45 MB.");
+          }
+        }
+
+        var extension = ruta.split(".").pop().toLowerCase();
+        var mime = extension === "png" ? "image/png" :
+          (extension === "webp" ? "image/webp" : "image/jpeg");
+        return entradaFoto.async("base64").then(function (base64) {
+          if (base64.length > 16 * 1024 * 1024) {
+            throw new Error("La foto " + ruta + " es demasiado grande para importarse.");
+          }
+          reporte.foto = "data:" + mime + ";base64," + base64;
+          return reporte;
+        });
+      })).then(function (reportesCompletos) {
+        return JSON.stringify(reportesCompletos);
+      });
+    });
+  });
+}
+
 function importarReportesDesdeTexto(textoJson, reportesPrecargados, criterios, vias) {
   var listaImportada;
   try {
