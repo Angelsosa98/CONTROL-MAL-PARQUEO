@@ -99,3 +99,12 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - La cartografía satelital se carga desde un servicio externo y requiere conexión a internet.
 - Se incorporó la atribución de Esri, Vantor, Earthstar Geographics y GIS User Community según los metadatos del servicio.
 - La distribución de evidencias permanece pendiente de ajustar sobre la geometría definitiva que entregará el equipo.
+
+
+## 15. Calles sobre satélite, control del recorrido y redistribución de evidencias — versión 0.9.1.6
+
+- Se incorporó la capa transparente World Transportation de Esri sobre World Imagery para visualizar trazos viales y rótulos de calles sobre la imagen satelital. Se conservan las capas Mapa de calles y Satélite sin rótulos como alternativas.
+- En la vista Registros se agregó una casilla visible e independiente para mostrar u ocultar únicamente las líneas verdes del recorrido; la capa de puntos y el mapa de calor no dependen de esta opción.
+- Se redistribuyeron las 30 ubicaciones sectoriales aproximadas: 5 en Calle 29H y 25 en el sector Villa Marbella, repartidas entre el borde occidental, tres tramos internos, el borde sur y el borde oriental.
+- Se aplicaron intervalos desiguales y desplazamientos laterales pequeños para evitar que los marcadores aparezcan como una fila perfectamente alineada.
+- Se mantiene `ubicacion: null` en todas las evidencias: las nuevas posiciones son aproximaciones cartográficas para visualización y no GPS individuales ni ubicaciones verificadas de cada fotografía.
