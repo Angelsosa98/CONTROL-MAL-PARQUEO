@@ -48,14 +48,30 @@ function crearCapasBaseMapa(mapa) {
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     {
       maxZoom: 19,
+      zIndex: 1,
       attribution: "Imagery &copy; Esri, Vantor, Earthstar Geographics, and the GIS User Community"
     }
   );
 
-  mapaCalles.addTo(mapa);
+  // Servicio transparente de referencia: dibuja carreteras y rótulos sobre la imagen.
+  var callesSobreSatelite = L.tileLayer(
+    "https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}",
+    {
+      maxZoom: 19,
+      zIndex: 2,
+      opacity: 0.92,
+      attribution: "Roads & labels: Sources Esri, HERE, Garmin, &copy; OpenStreetMap contributors"
+    }
+  );
+
+  var sateliteConCalles = L.layerGroup([mapaSatelital, callesSobreSatelite]);
+
+  // La vista de trabajo abre en satélite con calles. El usuario puede cambiarla.
+  sateliteConCalles.addTo(mapa);
   return {
-    "Mapa de calles": mapaCalles,
-    "Satélite": mapaSatelital
+    "Satélite + calles": sateliteConCalles,
+    "Satélite (sin rótulos)": mapaSatelital,
+    "Mapa de calles": mapaCalles
   };
 }
 
@@ -68,6 +84,28 @@ function agregarControlCapasMapa(mapa, mapasBase, superpuestas) {
     collapsed: true,
     position: "topright"
   }).addTo(mapa);
+}
+
+/**
+ * Conecta la casilla visible "Mostrar recorrido" con la capa verde.
+ * Separa el control del recorrido del selector de mapa base.
+ */
+function configurarControlRecorridoCampo() {
+  var casilla = document.getElementById("toggle-recorrido-campo");
+  if (!casilla) return;
+
+  casilla.checked = !!(
+    mapaRegistros && capaRecorridoCampo && mapaRegistros.hasLayer(capaRecorridoCampo)
+  );
+
+  casilla.onchange = function () {
+    if (!mapaRegistros || !capaRecorridoCampo) return;
+    if (casilla.checked) {
+      capaRecorridoCampo.addTo(mapaRegistros);
+    } else {
+      mapaRegistros.removeLayer(capaRecorridoCampo);
+    }
+  };
 }
 
 
@@ -257,9 +295,8 @@ function iniciarMapaRegistros(idContenedor, vias) {
   capaMarcadoresRegistros = L.layerGroup().addTo(mapaRegistros);
   capaPuntosEvidencias = L.layerGroup().addTo(mapaRegistros);
   dibujarRecorridoCampo(vias);
-  agregarControlCapasMapa(mapaRegistros, mapasBaseRegistros, {
-    "Recorrido de campo": capaRecorridoCampo
-  });
+  agregarControlCapasMapa(mapaRegistros, mapasBaseRegistros, {});
+  configurarControlRecorridoCampo();
 
   var avisoCalor = document.getElementById("aviso-sin-calor");
   if (avisoCalor && !heatDisponible()) {
