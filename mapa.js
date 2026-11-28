@@ -311,9 +311,9 @@ function iniciarMapaRegistros(idContenedor, vias) {
     div.innerHTML =
       "<strong>Leyenda del mapa</strong>" +
       '<div><span class="linea-leyenda-recorrido"></span> Recorrido de campo</div>' +
-      '<div><span class="punto-leyenda" style="background:#dc2626"></span> Reportes altos</div>' +
-      '<div><span class="punto-leyenda" style="background:#d97706"></span> Reportes medios</div>' +
-      '<div><span class="punto-leyenda" style="background:#16a34a"></span> Reportes bajos</div>';
+      '<div><span class="punto-leyenda" style="background:#dc2626"></span> Alto</div>' +
+      '<div><span class="punto-leyenda" style="background:#d97706"></span> Medio</div>' +
+      '<div><span class="punto-leyenda" style="background:#16a34a"></span> Bajo</div>';
     return div;
   };
   leyenda.addTo(mapaRegistros);
