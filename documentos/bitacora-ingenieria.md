@@ -67,7 +67,7 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - Se desplazó el trazado y las 30 posiciones sectoriales aproximadamente 2,8 m hacia el sur de la vista para centrarlos mejor sobre la calzada, manteniendo la forma de cada curva y giro.
 - Se redujo el grosor y la opacidad de la línea de recorrido.
 - Se redujeron radio y desenfoque de Leaflet.heat para que la concentración no se extienda tanto sobre las manzanas.
-- Se conservaron 5 puntos en Calle 29H y 25 en las vías interiores de Villa Marbella. Las ubicaciones siguen identificadas como aproximadas, no GPS individual.
+- Registro histórico de esa versión: 5 puntos en Calle 29H y 25 en vías interiores de Villa Marbella. Esa distribución fue sustituida en la versión 0.9.1.40 por el inventario vigente 9/21 (Universidad del Magdalena/Villa Marbella).
 
 
 ## 12. Ajuste de visualización sobre red vial — versión 0.9.1.3
@@ -134,7 +134,7 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - Se retiraron los tres tramos interiores adicionales de Villa Marbella.
 - Se eliminó el ajuste automático OSRM de la línea de recorrido para conservar exclusivamente la geometría original trazada por el equipo.
 - La línea verde representa solo el acceso por Calle 29H y el circuito perimetral original alrededor de Villa Marbella.
-- Se reubicaron las 30 evidencias como posiciones aproximadas desde donde se tomaron las fotografías: 5 en el tramo de acceso y 25 sobre el circuito perimetral. Las fotografías pueden mostrar vehículos observados a distancia, por lo que el marcador no pretende representar la ubicación exacta del vehículo.
+- Registro histórico de la versión 0.9.1.9: se anotó 5/25 como distribución provisional de puntos. La asignación vigente se corrigió en 0.9.1.40 a 9/21 y representa ubicaciones sectoriales de vehículos, no la ruta recorrida por el equipo.
 - Se mantienen las evidencias originales y su carácter aproximado; no se inventan GPS individuales.
 
 
