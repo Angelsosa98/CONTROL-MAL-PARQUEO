@@ -11,8 +11,8 @@
     "ubicacion_aproximada": {
       "lat": 11.2260446,
       "lng": -74.1891896,
-      "sector": "Corredor Calle 29H — Universidad del Magdalena",
-      "via_aproximada": "Calle 29H — corredor de la Universidad del Magdalena",
+      "sector": "Calle de la Universidad del Magdalena",
+      "via_aproximada": "Calle de la Universidad del Magdalena",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
@@ -30,8 +30,8 @@
     "ubicacion_aproximada": {
       "lat": 11.2257187,
       "lng": -74.189606,
-      "sector": "Corredor Calle 29H — Universidad del Magdalena",
-      "via_aproximada": "Calle 29H — corredor de la Universidad del Magdalena",
+      "sector": "Calle de la Universidad del Magdalena",
+      "via_aproximada": "Calle de la Universidad del Magdalena",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
@@ -49,8 +49,8 @@
     "ubicacion_aproximada": {
       "lat": 11.2254612,
       "lng": -74.1899845,
-      "sector": "Corredor Calle 29H — Universidad del Magdalena",
-      "via_aproximada": "Calle 29H — corredor de la Universidad del Magdalena",
+      "sector": "Calle de la Universidad del Magdalena",
+      "via_aproximada": "Calle de la Universidad del Magdalena",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
@@ -68,8 +68,8 @@
     "ubicacion_aproximada": {
       "lat": 11.2253193,
       "lng": -74.1901629,
-      "sector": "Corredor Calle 29H — Universidad del Magdalena",
-      "via_aproximada": "Calle 29H — corredor de la Universidad del Magdalena",
+      "sector": "Calle de la Universidad del Magdalena",
+      "via_aproximada": "Calle de la Universidad del Magdalena",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
@@ -87,8 +87,8 @@
     "ubicacion_aproximada": {
       "lat": 11.2251563,
       "lng": -74.1903684,
-      "sector": "Corredor Calle 29H — Universidad del Magdalena",
-      "via_aproximada": "Calle 29H — corredor de la Universidad del Magdalena",
+      "sector": "Calle de la Universidad del Magdalena",
+      "via_aproximada": "Calle de la Universidad del Magdalena",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
@@ -106,8 +106,8 @@
     "ubicacion_aproximada": {
       "lat": 11.2249409,
       "lng": -74.1906496,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Carrera 21C — borde occidental de Villa Marbella",
+      "sector": "Calle de la Universidad del Magdalena",
+      "via_aproximada": "Calle de la Universidad del Magdalena",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
@@ -125,8 +125,8 @@
     "ubicacion_aproximada": {
       "lat": 11.2248252,
       "lng": -74.1902819,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Carrera 21C — borde occidental de Villa Marbella",
+      "sector": "Calle de la Universidad del Magdalena",
+      "via_aproximada": "Calle de la Universidad del Magdalena",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
@@ -144,7 +144,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2247727,
       "lng": -74.1908767,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Carrera 21C — borde occidental de Villa Marbella",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -163,7 +163,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2246833,
       "lng": -74.1910065,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Carrera 21C — borde occidental de Villa Marbella",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -182,7 +182,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2246202,
       "lng": -74.1901305,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Tramo interno norte de Villa Marbella (referencia sectorial)",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -201,7 +201,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2245703,
       "lng": -74.191166,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Tramo interno norte de Villa Marbella (referencia sectorial)",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -220,7 +220,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2245861,
       "lng": -74.1911281,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Tramo interno norte de Villa Marbella (referencia sectorial)",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -239,7 +239,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2245834,
       "lng": -74.1906442,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Tramo interno norte de Villa Marbella (referencia sectorial)",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -258,7 +258,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2245624,
       "lng": -74.1900169,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Tramo interno norte de Villa Marbella (referencia sectorial)",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -277,7 +277,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2245256,
       "lng": -74.1907307,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Tramo interno central de Villa Marbella (referencia sectorial)",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -296,7 +296,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2244993,
       "lng": -74.1902981,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Tramo interno central de Villa Marbella (referencia sectorial)",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -315,7 +315,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2244626,
       "lng": -74.1911363,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Tramo interno central de Villa Marbella (referencia sectorial)",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -334,7 +334,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2244205,
       "lng": -74.1908875,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Tramo interno central de Villa Marbella (referencia sectorial)",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -353,7 +353,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2243574,
       "lng": -74.1910606,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Tramo interno central de Villa Marbella (referencia sectorial)",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -372,7 +372,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2243364,
       "lng": -74.1900656,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Tramo interno sur de Villa Marbella (referencia sectorial)",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -391,7 +391,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2242628,
       "lng": -74.1901683,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Tramo interno sur de Villa Marbella (referencia sectorial)",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -410,7 +410,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2242365,
       "lng": -74.1909794,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Tramo interno sur de Villa Marbella (referencia sectorial)",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -429,7 +429,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2245486,
       "lng": -74.1900283,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Tramo interno sur de Villa Marbella (referencia sectorial)",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Trasladado a un punto libre de la línea verde derecha para mantener la distribución de evidencias dentro del recorrido.",
@@ -448,7 +448,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2240789,
       "lng": -74.1908713,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Tramo interno sur de Villa Marbella (referencia sectorial)",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -467,7 +467,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2244416,
       "lng": -74.1899896,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Calle 29J — tramo sur de Villa Marbella",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Trasladado a un punto libre de la línea verde derecha para mantener la distribución de evidencias dentro del recorrido.",
@@ -486,7 +486,7 @@
     "ubicacion_aproximada": {
       "lat": 11.224021,
       "lng": -74.1905252,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Calle 29J — tramo sur de Villa Marbella",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -505,7 +505,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2239948,
       "lng": -74.1901197,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Calle 29J — tramo sur de Villa Marbella",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -524,7 +524,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2239212,
       "lng": -74.1906766,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Carrera 21D — retorno oriental de Villa Marbella",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -543,7 +543,7 @@
     "ubicacion_aproximada": {
       "lat": 11.2238318,
       "lng": -74.190363,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Carrera 21D — retorno oriental de Villa Marbella",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
@@ -562,7 +562,7 @@
     "ubicacion_aproximada": {
       "lat": 11.226134,
       "lng": -74.1887381,
-      "sector": "Parque Villa Marbella y calles aledañas",
+      "sector": "Villa Marbella",
       "via_aproximada": "Carrera 21D — retorno oriental de Villa Marbella",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
