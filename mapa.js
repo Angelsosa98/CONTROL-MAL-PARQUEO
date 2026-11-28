@@ -12,6 +12,7 @@ var capaReportesCaptura = null;
 var mapaRegistros = null;
 var capaMarcadoresRegistros = null;
 var capaCalorRegistros = null;
+var ultimasEvidenciasMapa = [];
 var promesaGeometriasVialesOSM = null;
 var modoVisualizacionRegistros = "puntos"; // "ambos" | "calor" | "puntos"
 var ultimosReportesRegistros = [];
@@ -680,7 +681,11 @@ function cambiarModoMapaRegistros(nuevoModo) {
  * Las fotografías permanecen en la galería y no crean puntos ni calor.
  */
 function actualizarMarcadoresEvidencias(evidencias) {
-  return Array.isArray(evidencias) ? evidencias.length : 0;
+  // Se conserva la fuente fotográfica por separado de los reportes ciudadanos.
+  // Sus niveles visuales preliminares se dibujan en el mismo mapa, pero no se
+  // agregan a las estadísticas ni se presentan como criticidad formal.
+  ultimasEvidenciasMapa = Array.isArray(evidencias) ? evidencias : [];
+  return ultimasEvidenciasMapa.length;
 }
 
 function escaparTextoMapa(valor) {
@@ -707,6 +712,43 @@ function actualizarMarcadoresRegistros(listaReportes, vias) {
 
   var coordenadas = [];
   var puntosCalor = [];
+
+  // Evidencias fotográficas: puntos por nivel visual preliminar.
+  // Sus coordenadas sectoriales guardadas se respetan sin ningún ajuste.
+  for (var e = 0; e < ultimasEvidenciasMapa.length; e++) {
+    var evidencia = ultimasEvidenciasMapa[e];
+    var ubicacion = evidencia && evidencia.ubicacion_aproximada;
+    var evaluacion = evidencia && evidencia.clasificacion_visual_preliminar;
+    if (!ubicacion || !Number.isFinite(Number(ubicacion.lat)) ||
+        !Number.isFinite(Number(ubicacion.lng)) || !evaluacion) continue;
+
+    var nivelVisual = String(evaluacion.nivel || "").trim().toLowerCase();
+    if (nivelVisual !== "alto" && nivelVisual !== "medio" && nivelVisual !== "bajo") continue;
+
+    var latVisual = Number(ubicacion.lat);
+    var lngVisual = Number(ubicacion.lng);
+    var intensidadVisual = nivelVisual === "alto" ? 1 : (nivelVisual === "medio" ? 0.65 : 0.30);
+    var colorVisual = obtenerColorNivel(nivelVisual);
+    puntosCalor.push([latVisual, lngVisual, intensidadVisual]);
+
+    var marcadorEvidencia = L.circleMarker([latVisual, lngVisual], {
+      radius: 7,
+      fillColor: colorVisual,
+      color: "#ffffff",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.92
+    });
+    marcadorEvidencia.bindPopup(
+      "<strong>" + escaparTextoMapa(evidencia.id || "Evidencia") + "</strong> · Evidencia fotográfica<br>" +
+      "Nivel visual preliminar: <strong>" + escaparTextoMapa(evaluacion.nivel) + "</strong><br>" +
+      "Observación: " + escaparTextoMapa(evaluacion.observacion || evaluacion.tipo_observado || "—") + "<br>" +
+      "Confianza visual: " + escaparTextoMapa(evaluacion.confianza || "no indicada") + "<br>" +
+      "<em>No es un puntaje formal de criticidad: falta fecha/hora para calcular franja.</em>"
+    );
+    marcadorEvidencia.addTo(capaMarcadoresRegistros);
+    coordenadas.push([latVisual, lngVisual]);
+  }
 
   for (var i = 0; i < ultimosReportesRegistros.length; i++) {
     var r = ultimosReportesRegistros[i];
