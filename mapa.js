@@ -203,8 +203,10 @@ function actualizarPuntosEnMapaCaptura(listaReportes, vias) {
       fillOpacity: 0.85
     })
       .bindPopup(
-        "<strong>" + r.id + "</strong><br>" +
-        "Cuadra: " + r.cuadra + "<br>" +
+        "<strong>" + escaparTextoMapa(r.id) + "</strong><br>" +
+        (r.ambito === "otros_sectores_santa_marta"
+          ? "Otros sectores de Santa Marta · " + (r.tipo_via_reporte === "arterial" ? "Vía arterial" : "Vía secundaria")
+          : "Cuadra: " + escaparTextoMapa(r.cuadra || "—")) + "<br>" +
         "Nivel: " + nivel + " (" + (r.criticidad ? r.criticidad.puntaje : "-") + ")"
       )
       .addTo(capaReportesCaptura);
@@ -228,7 +230,15 @@ function redimensionarMapaCaptura() {
  * No elimina registros: solo evita dibujar puntos ajenos al área en el mapa.
  */
 function reporteDentroZonaMapa(reporte, vias) {
-  if (!reporte || typeof reporte.lat !== "number" || typeof reporte.lng !== "number") return false;
+  if (!reporte || typeof reporte.lat !== "number" || typeof reporte.lng !== "number" ||
+      !isFinite(reporte.lat) || !isFinite(reporte.lng) ||
+      reporte.lat < -90 || reporte.lat > 90 || reporte.lng < -180 || reporte.lng > 180) return false;
+
+  // Los reportes externos se muestran sin aplicarles los límites del área de estudio.
+  if (reporte.ambito === "otros_sectores_santa_marta") {
+    return reporte.tipo_via_reporte === "arterial" || reporte.tipo_via_reporte === "secundaria";
+  }
+
   var zona = vias && vias.zona;
   var limites = zona && zona.limites;
   if (!limites) return true;
@@ -752,6 +762,15 @@ function actualizarMarcadoresEvidencias(evidencias, vias) {
  * visual del equipo. No se desplazan automáticamente a una calle cercana.
  */
 
+function escaparTextoMapa(valor) {
+  return String(valor == null ? "" : valor)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function actualizarMarcadoresRegistros(listaReportes, vias) {
   ultimosReportesRegistros = Array.isArray(listaReportes) ? listaReportes : [];
   if (vias) ultimoViasRegistros = vias;
@@ -788,11 +807,16 @@ function actualizarMarcadoresRegistros(listaReportes, vias) {
       fillOpacity: 0.9
     });
 
+    var referenciaReporte = r.ambito === "otros_sectores_santa_marta"
+      ? "Otros sectores de Santa Marta" +
+        (r.sector_referencia ? " · " + escaparTextoMapa(r.sector_referencia) : "") +
+        "<br>Vía " + (r.tipo_via_reporte === "arterial" ? "arterial" : "secundaria")
+      : "Cuadra: " + escaparTextoMapa(r.cuadra || "—");
     marcador.bindPopup(
-      "<strong>" + r.id + "</strong> (" + r.origen + ")<br>" +
-      "Fecha: " + r.fecha_hora.replace("T", " ") + "<br>" +
-      "Cuadra: " + r.cuadra + "<br>" +
-      "Nivel: <strong>" + nivel + " (" + puntaje + " pts)</strong>"
+      "<strong>" + escaparTextoMapa(r.id) + "</strong> (" + escaparTextoMapa(r.origen) + ")<br>" +
+      "Fecha: " + escaparTextoMapa(String(r.fecha_hora || "").replace("T", " ")) + "<br>" +
+      referenciaReporte + "<br>" +
+      "Nivel: <strong>" + escaparTextoMapa(nivel) + " (" + puntaje + " pts)</strong>"
     );
 
     marcador.addTo(capaMarcadoresRegistros);
