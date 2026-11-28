@@ -676,11 +676,6 @@ function renderizarAvance() {
   var hayReportes = AppEstado.reportesUnificados.length > 0;
   porId("seccion-filtros").hidden = !hayReportes;
   porId("seccion-resumen-operativo").hidden = !hayReportes;
-  var estadoMapa = porId("estado-mapa-registros");
-  if (estadoMapa) {
-    estadoMapa.textContent = "Mapa de evidencias: " + totalEvidencias +
-      " puntos sectoriales aproximados (5 en el corredor universitario y 25 en Villa Marbella). La línea verde representa el recorrido. No son coordenadas GPS individuales.";
-  }
 }
 
 function renderizarGaleriaEvidencias() {
