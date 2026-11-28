@@ -353,69 +353,117 @@
     }
   ],
   "recorrido_campo": {
-    "tipo": "reconstruccion_cartografica_aproximada",
-    "descripcion": "Recorrido exterior y tres líneas interiores ajustadas al eje visual de las calles, siguiendo la secuencia de puntos morados de referencia.",
-    "nota": "Las tres líneas interiores siguen las ubicaciones sectoriales moradas de referencia y conservan una sola polilínea por calle, sin duplicar el corredor exterior.",
+    "tipo": "recorrido_vial_por_geometrias_de_calle",
+    "descripcion": "Recorrido representado con las geometrías de las calles identificadas en la zona y tres trazos interiores independientes recuperados de la referencia anterior.",
+    "nota": "La línea verde representa únicamente el recorrido sobre las calzadas. Los puntos morados son una capa independiente y no intervienen en la construcción de la ruta.",
     "trazado": [
       [
-        11.226037,
-        -74.1891642
+        11.226312,
+        -74.189063
       ],
       [
-        11.2257635,
-        -74.189502
+        11.226133,
+        -74.189412
       ],
       [
-        11.225469,
-        -74.1898774
+        11.225955,
+        -74.189698
       ],
       [
-        11.225206,
-        -74.1902367
+        11.225781,
+        -74.189965
       ],
       [
-        11.2249746,
-        -74.1905478
+        11.225592,
+        -74.190207
       ],
       [
-        11.2246748,
-        -74.1909768
+        11.225418,
+        -74.190436
       ],
       [
-        11.2245486,
-        -74.1911753
+        11.225212,
+        -74.190702
       ],
       [
-        11.2242384,
-        -74.1909873
+        11.225023,
+        -74.190931
       ],
       [
-        11.2238231,
-        -74.1906813
+        11.224855,
+        -74.191109
       ],
       [
-        11.2236812,
-        -74.190547
+        11.224741,
+        -74.191236
       ],
       [
-        11.2239126,
-        -74.1901716
+        11.224638,
+        -74.191198
       ],
       [
-        11.2241335,
-        -74.1898498
+        11.224421,
+        -74.191097
       ],
       [
-        11.2245068,
-        -74.1899681
+        11.224188,
+        -74.19095
       ],
       [
-        11.2249274,
-        -74.1901454
+        11.223982,
+        -74.190779
       ],
       [
-        11.225206,
-        -74.1902367
+        11.22382,
+        -74.190601
+      ],
+      [
+        11.223733,
+        -74.190486
+      ],
+      [
+        11.223782,
+        -74.190366
+      ],
+      [
+        11.223863,
+        -74.190226
+      ],
+      [
+        11.22396,
+        -74.190086
+      ],
+      [
+        11.224085,
+        -74.189959
+      ],
+      [
+        11.224269,
+        -74.189984
+      ],
+      [
+        11.224459,
+        -74.190054
+      ],
+      [
+        11.224665,
+        -74.190124
+      ],
+      [
+        11.224876,
+        -74.190175
+      ],
+      [
+        11.225082,
+        -74.190239
+      ],
+      [
+        11.225277,
+        -74.190302
+      ],
+      [
+        11.225369,
+        -74.190372
       ]
     ],
     "hitos": [
@@ -464,7 +512,7 @@
       "corredor_universidad": 5,
       "recorrido_perimetral_villa_marbella": 25,
       "total": 30,
-      "criterio": "Los 30 puntos morados son ubicaciones aproximadas de vehículos observados alrededor y dentro del sector; no se utilizan para construir la línea del recorrido."
+      "criterio": "Las posiciones de los vehículos no definen el recorrido. La línea exterior sigue las geometrías de Calle 29H, Carrera 21C, Calle 29J y Carrera 21D; las tres líneas interiores son recorridos independientes."
     },
     "referencias": [
       {
@@ -495,72 +543,84 @@
     "tramos_internos": [
       {
         "id": "INTERNO-1",
-        "nombre": "Tramo transversal norte de Villa Marbella",
+        "nombre": "Calle interior norte de Villa Marbella",
         "coordenadas": [
           [
-            11.2245013,
-            -74.1910465
+            11.224595,
+            -74.191093
           ],
           [
-            11.224593,
-            -74.1909062
+            11.224694,
+            -74.190915
+          ],
+          [
+            11.224799,
+            -74.190725
           ],
           [
             11.224908,
-            -74.1903134
+            -74.190521
+          ],
+          [
+            11.225029,
+            -74.190292
           ]
         ],
-        "metodo": "Línea interior reconstruida siguiendo en orden las ubicaciones moradas de referencia para acompañar el eje de la calle, en lugar de una diagonal recta que corta el trazado vial."
+        "metodo": "Geometría de referencia recuperada del trazado anterior de calles interiores; se dibuja una sola polilínea continua por calle y no se usa la posición de los marcadores morados."
       },
       {
         "id": "INTERNO-2",
-        "nombre": "Tramo transversal central de Villa Marbella",
+        "nombre": "Calle interior central de Villa Marbella",
         "coordenadas": [
           [
-            11.224263,
-            -74.1909059
+            11.224348,
+            -74.190973
           ],
           [
-            11.2243348,
-            -74.1907945
+            11.224452,
+            -74.190788
           ],
           [
-            11.2244771,
-            -74.1905414
+            11.224568,
+            -74.190597
           ],
           [
-            11.2245898,
-            -74.1903364
+            11.224683,
+            -74.1904
           ],
           [
-            11.224688,
-            -74.190155
+            11.224777,
+            -74.190203
           ]
         ],
-        "metodo": "Línea interior reconstruida siguiendo en orden las ubicaciones moradas de referencia para acompañar el eje de la calle, en lugar de una diagonal recta que corta el trazado vial."
+        "metodo": "Geometría de referencia recuperada del trazado anterior de calles interiores; se dibuja una sola polilínea continua por calle y no se usa la posición de los marcadores morados."
       },
       {
         "id": "INTERNO-3",
-        "nombre": "Tramo transversal sur de Villa Marbella",
+        "nombre": "Calle interior sur de Villa Marbella",
         "coordenadas": [
           [
-            11.2239757,
-            -74.1900796
+            11.224095,
+            -74.190833
           ],
           [
-            11.2240645,
-            -74.1908592
+            11.224211,
+            -74.190623
           ],
           [
-            11.2244269,
-            -74.190631
+            11.22431,
+            -74.190432
           ],
           [
-            11.2242674,
-            -74.1908991
+            11.224408,
+            -74.190235
+          ],
+          [
+            11.224474,
+            -74.190038
           ]
         ],
-        "metodo": "Línea interior reconstruida siguiendo en orden las ubicaciones moradas de referencia para acompañar el eje de la calle, en lugar de una diagonal recta que corta el trazado vial."
+        "metodo": "Geometría de referencia recuperada del trazado anterior de calles interiores; se dibuja una sola polilínea continua por calle y no se usa la posición de los marcadores morados."
       }
     ]
   },
