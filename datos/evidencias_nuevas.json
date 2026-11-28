@@ -7,13 +7,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2261868,
-      "lng": -74.1892715,
-      "sector": "Corredor Calle 29H — Universidad del Magdalena",
-      "via_aproximada": "Calle 29H — corredor de la Universidad del Magdalena",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2262382,
+      "lng": -74.1892069,
+      "sector": "Corredor universitario — Calle 29H",
+      "via_aproximada": "Tramo original de acceso por Calle 29H",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -24,13 +24,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2258498,
-      "lng": -74.1898858,
-      "sector": "Corredor Calle 29H — Universidad del Magdalena",
-      "via_aproximada": "Calle 29H — corredor de la Universidad del Magdalena",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2259558,
+      "lng": -74.1896967,
+      "sector": "Corredor universitario — Calle 29H",
+      "via_aproximada": "Tramo original de acceso por Calle 29H",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -41,13 +41,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2254028,
-      "lng": -74.1904246,
-      "sector": "Corredor Calle 29H — Universidad del Magdalena",
-      "via_aproximada": "Calle 29H — corredor de la Universidad del Magdalena",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2256136,
+      "lng": -74.1901793,
+      "sector": "Corredor universitario — Calle 29H",
+      "via_aproximada": "Tramo original de acceso por Calle 29H",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -58,13 +58,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.225065,
-      "lng": -74.1909129,
-      "sector": "Corredor Calle 29H — Universidad del Magdalena",
-      "via_aproximada": "Calle 29H — corredor de la Universidad del Magdalena",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2252367,
+      "lng": -74.1906701,
+      "sector": "Corredor universitario — Calle 29H",
+      "via_aproximada": "Tramo original de acceso por Calle 29H",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -75,13 +75,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2247869,
-      "lng": -74.1911686,
-      "sector": "Corredor Calle 29H — Universidad del Magdalena",
-      "via_aproximada": "Calle 29H — corredor de la Universidad del Magdalena",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2248487,
+      "lng": -74.191116,
+      "sector": "Corredor universitario — Calle 29H",
+      "via_aproximada": "Tramo original de acceso por Calle 29H",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -92,13 +92,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2246419,
-      "lng": -74.1912111,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Carrera 21C — borde occidental de Villa Marbella",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.224695,
+      "lng": -74.191219,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -109,13 +109,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2242617,
-      "lng": -74.1909771,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Carrera 21C — borde occidental de Villa Marbella",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2245834,
+      "lng": -74.1911726,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -126,13 +126,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2239502,
-      "lng": -74.1907737,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Carrera 21C — borde occidental de Villa Marbella",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2244678,
+      "lng": -74.1911188,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -143,13 +143,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2237965,
-      "lng": -74.1905504,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Carrera 21C — borde occidental de Villa Marbella",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.224365,
+      "lng": -74.1910617,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -160,13 +160,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2246385,
-      "lng": -74.1910445,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Tramo interno norte de Villa Marbella (referencia sectorial)",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.224257,
+      "lng": -74.1909935,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -177,13 +177,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2247115,
-      "lng": -74.1908553,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Tramo interno norte de Villa Marbella (referencia sectorial)",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.224155,
+      "lng": -74.1909226,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -194,13 +194,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2248842,
-      "lng": -74.1906076,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Tramo interno norte de Villa Marbella (referencia sectorial)",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.224054,
+      "lng": -74.1908388,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -211,13 +211,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2249083,
-      "lng": -74.1904856,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Tramo interno norte de Villa Marbella (referencia sectorial)",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2239633,
+      "lng": -74.1907584,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -228,13 +228,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2250148,
-      "lng": -74.1903362,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Tramo interno norte de Villa Marbella (referencia sectorial)",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2238793,
+      "lng": -74.1906661,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -245,13 +245,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2243772,
-      "lng": -74.1908879,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Tramo interno central de Villa Marbella (referencia sectorial)",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2237958,
+      "lng": -74.190569,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -262,13 +262,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.224512,
-      "lng": -74.1907118,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Tramo interno central de Villa Marbella (referencia sectorial)",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2237422,
+      "lng": -74.1904635,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -279,13 +279,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2245589,
-      "lng": -74.1905751,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Tramo interno central de Villa Marbella (referencia sectorial)",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.223792,
+      "lng": -74.1903487,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -296,13 +296,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2247315,
-      "lng": -74.1903381,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Tramo interno central de Villa Marbella (referencia sectorial)",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2238563,
+      "lng": -74.1902376,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -313,13 +313,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2247461,
-      "lng": -74.1902468,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Tramo interno central de Villa Marbella (referencia sectorial)",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2239304,
+      "lng": -74.1901288,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -330,13 +330,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.224142,
-      "lng": -74.1907685,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Tramo interno sur de Villa Marbella (referencia sectorial)",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2240111,
+      "lng": -74.1900341,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -347,13 +347,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2241774,
-      "lng": -74.1906464,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Tramo interno sur de Villa Marbella (referencia sectorial)",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2241074,
+      "lng": -74.189962,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -364,13 +364,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.224341,
-      "lng": -74.1904041,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Tramo interno sur de Villa Marbella (referencia sectorial)",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2242368,
+      "lng": -74.1899796,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -381,13 +381,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2244087,
-      "lng": -74.1901932,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Tramo interno sur de Villa Marbella (referencia sectorial)",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.224355,
+      "lng": -74.1900157,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -398,13 +398,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2244778,
-      "lng": -74.1900861,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Tramo interno sur de Villa Marbella (referencia sectorial)",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2244747,
+      "lng": -74.1900593,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -415,13 +415,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2237651,
-      "lng": -74.1903741,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Calle 29J — tramo sur de Villa Marbella",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2245985,
+      "lng": -74.1901014,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -432,13 +432,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2239256,
-      "lng": -74.1901642,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Calle 29J — tramo sur de Villa Marbella",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2247205,
+      "lng": -74.1901374,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -449,13 +449,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2240473,
-      "lng": -74.1899843,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Calle 29J — tramo sur de Villa Marbella",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2248475,
+      "lng": -74.1901681,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -466,13 +466,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2242043,
-      "lng": -74.1899881,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Carrera 21D — retorno oriental de Villa Marbella",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2249759,
+      "lng": -74.190206,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -483,13 +483,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2246491,
-      "lng": -74.1901031,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Carrera 21D — retorno oriental de Villa Marbella",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2251193,
+      "lng": -74.190251,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   },
   {
@@ -500,13 +500,13 @@
     "descripcion": "Fotografía conservada como evidencia visual. No tiene ubicación GPS, fecha/hora de campo ni clasificación de criticidad verificadas.",
     "ubicacion": null,
     "fecha_hora": null,
-    "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
+    "nota_ubicacion": "La fotografía se tomó desde este punto aproximado del recorrido original. El vehículo observado podía estar a distancia; el marcador no representa necesariamente la ubicación del vehículo.",
     "ubicacion_aproximada": {
-      "lat": 11.2252671,
-      "lng": -74.1903094,
-      "sector": "Parque Villa Marbella y calles aledañas",
-      "via_aproximada": "Carrera 21D — retorno oriental de Villa Marbella",
-      "metodo": "Punto sectorial aproximado distribuido con separación irregular sobre el tramo vial de referencia y ligeros desplazamientos laterales para evitar una fila geométrica. No es GPS individual."
+      "lat": 11.2252855,
+      "lng": -74.1903085,
+      "sector": "Recorrido perimetral original — Villa Marbella",
+      "via_aproximada": "Recorrido original alrededor de Villa Marbella",
+      "metodo": "Punto sectorial aproximado ubicado sobre el recorrido original de campo. Representa la posición desde donde se tomó la fotografía, no la ubicación exacta del vehículo fotografiado ni un GPS individual."
     }
   }
 ]
