@@ -435,29 +435,55 @@ function obtenerGeometriasVialesOSM(vias) {
   if (promesaGeometriasVialesOSM) return promesaGeometriasVialesOSM;
   var limites = vias && vias.zona && vias.zona.limites;
   if (!limites) return Promise.reject(new Error("No hay límites geográficos para consultar calles."));
-  var sur = Number(limites.lat_min) - 0.00015;
-  var norte = Number(limites.lat_max) + 0.00015;
-  var oeste = Number(limites.lng_min) - 0.00015;
-  var este = Number(limites.lng_max) + 0.00015;
-  var consulta = '[out:json][timeout:25];way["highway"~"^(primary|secondary|tertiary|unclassified|residential|living_street|service|road|pedestrian)$"](' +
+  var sur = Number(limites.lat_min) - 0.0002;
+  var norte = Number(limites.lat_max) + 0.0002;
+  var oeste = Number(limites.lng_min) - 0.0002;
+  var este = Number(limites.lng_max) + 0.0002;
+  var consulta = '[out:json][timeout:25];way["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|service|road|pedestrian)$"](' +
     sur + "," + oeste + "," + norte + "," + este + ');out geom;';
-  var url = "https://overpass-api.de/api/interpreter?data=" + encodeURIComponent(consulta);
-  promesaGeometriasVialesOSM = fetch(url, { method: "GET", mode: "cors" })
-    .then(function (respuesta) {
-      if (!respuesta.ok) throw new Error("OpenStreetMap no respondió para la geometría vial.");
+  var servidores = [
+    "https://overpass-api.de/api/interpreter?data=",
+    "https://overpass.kumi.systems/api/interpreter?data=",
+    "https://overpass.nchc.org.tw/api/interpreter?data="
+  ];
+  var urlDatos = encodeURIComponent(consulta);
+
+  function consultarServidor(indice, errores) {
+    if (indice >= servidores.length) {
+      throw new Error("No fue posible obtener calles de los servidores cartográficos: " + errores.join(" | "));
+    }
+    var controlador = typeof AbortController !== "undefined" ? new AbortController() : null;
+    var temporizador = controlador ? setTimeout(function () { controlador.abort(); }, 18000) : null;
+    return fetch(servidores[indice] + urlDatos, {
+      method: "GET",
+      mode: "cors",
+      signal: controlador ? controlador.signal : undefined,
+      cache: "no-store"
+    }).then(function (respuesta) {
+      if (!respuesta.ok) throw new Error("Servidor " + (indice + 1) + ": HTTP " + respuesta.status);
       return respuesta.json();
-    })
-    .then(function (datos) {
+    }).then(function (datos) {
       var calles = (datos.elements || []).filter(function (elemento) {
         return elemento.type === "way" && Array.isArray(elemento.geometry) && elemento.geometry.length >= 2;
       });
-      if (!calles.length) throw new Error("No se encontraron calles mapeadas en el sector.");
+      if (!calles.length) throw new Error("Servidor " + (indice + 1) + ": no devolvió calles.");
       return calles;
-    })
-    .catch(function (error) {
-      promesaGeometriasVialesOSM = null;
+    }).catch(function (error) {
+      errores.push(error && error.message ? error.message : String(error));
+      return consultarServidor(indice + 1, errores);
+    }).then(function (calles) {
+      if (temporizador) clearTimeout(temporizador);
+      return calles;
+    }, function (error) {
+      if (temporizador) clearTimeout(temporizador);
       throw error;
     });
+  }
+
+  promesaGeometriasVialesOSM = consultarServidor(0, []).catch(function (error) {
+    promesaGeometriasVialesOSM = null;
+    throw error;
+  });
   return promesaGeometriasVialesOSM;
 }
 
@@ -501,7 +527,7 @@ function ajustarMarcadoresEvidenciasAViasOSM(registros, puntosCalor, vias) {
           if (!mejor || candidato.distancia < mejor.distancia) mejor = candidato;
         }
       });
-      if (mejor && mejor.distancia <= 35) {
+      if (mejor && mejor.distancia <= 80) {
         registro.marcador.setLatLng([mejor.lat, mejor.lng]);
         if (puntosCalor[indice]) puntosCalor[indice] = [mejor.lat, mejor.lng, 1];
       }
@@ -511,7 +537,7 @@ function ajustarMarcadoresEvidenciasAViasOSM(registros, puntosCalor, vias) {
     }
   }).catch(function (error) {
     if (typeof console !== "undefined" && console.info) {
-      console.info("Se conservan ubicaciones sectoriales aproximadas:", error.message);
+      console.warn("No se pudieron ajustar los puntos a las calles; se conservan las ubicaciones aproximadas:", error.message);
     }
   });
 }
