@@ -108,3 +108,13 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - Se redistribuyeron las 30 ubicaciones sectoriales aproximadas: 5 en Calle 29H y 25 en el sector Villa Marbella, repartidas entre el borde occidental, tres tramos internos, el borde sur y el borde oriental.
 - Se aplicaron intervalos desiguales y desplazamientos laterales pequeños para evitar que los marcadores aparezcan como una fila perfectamente alineada.
 - Se mantiene `ubicacion: null` en todas las evidencias: las nuevas posiciones son aproximaciones cartográficas para visualización y no GPS individuales ni ubicaciones verificadas de cada fotografía.
+
+
+## 17. Corrección de puntos sobre calzadas y mapa satelital — versión 0.9.1.7
+
+- Se corrigió el host de teselas de World Transportation de Esri a `server.arcgisonline.com` para superponer calles y rótulos sobre World Imagery.
+- El mapa de registros inicia en modo "Puntos" para evitar que el mapa de calor cubra las calzadas y los marcadores.
+- Se incorporó consulta de geometrías de vías de OpenStreetMap mediante Overpass. Cada marcador se proyecta al segmento vial más cercano cuando la distancia no supera 35 m.
+- Si el servicio no responde o no hay geometría vial dentro del umbral, se conserva la ubicación sectorial aproximada de origen.
+- Se eliminó el texto informativo duplicado que aparecía debajo del mapa.
+- Las ubicaciones continúan siendo aproximadas y no se consideran GPS individuales de las fotografías.
