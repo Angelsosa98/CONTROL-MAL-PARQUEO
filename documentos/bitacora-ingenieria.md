@@ -89,3 +89,13 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - Los tramos interiores se reconstruyeron visualmente tomando como referencia la imagen satelital y la geometría exterior existente; sus coordenadas son aproximadas y no GPS individual.
 - Las 30 evidencias, sus estados y su distribución sectorial se mantienen sin cambios.
 - La verificación visual final debe hacerse sobre el mapa publicado y compararse con la referencia satelital suministrada por el equipo.
+
+
+## 14. Selector de mapas base — versión 0.9.1.5
+
+- Se incorporó un control de capas en las vistas Captura y Registros.
+- El usuario puede alternar entre mapa de calles de OpenStreetMap e imagen satelital de Esri World Imagery.
+- En Registros se agregó la opción para mostrar u ocultar el recorrido de campo de forma independiente.
+- La cartografía satelital se carga desde un servicio externo y requiere conexión a internet.
+- Se incorporó la atribución de Esri, Vantor, Earthstar Geographics y GIS User Community según los metadatos del servicio.
+- La distribución de evidencias permanece pendiente de ajustar sobre la geometría definitiva que entregará el equipo.
