@@ -1,3 +1,6 @@
-Carpeta con 30 fotografías seleccionadas para la nueva muestra del proyecto Control Vial Santa Marta.
+Carpeta con 30 fotografías seleccionadas para la muestra del proyecto Control Vial Santa Marta.
 Los nombres conservan su numeración original (evidencia-001.jpg a evidencia-040.jpg, con algunos archivos omitidos). El archivo indice_evidencias.csv relaciona cada código EVID con el nombre de su fotografía.
-Las fotografías son evidencia visual; no confirman por sí solas una infracción ni tienen coordenadas GPS asociadas.
+Las fichas tienen ubicación sectorial aproximada asignada en datos/evidencias_nuevas.json: 9 corresponden a la calle de la Universidad del Magdalena y 21 a Villa Marbella.
+Las coordenadas son referencias sectoriales aproximadas, no GPS individual de cada fotografía. La columna coordenadas_gps del CSV permanece en "No disponibles".
+Cada fotografía tiene una valoración visual preliminar Alto/Medio/Bajo. No es el índice formal de criticidad, pues las fichas no incluyen fecha/hora verificadas.
+Las fotografías son evidencia visual; no confirman por sí solas una infracción legal. Antes de publicar o sustentar el proyecto, revisar que placas y rostros identificables estén anonimizados.
