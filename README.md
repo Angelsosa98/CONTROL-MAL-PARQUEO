@@ -27,6 +27,10 @@ Aplicación web estática desarrollada con HTML, CSS, JavaScript y Leaflet para 
 - Línea verde del circuito aproximado del equipo. Con conexión, intenta ajustar la geometría a la red vial de OpenStreetMap mediante OSRM; si el servicio no responde o no logra un ajuste cercano, conserva el trazado manual.
 - Galería independiente de evidencias fotográficas.
 
+## Capas del mapa
+
+Los mapas de Captura y Registros permiten alternar entre el mapa de calles de OpenStreetMap y la imagen satelital de Esri. En la vista Registros también se puede mostrar u ocultar el recorrido de campo sin ocultar las evidencias. La capa satelital requiere conexión a internet y conserva la atribución del proveedor.
+
 ## Recorrido cartográfico\n\nEl circuito se dibuja directamente con la geometría manual reconstruida a partir de la referencia satelital del equipo. Incluye el recorrido exterior y tres tramos transversales interiores de Villa Marbella. No se usa enrutamiento automático para evitar que un servicio externo cambie el camino realizado por el equipo. La geometría es una referencia cartográfica aproximada, no un levantamiento GPS.\n\n## Criterios de criticidad
 
 `Puntaje = Peso(Categoría) + Peso(Tipo de vía) + Peso(Franja horaria)`
