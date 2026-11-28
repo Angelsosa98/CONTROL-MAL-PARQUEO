@@ -255,29 +255,155 @@ function iniciarMapaRegistros(idContenedor, vias) {
  * Circuito aproximado de trabajo de campo, separado de los reportes.
  * Los hitos son referencias del sector, no GPS exacto de cada evidencia.
  */
+/**
+ * Calcula una clave estable para cachear el ajuste cartográfico del recorrido.
+ * El contenido base son puntos sectoriales aproximados, no una traza GPS.
+ */
+function claveRecorridoCampo(puntos) {
+  var base = puntos.map(function (p) {
+    return Number(p[0]).toFixed(6) + "," + Number(p[1]).toFixed(6);
+  }).join("|");
+  var hash = 2166136261;
+  for (var i = 0; i < base.length; i++) {
+    hash ^= base.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return "recorrido-osm-v1-" + (hash >>> 0).toString(36);
+}
+
+/**
+ * Pinta la geometría recibida. La línea de respaldo se muestra desde el inicio;
+ * cuando llega una geometría de la red vial, reemplaza visualmente esa línea.
+ */
+function pintarRecorridoCampo(puntos, ajustado) {
+  if (!leafletDisponible() || !mapaRegistros || !capaRecorridoCampo || !Array.isArray(puntos) || puntos.length < 2) {
+    return;
+  }
+
+  capaRecorridoCampo.clearLayers();
+
+  var detalle = ajustado
+    ? "Geometría ajustada a segmentos viales disponibles en OpenStreetMap mediante enrutamiento. Los puntos de paso son referencias sectoriales aproximadas; no es una traza GPS de levantamiento."
+    : "Trazado sectorial aproximado del equipo. Si hay conexión, el mapa intentará ajustarlo a la red vial; esta línea no representa GPS individual de las evidencias.";
+
+  L.polyline(puntos, {
+    color: "#15803d",
+    weight: 2.5,
+    opacity: 0.62,
+    lineCap: "round",
+    lineJoin: "round"
+  }).bindPopup(
+    "<strong>Recorrido de campo</strong><br>" + detalle
+  ).addTo(capaRecorridoCampo);
+}
+
+/**
+ * Ajusta el circuito a la red vial pública por medio del servicio OSRM.
+ * Usa todos los vértices en orden para conservar la forma del circuito y sus giros.
+ * Si no hay conexión, el servidor no responde o los puntos se alejan demasiado
+ * de la red, se conserva el trazado manual aproximado.
+ */
+function ajustarRecorridoCampoRedVial(puntos) {
+  if (typeof fetch !== "function" || !Array.isArray(puntos) || puntos.length < 2) return;
+
+  var clave = claveRecorridoCampo(puntos);
+  var claveCache = "control-vial-recorrido-campo-osm";
+  var edadMaximaCache = 30 * 24 * 60 * 60 * 1000;
+
+  // Reutilizar la última geometría válida para evitar solicitudes repetidas.
+  try {
+    var cache = JSON.parse(localStorage.getItem(claveCache) || "null");
+    if (cache && cache.clave === clave && Array.isArray(cache.coordenadas) &&
+        cache.coordenadas.length > puntos.length && Date.now() - cache.fecha < edadMaximaCache) {
+      pintarRecorridoCampo(cache.coordenadas, true);
+      return;
+    }
+  } catch (errorCache) {
+    // El almacenamiento local puede estar bloqueado; el ajuste seguirá funcionando.
+  }
+
+  // OSRM recibe longitud,latitud. El radio acotado evita saltos a calles lejanas.
+  var coordenadas = puntos.map(function (p) {
+    return Number(p[1]) + "," + Number(p[0]);
+  }).join(";");
+  var radios = puntos.map(function () { return "22"; }).join(";");
+  var url = "https://router.project-osrm.org/route/v1/driving/" + coordenadas +
+    "?overview=full&geometries=geojson&steps=false&continue_straight=true&radiuses=" + radios;
+
+  fetch(url, { method: "GET", mode: "cors" })
+    .then(function (respuesta) {
+      if (!respuesta.ok) throw new Error("El servicio de ajuste vial no respondió correctamente.");
+      return respuesta.json();
+    })
+    .then(function (resultado) {
+      if (!resultado || resultado.code !== "Ok" || !Array.isArray(resultado.routes) ||
+          !resultado.routes.length || !resultado.routes[0].geometry ||
+          !Array.isArray(resultado.routes[0].geometry.coordinates)) {
+        throw new Error("No se encontró una geometría vial válida para el circuito.");
+      }
+
+      var puntosAjustados = resultado.routes[0].geometry.coordinates.map(function (p) {
+        return [Number(p[1]), Number(p[0])];
+      }).filter(function (p) {
+        return Number.isFinite(p[0]) && Number.isFinite(p[1]);
+      });
+
+      if (puntosAjustados.length <= puntos.length) {
+        throw new Error("La geometría devuelta no aporta suficiente detalle vial.");
+      }
+
+      // Confirmar que los vértices de referencia se ajustaron cerca de la vía.
+      var paradas = Array.isArray(resultado.waypoints) ? resultado.waypoints : [];
+      var ajusteValido = paradas.length === puntos.length && paradas.every(function (parada) {
+        return Number.isFinite(Number(parada.distance)) && Number(parada.distance) <= 22;
+      });
+      if (!ajusteValido) {
+        throw new Error("Uno o más puntos de paso quedaron demasiado lejos de la red vial.");
+      }
+
+      pintarRecorridoCampo(puntosAjustados, true);
+
+      try {
+        localStorage.setItem(claveCache, JSON.stringify({
+          clave: clave,
+          coordenadas: puntosAjustados,
+          fecha: Date.now()
+        }));
+      } catch (errorAlmacenamiento) {
+        // El mapa ya está actualizado; no es indispensable guardar la caché.
+      }
+    })
+    .catch(function (error) {
+      // Se mantiene visible el trazado aproximado ya pintado como respaldo.
+      if (typeof console !== "undefined" && console.info) {
+        console.info("Se conserva el recorrido aproximado:", error.message);
+      }
+    });
+}
+
+/**
+ * Circuito aproximado de trabajo de campo, separado de los reportes.
+ * Los hitos son referencias del sector, no GPS exacto de cada evidencia.
+ */
 function dibujarRecorridoCampo(vias) {
   if (!leafletDisponible() || !mapaRegistros) return;
   if (capaRecorridoCampo) mapaRegistros.removeLayer(capaRecorridoCampo);
-  capaRecorridoCampo = L.layerGroup();
+
+  capaRecorridoCampo = L.layerGroup().addTo(mapaRegistros);
   var recorrido = vias && vias.recorrido_campo;
   var hitos = recorrido && Array.isArray(recorrido.hitos) ? recorrido.hitos : [];
   var puntos = recorrido && Array.isArray(recorrido.trazado) && recorrido.trazado.length >= 2
     ? recorrido.trazado : hitos.map(function (h) { return h.coordenadas; });
+
+  puntos = puntos.filter(function (p) {
+    return Array.isArray(p) && p.length >= 2 &&
+      Number.isFinite(Number(p[0])) && Number.isFinite(Number(p[1]));
+  });
   if (puntos.length < 2) return;
 
-  // Línea verde: referencia del recorrido. Los puntos rojos son las 30 evidencias.
-  L.polyline(puntos, {
-    color: "#15803d",
-    weight: 2.5,
-    opacity: 0.58,
-    lineCap: "round",
-    lineJoin: "round"
-  }).bindPopup(
-    "<strong>Recorrido de campo</strong><br>" +
-    "Trazado aproximado reconstruido a partir de la línea verde aportada por el equipo."
-  ).addTo(capaRecorridoCampo);
-
-  capaRecorridoCampo.addTo(mapaRegistros);
+  // Mostrar inmediatamente el respaldo y sustituirlo solo si el ajuste vial es válido.
+  pintarRecorridoCampo(puntos, false);
+  ajustarRecorridoCampoRedVial(puntos);
 }
 function aplicarModoCapasRegistros() {
   if (!leafletDisponible() || !mapaRegistros) return;
