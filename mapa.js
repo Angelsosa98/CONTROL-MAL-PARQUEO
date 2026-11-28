@@ -35,6 +35,43 @@ function heatDisponible() {
 }
 
 /**
+ * Crea mapas base intercambiables: calles de OpenStreetMap y satélite Esri.
+ * La capa satelital conserva la atribución requerida por el proveedor.
+ */
+function crearCapasBaseMapa(mapa) {
+  var mapaCalles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  });
+
+  var mapaSatelital = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    {
+      maxZoom: 19,
+      attribution: "Imagery &copy; Esri, Vantor, Earthstar Geographics, and the GIS User Community"
+    }
+  );
+
+  mapaCalles.addTo(mapa);
+  return {
+    "Mapa de calles": mapaCalles,
+    "Satélite": mapaSatelital
+  };
+}
+
+/**
+ * Agrega el selector de mapas base y las capas superpuestas disponibles.
+ */
+function agregarControlCapasMapa(mapa, mapasBase, superpuestas) {
+  if (!leafletDisponible() || !mapa || !L.control || typeof L.control.layers !== "function") return;
+  L.control.layers(mapasBase, superpuestas || {}, {
+    collapsed: true,
+    position: "topright"
+  }).addTo(mapa);
+}
+
+
+/**
  * Devuelve el color hexadecimal asociado a cada nivel de criticidad.
  */
 function obtenerColorNivel(nivel) {
@@ -60,12 +97,12 @@ function iniciarMapaCaptura(idContenedor, vias, alElegirUbicacion) {
     zoomControl: true
   }).setView(centro, zoom);
 
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(mapaCaptura);
+  var mapasBaseCaptura = crearCapasBaseMapa(mapaCaptura);
 
   capaReportesCaptura = L.layerGroup().addTo(mapaCaptura);
+  agregarControlCapasMapa(mapaCaptura, mapasBaseCaptura, {
+    "Reportes registrados": capaReportesCaptura
+  });
 
   mapaCaptura.on("click", function (e) {
     if (typeof alElegirUbicacion === "function") {
@@ -215,14 +252,14 @@ function iniciarMapaRegistros(idContenedor, vias) {
     zoomControl: true
   }).setView(centro, zoom);
 
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(mapaRegistros);
+  var mapasBaseRegistros = crearCapasBaseMapa(mapaRegistros);
 
   capaMarcadoresRegistros = L.layerGroup().addTo(mapaRegistros);
   capaPuntosEvidencias = L.layerGroup().addTo(mapaRegistros);
   dibujarRecorridoCampo(vias);
+  agregarControlCapasMapa(mapaRegistros, mapasBaseRegistros, {
+    "Recorrido de campo": capaRecorridoCampo
+  });
 
   var avisoCalor = document.getElementById("aviso-sin-calor");
   if (avisoCalor && !heatDisponible()) {
