@@ -18,7 +18,7 @@ Las fotografías no incluyen actualmente coordenadas GPS verificadas, fecha/hora
 
 ## 2. Tratamiento de las fotografías
 
-Las 30 fotografías se mantienen en el repositorio y en la galería. A partir del trazado satelital enviado por el equipo y de la distribución comunicada en campo, el mapa representa 5 evidencias sobre Calle 29H y 25 en Carrera 21C, Calle 29J y Carrera 21D alrededor de Villa Marbella. Las coordenadas son sectoriales aproximadas, no GPS original ni ubicación individual verificada.
+Las 30 fotografías se mantienen en el repositorio y en la galería. A partir del trazado satelital enviado por el equipo y de la distribución comunicada en campo, las fichas conservan metadatos sectoriales aproximados para consulta documental. Desde la versión 0.9.1.37 esas posiciones no se dibujan como marcadores ni se usan para el mapa de calor. Las fotografías no equivalen a GPS original ni a ubicación individual verificada.
 
 Antes de utilizar cada fotografía como evidencia de un reporte, el equipo debe documentar su ubicación real, fecha/hora, categoría, actor y observación de campo, y verificar la privacidad de las personas y placas visibles.
 
