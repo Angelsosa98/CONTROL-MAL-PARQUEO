@@ -427,13 +427,13 @@
     "fecha_hora": null,
     "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
     "ubicacion_aproximada": {
-      "lat": 11.2241561,
-      "lng": -74.1892967,
+      "lat": 11.2245486,
+      "lng": -74.1900283,
       "sector": "Parque Villa Marbella y calles aledañas",
       "via_aproximada": "Tramo interno sur de Villa Marbella (referencia sectorial)",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
-      "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
-      "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+      "nota_referencia": "Trasladado a un punto libre de la línea verde derecha para mantener la distribución de evidencias dentro del recorrido.",
+      "ajuste_visual": "Reubicación solicitada por el equipo sobre el tramo verde derecho del recorrido guardado; ubicación aproximada."
     }
   },
   {
@@ -465,13 +465,13 @@
     "fecha_hora": null,
     "nota_ubicacion": "Ubicación sectorial reconstruida para visualización del conjunto; distribución irregular y ligeramente desplazada respecto al eje de la vía. No equivale a coordenada GPS original de la fotografía.",
     "ubicacion_aproximada": {
-      "lat": 11.2240436,
-      "lng": -74.1910357,
+      "lat": 11.2244416,
+      "lng": -74.1899896,
       "sector": "Parque Villa Marbella y calles aledañas",
       "via_aproximada": "Calle 29J — tramo sur de Villa Marbella",
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
-      "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
-      "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+      "nota_referencia": "Trasladado a un punto libre de la línea verde derecha para mantener la distribución de evidencias dentro del recorrido.",
+      "ajuste_visual": "Reubicación solicitada por el equipo sobre el tramo verde derecho del recorrido guardado; ubicación aproximada."
     }
   },
   {
