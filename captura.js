@@ -340,7 +340,7 @@ function configurarBuscador() {
     var consulta = input.value.trim();
     if (consulta.length < 3) return ocultar();
     mostrarTexto("estado-busqueda-direccion", "Buscando...");
-    buscarDireccionesMapa(consulta, AppEstado.vias).then(function (items) {
+    buscarDireccionesMapa(consulta, AppEstado.vias, AppEstado.ambitoCaptura).then(function (items) {
       if (input.value.trim() !== consulta) return;
       ocultar();
       if (items.length === 0) {
