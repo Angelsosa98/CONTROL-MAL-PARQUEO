@@ -162,3 +162,11 @@ Se impide crear la capa Leaflet.heat cuando el contenedor del mapa Registros tie
 - `dibujarRecorridoCampo` dibuja el perímetro como una línea y cada uno de los tres segmentos interiores como polilíneas independientes.
 - No se generan circuitos cerrados, diagonales, ramales ni rutas automáticas adicionales.
 - No se modificaron las 30 evidencias ni sus ubicaciones aproximadas.
+
+
+## 22. Recorrido construido desde el orden de evidencias — versión 0.9.1.13
+
+- Se confirmó que `datos/evidencias_nuevas.json` conserva exactamente las 30 posiciones históricas de la versión 0.9.1.7; el archivo no se modificó.
+- Se reconstruyó la geometría de la línea exterior usando, en orden, EVID-001 a EVID-009 y EVID-025 a EVID-030.
+- Se reconstruyeron los tres segmentos interiores como polilíneas independientes: EVID-010 a EVID-014, EVID-015 a EVID-019 y EVID-020 a EVID-024.
+- No se agregaron ni movieron puntos, no se usó enrutamiento automático y las coordenadas continúan siendo aproximadas.
