@@ -16,6 +16,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Medio",
+      "tipo_observado": "ocupacion_borde_calzada",
+      "confianza": "media",
+      "observacion": "Grupo de motocicletas estacionadas junto al borde; la imagen no permite confirmar un bloqueo total del andén.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -35,6 +43,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Bajo",
+      "tipo_observado": "estacionamiento_junto_a_borde",
+      "confianza": "baja",
+      "observacion": "Vehículo junto al frente comercial; el encuadre no permite determinar con seguridad cuánto invade el espacio peatonal.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -54,6 +70,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Medio",
+      "tipo_observado": "ocupacion_parcial_anden",
+      "confianza": "media",
+      "observacion": "Vehículo muy próximo al andén y al poste; parece ocupar parcialmente la franja peatonal.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -73,6 +97,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Medio",
+      "tipo_observado": "detencion_en_calzada",
+      "confianza": "media",
+      "observacion": "Vehículo detenido o estacionado en la calzada junto al borde; no se observa señal de hora ni duración.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -92,6 +124,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Alto",
+      "tipo_observado": "obstruccion_transversal_calzada",
+      "confianza": "media",
+      "observacion": "Taxi ubicado transversalmente y ocupando una parte importante del paso vehicular.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -111,6 +151,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Alto",
+      "tipo_observado": "ocupacion_anden",
+      "confianza": "alta",
+      "observacion": "Automóvil ocupa el espacio peatonal junto al árbol y el poste.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -130,6 +178,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Medio",
+      "tipo_observado": "detencion_en_calzada",
+      "confianza": "media",
+      "observacion": "Vehículo detenido en el área de circulación próxima al andén.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -149,6 +205,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Medio",
+      "tipo_observado": "motocicleta_en_calzada",
+      "confianza": "media",
+      "observacion": "Motocicleta estacionada en el espacio de circulación en una intersección.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -168,6 +232,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Alto",
+      "tipo_observado": "ocupacion_anden",
+      "confianza": "alta",
+      "observacion": "Motocicleta estacionada sobre el andén, reduciendo el espacio de paso peatonal.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -187,6 +259,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Medio",
+      "tipo_observado": "ocupacion_parcial_anden",
+      "confianza": "media",
+      "observacion": "Camioneta ubicada sobre el borde peatonal; la fotografía muestra invasión parcial.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -206,6 +286,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Medio",
+      "tipo_observado": "ocupacion_anden",
+      "confianza": "media",
+      "observacion": "Automóvil estacionado sobre o junto a la franja de andén.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -225,6 +313,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Bajo",
+      "tipo_observado": "estacionamiento_junto_a_borde",
+      "confianza": "baja",
+      "observacion": "Vehículo próximo al frente de una edificación; no se distingue una obstrucción peatonal completa.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -244,6 +340,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Bajo",
+      "tipo_observado": "estacionamiento_junto_a_borde",
+      "confianza": "baja",
+      "observacion": "Vehículos alineados junto al borde; el encuadre no permite atribuir una obstrucción severa.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -263,6 +367,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Medio",
+      "tipo_observado": "ocupacion_borde_calzada",
+      "confianza": "media",
+      "observacion": "Fila de vehículos estacionados junto al borde de la vía; posible reducción del espacio de circulación.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -282,6 +394,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Medio",
+      "tipo_observado": "ocupacion_borde_calzada",
+      "confianza": "media",
+      "observacion": "Vehículo y motocicleta ocupan el borde de la vía junto al andén.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -301,6 +421,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Alto",
+      "tipo_observado": "ocupacion_anden",
+      "confianza": "alta",
+      "observacion": "Automóvil y motocicleta ocupan la franja peatonal y dificultan el paso.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -320,6 +448,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Bajo",
+      "tipo_observado": "estacionamiento_junto_a_borde",
+      "confianza": "baja",
+      "observacion": "Vehículo de servicio estacionado en vía local; la imagen no permite confirmar bloqueo del andén.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -339,6 +475,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Medio",
+      "tipo_observado": "ocupacion_borde_calzada",
+      "confianza": "baja",
+      "observacion": "Camioneta estacionada junto al borde; posible afectación parcial del espacio peatonal.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -358,6 +502,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Alto",
+      "tipo_observado": "ocupacion_anden",
+      "confianza": "alta",
+      "observacion": "Automóvil ocupa claramente el andén frente a una vivienda.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -377,6 +529,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Medio",
+      "tipo_observado": "ocupacion_parcial_anden",
+      "confianza": "media",
+      "observacion": "Vehículo estacionado junto al andén; posible invasión parcial del espacio peatonal.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -396,6 +556,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Alto",
+      "tipo_observado": "ocupacion_anden",
+      "confianza": "alta",
+      "observacion": "Vehículo estacionado sobre el espacio de circulación peatonal frente a la vivienda.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -415,6 +583,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Bajo",
+      "tipo_observado": "estacionamiento_junto_a_borde",
+      "confianza": "baja",
+      "observacion": "Vehículo visible en una vía local; el encuadre no permite verificar una obstrucción concreta.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -434,6 +610,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Trasladado a un punto libre de la línea verde derecha para mantener la distribución de evidencias dentro del recorrido.",
       "ajuste_visual": "Reubicación solicitada por el equipo sobre el tramo verde derecho del recorrido guardado; ubicación aproximada."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Medio",
+      "tipo_observado": "ocupacion_borde_calzada",
+      "confianza": "media",
+      "observacion": "Vehículo estacionado junto al borde de la vía local, próximo al paso peatonal.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -453,6 +637,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Medio",
+      "tipo_observado": "ocupacion_parcial_anden",
+      "confianza": "media",
+      "observacion": "Taxi ubicado junto al andén; la fotografía sugiere ocupación parcial de la franja peatonal.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -472,6 +664,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Trasladado a un punto libre de la línea verde derecha para mantener la distribución de evidencias dentro del recorrido.",
       "ajuste_visual": "Reubicación solicitada por el equipo sobre el tramo verde derecho del recorrido guardado; ubicación aproximada."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Alto",
+      "tipo_observado": "ocupacion_anden",
+      "confianza": "alta",
+      "observacion": "Automóvil ocupa el espacio peatonal bajo la estructura cubierta de la edificación.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -491,6 +691,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Medio",
+      "tipo_observado": "ocupacion_borde_calzada",
+      "confianza": "media",
+      "observacion": "Automóvil estacionado junto al frente comercial, próximo al borde peatonal.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -510,6 +718,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Medio",
+      "tipo_observado": "obstruccion_parcial_calzada",
+      "confianza": "media",
+      "observacion": "Vehículo estacionado en una vía estrecha, reduciendo parcialmente el espacio de circulación.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -529,6 +745,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Alto",
+      "tipo_observado": "ocupacion_anden",
+      "confianza": "alta",
+      "observacion": "Motocicleta estacionada sobre el andén, ocupando la franja peatonal.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -548,6 +772,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Medio",
+      "tipo_observado": "ocupacion_borde_calzada",
+      "confianza": "media",
+      "observacion": "Varios vehículos estacionados en línea junto al borde; posible reducción del espacio vial disponible.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   },
   {
@@ -567,6 +799,14 @@
       "metodo": "Ubicación aproximada georreferenciada desde el centro del marcador morado en la imagen satelital proporcionada por el equipo, calibrada con su recorrido dibujado; no es GPS individual.",
       "nota_referencia": "Punto morado leído de la referencia visual del recorrido; el punto adicional final se distribuyó sobre el mismo corredor para completar las 30 evidencias.",
       "ajuste_visual": "Ajustada al eje de una de las calles del recorrido corregido; posición aproximada, no GPS individual."
+    },
+    "clasificacion_visual_preliminar": {
+      "nivel": "Alto",
+      "tipo_observado": "ocupacion_ciclorruta",
+      "confianza": "alta",
+      "observacion": "Camión ocupa la infraestructura demarcada para circulación ciclista.",
+      "metodo": "Lectura visual de la fotografía; clasificación orientativa de la obstrucción visible. No es una determinación legal ni el índice formal de criticidad.",
+      "pendiente": "La ficha no tiene fecha/hora; no puede calcularse la franja pico/valle ni el puntaje formal completo."
     }
   }
 ]
